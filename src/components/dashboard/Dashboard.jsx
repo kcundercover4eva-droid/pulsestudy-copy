@@ -17,8 +17,9 @@ import {
   Calendar as CalendarIcon
 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import confetti from 'canvas-confetti';
+import moment from 'moment';
 
 // --- SUB-COMPONENTS ---
 
@@ -223,24 +224,66 @@ const DopamineDropModal = ({ isOpen, onClose }) => (
 
 export default function Dashboard() {
   const [showDrop, setShowDrop] = useState(false);
+  const queryClient = useQueryClient();
+
+  // Get Auth User for Name
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
   
-  // Mock User Data (Replace with real query later)
-  const { data: user } = useQuery({
+  // Get Profile Data
+  const { data: userProfile } = useQuery({
     queryKey: ['userProfile'],
     queryFn: async () => {
        const profiles = await base44.entities.UserProfile.list();
-       return profiles[0] || { accentColor: 'neonGreen', weeklyGoalHours: 10 };
+       // Return existing profile or defaults
+       return profiles[0] || { 
+         accentColor: 'neonGreen', 
+         weeklyGoalHours: 10, 
+         totalPoints: 0, 
+         currentStreak: 0,
+         lastDopamineDropDate: null 
+       };
     },
-    initialData: { accentColor: 'neonGreen', weeklyGoalHours: 10 }
   });
 
-  // Simulate drop appearing
-  useEffect(() => {
-    const timer = setTimeout(() => setShowDrop(true), 1500);
-    return () => clearTimeout(timer);
-  }, []);
+  // Mutation to update drop date
+  const updateProfileMutation = useMutation({
+    mutationFn: async (updatedData) => {
+      const profiles = await base44.entities.UserProfile.list();
+      if (profiles.length > 0) {
+        return await base44.entities.UserProfile.update(profiles[0].id, updatedData);
+      } else {
+        return await base44.entities.UserProfile.create(updatedData);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userProfile']);
+    },
+  });
 
-  const accentColor = user?.accentColor || 'neonGreen';
+  // Handle Daily Dopamine Drop Logic
+  useEffect(() => {
+    if (!userProfile) return;
+
+    const today = moment().format('YYYY-MM-DD');
+    const lastDropDate = userProfile.lastDopamineDropDate 
+      ? moment(userProfile.lastDopamineDropDate).format('YYYY-MM-DD') 
+      : null;
+
+    // Only show if we haven't shown it today
+    if (lastDropDate !== today) {
+      const timer = setTimeout(() => {
+        setShowDrop(true);
+        // Mark as shown for today
+        updateProfileMutation.mutate({ lastDopamineDropDate: today });
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [userProfile?.id]); // Only run when profile loads/changes
+
+  const accentColor = userProfile?.accentColor || 'neonGreen';
   
   // Color mapping for dynamic classes
   const colorMap = {
@@ -263,15 +306,17 @@ export default function Dashboard() {
         {/* Header */}
         <header className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold">Good afternoon, Alex</h1>
-            <p className="text-white/40">Ready to crush your 2h goal today?</p>
+            <h1 className="text-3xl font-bold">Good afternoon, {currentUser?.full_name?.split(' ')[0] || 'Friend'}</h1>
+            <p className="text-white/40">Ready to crush your {userProfile?.weeklyGoalHours || 10}h goal this week?</p>
           </div>
           <div className="flex items-center gap-4">
             <div className="glass px-4 py-2 rounded-full flex items-center gap-2">
               <Flame className="w-4 h-4 text-orange-400 fill-orange-400" />
-              <span className="font-bold">12 Day Streak</span>
+              <span className="font-bold">{userProfile?.currentStreak || 0} Day Streak</span>
             </div>
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 border border-white/10" />
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 border border-white/10 flex items-center justify-center text-sm font-bold">
+              {currentUser?.full_name?.charAt(0) || 'U'}
+            </div>
           </div>
         </header>
 
@@ -282,17 +327,17 @@ export default function Dashboard() {
           <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
              <StatCard 
                title="Focus Points" 
-               value="2,450" 
+               value={userProfile?.totalPoints || 0} 
                icon={Zap} 
                color="yellow" 
-               trend="+150 today"
+               trend="Keep grinding!"
              />
              <StatCard 
                title="Quiz Mastery" 
-               value="85%" 
+               value="0%" 
                icon={Brain} 
                color="purple" 
-               trend="Top 10% of class"
+               trend="Start a quiz!"
              />
              
              {/* Weekly Goal Progress - Spans 2 cols */}
@@ -300,17 +345,17 @@ export default function Dashboard() {
                <div className="flex justify-between items-end mb-4">
                  <div>
                    <h3 className="text-lg font-bold">Weekly Goal</h3>
-                   <p className="text-sm text-white/40">10 hours targeted</p>
+                   <p className="text-sm text-white/40">{userProfile?.weeklyGoalHours || 10} hours targeted</p>
                  </div>
                  <div className="text-right">
-                   <span className="text-3xl font-bold text-white">6.5</span>
-                   <span className="text-white/40 text-sm"> / 10h</span>
+                   <span className="text-3xl font-bold text-white">0</span>
+                   <span className="text-white/40 text-sm"> / {userProfile?.weeklyGoalHours || 10}h</span>
                  </div>
                </div>
                <div className="h-4 bg-white/5 rounded-full overflow-hidden">
                  <motion.div 
                    initial={{ width: 0 }}
-                   animate={{ width: '65%' }}
+                   animate={{ width: '0%' }}
                    transition={{ duration: 1.5, ease: "easeOut" }}
                    className={`h-full bg-gradient-to-r from-${themeColor}-500 to-${themeColor}-300 rounded-full shadow-[0_0_20px_rgba(74,222,128,0.5)]`}
                  />
