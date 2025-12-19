@@ -142,7 +142,7 @@ export default function FlashcardFeed() {
             animate={{ opacity: 1, scale: 1 }}
             className="absolute inset-0 flex flex-col items-center justify-center text-center glass rounded-3xl p-8"
           >
-            <Trophy className="w-20 h-20 text-yellow-400 mb-4" />
+            <div className="w-20 h-20 text-yellow-400 mb-4">🏆</div>
             <h3 className="text-3xl font-bold mb-2">Session Complete!</h3>
             <p className="text-white/60 mb-8">You reviewed {cards.length} cards.</p>
             <Button onClick={restart} className="bg-white text-black font-bold rounded-xl h-12 px-8">
