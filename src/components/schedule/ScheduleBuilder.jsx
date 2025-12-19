@@ -41,23 +41,30 @@ export default function ScheduleBuilder() {
   }, [localBlocks]);
 
   useEffect(() => {
-    if (dbBlocks) {
+    if (dbBlocks && Array.isArray(dbBlocks)) {
+      console.log('Loaded blocks:', dbBlocks);
       setLocalBlocks(dbBlocks.map(dbBlock => {
         const data = dbBlock.data || {};
+        // Fallback for potentially missing values
         return { 
           id: dbBlock.id, 
           ...data,
-          // Ensure numeric types to prevent visibility issues
-          day: Number(data.day ?? 0),
-          start: Number(data.start ?? 0),
-          end: Number(data.end ?? 0)
+          day: typeof data.day === 'number' ? data.day : Number(data.day ?? 0),
+          start: typeof data.start === 'number' ? data.start : Number(data.start ?? 16),
+          end: typeof data.end === 'number' ? data.end : Number(data.end ?? 17),
+          type: data.type || 'study',
+          title: data.title || ''
         };
       }));
     }
   }, [dbBlocks]);
 
   const updateBlockMutation = useMutation({
-    mutationFn: (block) => base44.entities.ScheduleBlock.update(block.id, block),
+    mutationFn: (block) => {
+      // Create a clean data object without the ID or other potential metadata
+      const { id, ...data } = block;
+      return base44.entities.ScheduleBlock.update(id, data);
+    },
     onSuccess: () => queryClient.invalidateQueries(['scheduleBlocks']),
   });
   
