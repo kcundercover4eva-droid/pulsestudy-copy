@@ -42,14 +42,17 @@ export default function ScheduleBuilder() {
 
   useEffect(() => {
     if (dbBlocks) {
-      setLocalBlocks(dbBlocks.map(dbBlock => ({ 
-        id: dbBlock.id, 
-        ...dbBlock.data,
-        // Ensure numeric types to prevent visibility issues
-        day: Number(dbBlock.data.day),
-        start: Number(dbBlock.data.start),
-        end: Number(dbBlock.data.end)
-      })));
+      setLocalBlocks(dbBlocks.map(dbBlock => {
+        const data = dbBlock.data || {};
+        return { 
+          id: dbBlock.id, 
+          ...data,
+          // Ensure numeric types to prevent visibility issues
+          day: Number(data.day ?? 0),
+          start: Number(data.start ?? 0),
+          end: Number(data.end ?? 0)
+        };
+      }));
     }
   }, [dbBlocks]);
 
