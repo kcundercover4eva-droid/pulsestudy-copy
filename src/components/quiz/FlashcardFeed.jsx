@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { Check, X, RotateCcw, Brain, Layers } from 'lucide-react';
+import { Check, X, RotateCcw, Brain, Layers, Trophy } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -142,7 +142,7 @@ export default function FlashcardFeed() {
             animate={{ opacity: 1, scale: 1 }}
             className="absolute inset-0 flex flex-col items-center justify-center text-center glass rounded-3xl p-8"
           >
-            <div className="w-20 h-20 text-yellow-400 mb-4">🏆</div>
+            <Trophy className="w-20 h-20 text-yellow-400 mb-4" />
             <h3 className="text-3xl font-bold mb-2">Session Complete!</h3>
             <p className="text-white/60 mb-8">You reviewed {cards.length} cards.</p>
             <Button onClick={restart} className="bg-white text-black font-bold rounded-xl h-12 px-8">
