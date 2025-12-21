@@ -327,6 +327,7 @@ export default function ScheduleBuilder() {
             <Button onClick={handleAddBlock} className="w-full bg-cyan-500 text-black font-bold">Save Block</Button>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {/* Scheduler Grid */}
