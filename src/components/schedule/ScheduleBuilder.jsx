@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { Plus, GripHorizontal, Clock } from 'lucide-react';
+import { Plus, GripHorizontal, Clock, RotateCcw } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -110,6 +110,33 @@ export default function ScheduleBuilder() {
       title: newBlock.title || newBlock.type.charAt(0).toUpperCase() + newBlock.type.slice(1)
     });
     setIsDialogOpen(false);
+  };
+
+  const handleResetDefaults = async () => {
+    if (confirm('Reset schedule to defaults? This will remove all custom blocks.')) {
+        // Delete all existing blocks
+        if (dbBlocks?.length) {
+            await Promise.all(dbBlocks.map(b => base44.entities.ScheduleBlock.delete(b.id)));
+        }
+        
+        // Re-seed defaults
+        const seedBlocks = [];
+        const DAYS_INDICES = [0, 1, 2, 3, 4, 5, 6]; 
+
+        // School: Mon(0) - Fri(4) from 8:00 to 15:00
+        [0, 1, 2, 3, 4].forEach(day => {
+            seedBlocks.push({ day, start: 8, end: 15, type: 'school', title: 'School' });
+        });
+
+        // Sleep: Every day 23:00-24:00 AND 00:00-06:00
+        DAYS_INDICES.forEach(day => {
+            seedBlocks.push({ day, start: 23, end: 24, type: 'sleep', title: 'Sleep' });
+            seedBlocks.push({ day, start: 0, end: 6, type: 'sleep', title: 'Sleep' });
+        });
+
+        await base44.entities.ScheduleBlock.bulkCreate(seedBlocks);
+        queryClient.invalidateQueries(['scheduleBlocks']);
+    }
   };
 
   // --- DRAG & RESIZE STATE ---
@@ -229,12 +256,20 @@ export default function ScheduleBuilder() {
           <p className="text-white/40 text-sm">Drag to resize. Plan your perfect week.</p>
         </div>
         
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-cyan-500 hover:bg-cyan-600 text-black font-bold rounded-xl shadow-[0_0_15px_rgba(6,182,212,0.5)]">
-              <Plus className="w-4 h-4 mr-2" /> Add Block
+        <div className="flex gap-2">
+            <Button 
+                variant="outline" 
+                onClick={handleResetDefaults}
+                className="border-white/10 hover:bg-white/5 text-white/60 hover:text-white"
+            >
+                <RotateCcw className="w-4 h-4 mr-2" /> Reset
             </Button>
-          </DialogTrigger>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+                <Button className="bg-cyan-500 hover:bg-cyan-600 text-black font-bold rounded-xl shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+                <Plus className="w-4 h-4 mr-2" /> Add Block
+                </Button>
+            </DialogTrigger>
           <DialogContent className="glass bg-slate-900/90 text-white border-white/10">
             <DialogHeader>
               <DialogTitle>Add Schedule Block</DialogTitle>
