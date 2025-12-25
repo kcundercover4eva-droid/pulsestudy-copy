@@ -247,12 +247,16 @@ export default function ScheduleBuilder() {
       newStart = Math.round(newStart / SNAP_DECIMAL) * SNAP_DECIMAL;
       newEnd = Math.round(newEnd / SNAP_DECIMAL) * SNAP_DECIMAL;
 
+      // Get the block being dragged
+      const currentBlock = localBlocksRef.current.find(b => b.id === dragState.blockId);
+      const minDuration = currentBlock?.type === 'sleep' ? 5 : SNAP_DECIMAL;
+
       // Constraints
       if (dragState.action === 'resize-bottom') {
-        if (newEnd <= newStart + SNAP_DECIMAL) newEnd = newStart + SNAP_DECIMAL; // Min duration
+        if (newEnd <= newStart + minDuration) newEnd = newStart + minDuration;
         if (newEnd > 24) newEnd = 24;
       } else if (dragState.action === 'resize-top') {
-        if (newStart >= newEnd - SNAP_DECIMAL) newStart = newEnd - SNAP_DECIMAL;
+        if (newStart >= newEnd - minDuration) newStart = newEnd - minDuration;
         if (newStart < 0) newStart = 0;
       } else if (dragState.action === 'move') {
         const duration = newEnd - newStart;
@@ -481,7 +485,7 @@ export default function ScheduleBuilder() {
                     >
                       {/* Top Handle */}
                       <div 
-                        className="absolute top-0 left-0 right-0 h-4 cursor-ns-resize flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black/20 z-20"
+                        className="absolute top-0 left-0 right-0 h-6 cursor-ns-resize flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black/20 z-20"
                         onPointerDown={(e) => handlePointerDown(e, block, 'resize-top')}
                       >
                          <div className="w-8 h-1 rounded-full bg-white/70" />
@@ -523,7 +527,7 @@ export default function ScheduleBuilder() {
 
                       {/* Bottom Handle */}
                       <div 
-                        className="absolute bottom-0 left-0 right-0 h-4 cursor-ns-resize flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black/20 z-20"
+                        className="absolute bottom-0 left-0 right-0 h-6 cursor-ns-resize flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity bg-black/20 z-20"
                         onPointerDown={(e) => handlePointerDown(e, block, 'resize-bottom')}
                       >
                         <div className="w-8 h-1 rounded-full bg-white/70" />
