@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { Plus, GripHorizontal, Clock, RotateCcw } from 'lucide-react';
+import { Plus, GripHorizontal, Clock, RotateCcw, X } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
