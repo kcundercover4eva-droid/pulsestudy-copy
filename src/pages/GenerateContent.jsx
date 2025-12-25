@@ -234,17 +234,17 @@ Begin now. Use ONLY the text provided.`,
       // Update material status
       await base44.entities.StudyMaterial.update(material.id, {
         status: 'completed',
-        flashcardCount: flashcards.length,
-        notecardCount: notecards.length,
-        quizCount: quizzes.length,
+        flashcardCount: allFlashcards.length,
+        notecardCount: allNotecards.length,
+        quizCount: allQuizzes.length,
       });
 
       return {
         material,
         counts: {
-          flashcards: flashcards.length,
-          notecards: notecards.length,
-          quizzes: quizzes.length,
+          flashcards: allFlashcards.length,
+          notecards: allNotecards.length,
+          quizzes: allQuizzes.length,
         }
       };
     },
