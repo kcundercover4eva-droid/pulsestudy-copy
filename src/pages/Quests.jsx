@@ -12,7 +12,13 @@ import { toast } from 'sonner';
 
 export default function Quests() {
   const queryClient = useQueryClient();
-  const { userProfile, updateProfileMutation, awardEvolutionPoints, triggerBossMilestone } = useRewards();
+  const { userProfile, awardEvolutionPoints, triggerBossMilestone } = useRewards();
+
+  // Update profile mutation
+  const updateProfileMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.UserProfile.update(id, data),
+    onSuccess: () => queryClient.invalidateQueries(['userProfile']),
+  });
 
   // Fetch quests
   const { data: quests = [] } = useQuery({
