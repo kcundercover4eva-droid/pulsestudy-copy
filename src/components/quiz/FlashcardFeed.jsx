@@ -155,7 +155,7 @@ export default function FlashcardFeed() {
         {cards.length === 0 && (
            <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8 text-white/40">
              <Layers className="w-16 h-16 mb-4 opacity-50" />
-             <p>No flashcards yet.</p>
+             <p>Upload study material to generate flashcards</p>
            </div>
         )}
       </div>

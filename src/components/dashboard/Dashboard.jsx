@@ -365,20 +365,8 @@ export default function Dashboard() {
              {/* Recent Activity */}
              <div className="col-span-1 sm:col-span-2 glass-card p-6 rounded-3xl">
                 <h3 className="text-lg font-bold mb-4">Today's Schedule</h3>
-                <div className="space-y-4">
-                  {[
-                    { time: '14:00', label: 'Deep Work: Math', type: 'focus', duration: '45m' },
-                    { time: '15:00', label: 'History Quiz', type: 'quiz', duration: '15m' },
-                    { time: '16:00', label: 'Free Time', type: 'free', duration: '1h' },
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-4 group cursor-pointer">
-                      <div className="w-16 text-sm text-white/40 font-mono">{item.time}</div>
-                      <div className="flex-1 glass p-3 rounded-xl flex items-center justify-between border-l-4 border-l-cyan-400 hover:bg-white/5 transition-colors">
-                        <span className="font-medium">{item.label}</span>
-                        <span className="text-xs text-white/30 bg-white/5 px-2 py-1 rounded-md">{item.duration}</span>
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex items-center justify-center h-32 text-white/40">
+                  <p>Build your schedule in the Schedule tab</p>
                 </div>
              </div>
           </div>

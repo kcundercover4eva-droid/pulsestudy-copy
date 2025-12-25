@@ -4,11 +4,12 @@ import OnboardingWizard from '@/components/OnboardingWizard';
 import Dashboard from '@/components/dashboard/Dashboard';
 import FlashcardFeed from '@/components/quiz/FlashcardFeed';
 import ScheduleBuilder from '@/components/schedule/ScheduleBuilder';
-import { Calendar, Brain, LayoutDashboard, Home as HomeIcon } from 'lucide-react';
+import GenerateContent from './GenerateContent';
+import { Calendar, Brain, LayoutDashboard, Home as HomeIcon, Upload } from 'lucide-react';
 
 export default function Home() {
   const [view, setView] = useState('landing'); // landing, onboarding, app
-  const [appTab, setAppTab] = useState('dashboard'); // dashboard, quiz, schedule
+  const [appTab, setAppTab] = useState('dashboard'); // dashboard, quiz, schedule, generate
 
   if (view === 'landing') {
     return <LandingScreen onGetStarted={() => setView('onboarding')} />;
@@ -33,16 +34,25 @@ export default function Home() {
             <ScheduleBuilder />
           </div>
         )}
+        {appTab === 'generate' && <GenerateContent />}
       </main>
 
       {/* Bottom Nav */}
-      <div className="fixed bottom-0 left-0 right-0 h-20 glass border-t border-white/10 z-50 flex justify-around items-center px-6 backdrop-blur-xl bg-black/40">
+      <div className="fixed bottom-0 left-0 right-0 h-20 glass border-t border-white/10 z-50 flex justify-around items-center px-2 backdrop-blur-xl bg-black/40">
         <button 
           onClick={() => setAppTab('schedule')}
           className={`flex flex-col items-center gap-1 transition-all duration-300 ${appTab === 'schedule' ? 'text-cyan-400 scale-110' : 'text-white/40 hover:text-white/70'}`}
         >
-          <Calendar className="w-6 h-6" />
-          <span className="text-[10px] font-bold uppercase tracking-wider">Schedule</span>
+          <Calendar className="w-5 h-5" />
+          <span className="text-[9px] font-bold uppercase tracking-wider">Schedule</span>
+        </button>
+
+        <button 
+          onClick={() => setAppTab('generate')}
+          className={`flex flex-col items-center gap-1 transition-all duration-300 ${appTab === 'generate' ? 'text-cyan-400 scale-110' : 'text-white/40 hover:text-white/70'}`}
+        >
+          <Upload className="w-5 h-5" />
+          <span className="text-[9px] font-bold uppercase tracking-wider">Upload</span>
         </button>
 
         <button 
@@ -58,8 +68,8 @@ export default function Home() {
           onClick={() => setAppTab('quiz')}
           className={`flex flex-col items-center gap-1 transition-all duration-300 ${appTab === 'quiz' ? 'text-cyan-400 scale-110' : 'text-white/40 hover:text-white/70'}`}
         >
-          <Brain className="w-6 h-6" />
-          <span className="text-[10px] font-bold uppercase tracking-wider">Quiz</span>
+          <Brain className="w-5 h-5" />
+          <span className="text-[9px] font-bold uppercase tracking-wider">Quiz</span>
         </button>
       </div>
     </div>
