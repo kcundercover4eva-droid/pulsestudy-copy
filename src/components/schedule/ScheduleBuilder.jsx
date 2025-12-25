@@ -69,20 +69,15 @@ export default function ScheduleBuilder() {
   useEffect(() => {
     if (dbBlocks && Array.isArray(dbBlocks)) {
       console.log('Loaded blocks:', dbBlocks);
-      setLocalBlocks(dbBlocks.map(dbBlock => {
-        const data = dbBlock.data || {};
-        // Fallback for potentially missing values
-        return { 
-          id: dbBlock.id, 
-          ...data,
-          day: typeof data.day === 'number' ? data.day : Number(data.day ?? 0),
-          start: typeof data.start === 'number' ? data.start : Number(data.start ?? 16),
-          end: typeof data.end === 'number' ? data.end : Number(data.end ?? 17),
-          type: data.type || 'study',
-          title: data.title || '',
-          color: data.color || '#10b981'
-        };
-      }));
+      setLocalBlocks(dbBlocks.map(dbBlock => ({
+        id: dbBlock.id,
+        day: Number(dbBlock.day),
+        start: Number(dbBlock.start),
+        end: Number(dbBlock.end),
+        type: dbBlock.type || 'study',
+        title: dbBlock.title || '',
+        color: dbBlock.color || '#10b981'
+      })));
     }
   }, [dbBlocks]);
 
