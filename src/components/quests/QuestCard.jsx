@@ -4,6 +4,8 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, Clock, Zap, Coins, Sparkles, Target } from 'lucide-react';
+import { soundManager } from '../../utils/soundManager';
+import { haptics } from '../../utils/haptics';
 
 const categoryIcons = {
   study: '📚',
@@ -109,7 +111,11 @@ export default function QuestCard({ quest, onClaim }) {
           {/* Action */}
           {isComplete && !quest.isClaimed && (
             <Button
-              onClick={() => onClaim(quest)}
+              onClick={() => {
+                soundManager.play('questComplete');
+                haptics.success();
+                onClaim(quest);
+              }}
               className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold"
             >
               🎁 Claim Rewards

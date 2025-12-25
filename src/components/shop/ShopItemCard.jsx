@@ -4,6 +4,8 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Coins, Lock, Clock, Sparkles, Check } from 'lucide-react';
+import { soundManager } from '../../utils/soundManager';
+import { haptics } from '../../utils/haptics';
 
 const rarityConfig = {
   common: { bg: 'from-slate-600 to-slate-800', border: 'border-slate-500', glow: 'shadow-slate-500/30' },
@@ -131,7 +133,11 @@ export default function ShopItemCard({ item, userCurrency, userLevel, isOwned, o
             </Button>
           ) : (
             <Button
-              onClick={() => onPurchase(item)}
+              onClick={() => {
+                soundManager.play('purchase');
+                haptics.medium();
+                onPurchase(item);
+              }}
               disabled={isPurchasing}
               className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold"
             >

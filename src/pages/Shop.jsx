@@ -9,6 +9,7 @@ import { Store, Coins, Sparkles, Search, TrendingUp } from 'lucide-react';
 import ShopItemCard from '../components/shop/ShopItemCard';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
+import { soundManager } from '../utils/soundManager';
 
 export default function Shop() {
   const queryClient = useQueryClient();
@@ -88,10 +89,12 @@ export default function Shop() {
       queryClient.invalidateQueries(['inventory']);
       queryClient.invalidateQueries(['shopItems']);
       
+      soundManager.play('purchase');
       confetti({
         particleCount: 100,
         spread: 70,
         origin: { y: 0.6 },
+        colors: ['#fbbf24', '#f59e0b', '#8b5cf6'],
       });
       
       toast.success(`${item.name} purchased! 🎉`);
