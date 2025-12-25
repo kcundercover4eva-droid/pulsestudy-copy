@@ -35,9 +35,11 @@ export default function ScheduleBuilder() {
 
   const [localBlocks, setLocalBlocks] = useState([]);
   const [isCreationMode, setIsCreationMode] = useState(false);
+  const [isEraseMode, setIsEraseMode] = useState(false);
   const [is12Hour, setIs12Hour] = useState(false);
   const [editingBlockId, setEditingBlockId] = useState(null);
   const [editingTitle, setEditingTitle] = useState('');
+  const [blockToDelete, setBlockToDelete] = useState(null);
 
   // Seeding Default Blocks - School 8am-3pm Mon-Fri, Sleep 10pm-6am all days
   useEffect(() => {
@@ -104,6 +106,11 @@ export default function ScheduleBuilder() {
     onSuccess: () => queryClient.invalidateQueries(['scheduleBlocks']),
   });
 
+  const deleteBlockMutation = useMutation({
+    mutationFn: (blockId) => base44.entities.ScheduleBlock.delete(blockId),
+    onSuccess: () => queryClient.invalidateQueries(['scheduleBlocks']),
+  });
+
   // --- NEW BLOCK FORM ---
   const [newBlock, setNewBlock] = useState({ day: 0, start: 16, duration: 1, type: 'study', title: '', color: '#10b981' });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -121,30 +128,11 @@ export default function ScheduleBuilder() {
     setIsCreationMode(false);
   };
 
-  const handleResetDefaults = async () => {
-    if (confirm('Reset schedule to defaults? This will remove all custom blocks.')) {
-        // Delete all existing blocks
-        if (dbBlocks?.length) {
-            await Promise.all(dbBlocks.map(b => base44.entities.ScheduleBlock.delete(b.id)));
-        }
-        
-        // Re-seed defaults
-        const seedBlocks = [];
-        const DAYS_INDICES = [0, 1, 2, 3, 4, 5, 6]; 
-
-        // School: Mon(0) - Fri(4) from 8:00 to 15:00 (3pm)
-        [0, 1, 2, 3, 4].forEach(day => {
-            seedBlocks.push({ day, start: 8, end: 15, type: 'school', title: 'School', color: '#3b82f6' });
-        });
-
-        // Sleep: Every day 22:00-24:00 (10pm-midnight) AND 00:00-06:00
-        DAYS_INDICES.forEach(day => {
-            seedBlocks.push({ day, start: 22, end: 24, type: 'sleep', title: 'Sleep', color: '#8b5cf6' });
-            seedBlocks.push({ day, start: 0, end: 6, type: 'sleep', title: 'Sleep', color: '#8b5cf6' });
-        });
-
-        await base44.entities.ScheduleBlock.bulkCreate(seedBlocks);
-        queryClient.invalidateQueries(['scheduleBlocks']);
+  const handleDeleteBlock = async () => {
+    if (blockToDelete) {
+      await deleteBlockMutation.mutateAsync(blockToDelete.id);
+      setBlockToDelete(null);
+      setIsEraseMode(false);
     }
   };
 
@@ -192,6 +180,14 @@ export default function ScheduleBuilder() {
   };
 
   const handlePointerDown = (e, block, action) => {
+    if (isEraseMode && action === 'move') {
+      // In erase mode, clicking the block triggers deletion
+      e.preventDefault();
+      e.stopPropagation();
+      setBlockToDelete(block);
+      return;
+    }
+
     e.preventDefault();
     e.stopPropagation(); // Prevent triggering grid creation
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -358,13 +354,19 @@ export default function ScheduleBuilder() {
             </label>
             <Button 
                 variant="outline" 
-                onClick={handleResetDefaults}
-                className="border-white/10 hover:bg-white/5 text-white/60 hover:text-white"
+                onClick={() => {
+                  setIsEraseMode(!isEraseMode);
+                  setIsCreationMode(false);
+                }}
+                className={`border-white/10 hover:bg-white/5 ${isEraseMode ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'text-white/60 hover:text-white'}`}
             >
-                <RotateCcw className="w-4 h-4 mr-2" /> Reset
+                <X className="w-4 h-4 mr-2" /> {isEraseMode ? 'Cancel Erase' : 'Erase Mode'}
             </Button>
             <Button 
-              onClick={() => setIsCreationMode(!isCreationMode)}
+              onClick={() => {
+                setIsCreationMode(!isCreationMode);
+                setIsEraseMode(false);
+              }}
               className={`font-bold rounded-xl ${isCreationMode ? 'bg-orange-500 hover:bg-orange-600' : 'bg-cyan-500 hover:bg-cyan-600'} text-black shadow-[0_0_15px_rgba(6,182,212,0.5)]`}
             >
               <Plus className="w-4 h-4 mr-2" /> {isCreationMode ? 'Cancel' : 'Add Block'}
@@ -500,7 +502,7 @@ export default function ScheduleBuilder() {
                         scale: 1,
                         zIndex: dragState?.blockId === block.id ? 50 : 1
                       }}
-                      className={`absolute left-1 right-1 rounded-xl border-2 overflow-hidden select-none touch-none ${dragState?.blockId === block.id ? 'shadow-[0_0_20px_rgba(255,255,255,0.2)] ring-2 ring-white/50' : ''}`}
+                      className={`absolute left-1 right-1 rounded-xl border-2 overflow-hidden select-none touch-none ${dragState?.blockId === block.id ? 'shadow-[0_0_20px_rgba(255,255,255,0.2)] ring-2 ring-white/50' : ''} ${isEraseMode ? 'cursor-pointer hover:ring-2 hover:ring-red-500 hover:opacity-80' : ''}`}
                       style={{
                         top: `${block.start * PIXELS_PER_HOUR}px`,
                         height: `${(block.end - block.start) * PIXELS_PER_HOUR}px`,
@@ -577,6 +579,35 @@ export default function ScheduleBuilder() {
           </div>
         </div>
       </div>
-    </div>
-  );
-}
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={!!blockToDelete} onOpenChange={() => setBlockToDelete(null)}>
+        <DialogContent className="glass bg-slate-900/90 text-white border-white/10">
+          <DialogHeader>
+            <DialogTitle>Delete Block?</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-white/80">
+              Are you sure you want to delete "<span className="font-bold">{blockToDelete?.title}</span>"?
+            </p>
+          </div>
+          <div className="flex gap-3 justify-end">
+            <Button 
+              variant="outline" 
+              onClick={() => setBlockToDelete(null)}
+              className="border-white/10 hover:bg-white/5"
+            >
+              No
+            </Button>
+            <Button 
+              onClick={handleDeleteBlock}
+              className="bg-red-500 hover:bg-red-600 text-white"
+            >
+              Yes, Delete
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      </div>
+      );
+      }
