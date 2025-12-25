@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Zap } from 'lucide-react';
-import { soundManager } from '../../utils/soundManager';
+import { soundManager } from '../utils/soundManager';
 import confetti from 'canvas-confetti';
 
 export default function LevelUpAnimation({ show, level, onComplete }) {

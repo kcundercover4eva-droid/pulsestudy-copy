@@ -9,7 +9,7 @@ import { Store, Coins, Sparkles, Search, TrendingUp } from 'lucide-react';
 import ShopItemCard from '../components/shop/ShopItemCard';
 import { toast } from 'sonner';
 import confetti from 'canvas-confetti';
-import { soundManager } from '../utils/soundManager';
+import { soundManager } from '../components/utils/soundManager';
 
 export default function Shop() {
   const queryClient = useQueryClient();

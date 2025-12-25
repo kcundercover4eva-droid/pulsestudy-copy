@@ -4,8 +4,8 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Coins, Lock, Clock, Sparkles, Check } from 'lucide-react';
-import { soundManager } from '../../utils/soundManager';
-import { haptics } from '../../utils/haptics';
+import { soundManager } from '../utils/soundManager';
+import { haptics } from '../utils/haptics';
 
 const rarityConfig = {
   common: { bg: 'from-slate-600 to-slate-800', border: 'border-slate-500', glow: 'shadow-slate-500/30' },
