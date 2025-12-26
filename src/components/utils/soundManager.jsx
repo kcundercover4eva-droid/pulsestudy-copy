@@ -47,10 +47,10 @@ export const soundManager = new SoundManager();
 
 // Ambient sound URLs (loopable ambient tracks)
 const ambientSounds = {
-  rain: 'https://assets.mixkit.co/active_storage/sfx/2393/2393.wav',
-  cafe: 'https://assets.mixkit.co/active_storage/sfx/2523/2523.wav', // Smooth mellow jazz
-  whitenoise: 'https://assets.mixkit.co/active_storage/sfx/2395/2395.wav',
-  synth: 'https://assets.mixkit.co/active_storage/sfx/2466/2466.wav',
+  rain: 'https://cdn.pixabay.com/audio/2022/05/13/audio_2f1c926891.mp3',
+  cafe: 'https://cdn.pixabay.com/audio/2022/03/10/audio_4e851f6d64.mp3',
+  whitenoise: 'https://cdn.pixabay.com/audio/2022/03/12/audio_db517ed5fc.mp3',
+  synth: 'https://cdn.pixabay.com/audio/2023/10/30/audio_c39434dd72.mp3',
 };
 
 // Ambient sound management
@@ -71,33 +71,27 @@ export const playAmbient = (ambientType) => {
   try {
     ambientAudio = new Audio(ambientSounds[ambientType]);
     ambientAudio.loop = true;
-    ambientAudio.volume = 0.4;
+    ambientAudio.volume = 0.3;
+    ambientAudio.crossOrigin = "anonymous";
     
-    // Better error handling
+    // Load the audio
+    ambientAudio.load();
+    
     ambientAudio.addEventListener('error', (e) => {
-      console.error('Audio load error:', e, ambientSounds[ambientType]);
+      console.error('Audio load error:', e.target.error, ambientSounds[ambientType]);
     });
     
-    ambientAudio.addEventListener('canplaythrough', () => {
-      console.log('Audio loaded successfully:', ambientType);
-    });
-    
-    // Play with better error handling
-    const playPromise = ambientAudio.play();
-    if (playPromise !== undefined) {
-      playPromise
+    ambientAudio.addEventListener('loadeddata', () => {
+      console.log('Audio loaded, attempting play:', ambientType);
+      ambientAudio.play()
         .then(() => {
           console.log('Ambient sound playing:', ambientType);
           currentAmbient = ambientType;
         })
         .catch(error => {
-          console.error('Play failed:', error.message);
-          // If autoplay is blocked, user needs to interact first
-          if (error.name === 'NotAllowedError') {
-            console.warn('Autoplay blocked. User interaction required.');
-          }
+          console.error('Play failed:', error);
         });
-    }
+    });
   } catch (error) {
     console.error('Failed to create ambient sound:', error);
   }
