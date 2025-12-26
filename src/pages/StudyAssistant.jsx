@@ -26,7 +26,13 @@ export default function StudyAssistant() {
     if (location.state?.initialQuestion) {
       const { question, subject: initialSubject, topic } = location.state;
       setSubject(initialSubject || 'Math');
-      setInput(`I need help with this problem: ${question}${topic ? ` (Topic: ${topic})` : ''}`);
+      // Auto-send the question immediately
+      const questionText = `I need help with this problem: ${question}${topic ? ` (Topic: ${topic})` : ''}`;
+      setInput(questionText);
+      // Send automatically after a brief delay
+      setTimeout(() => {
+        sendMessage(questionText);
+      }, 100);
     }
   }, [location.state]);
 
@@ -63,9 +69,9 @@ export default function StudyAssistant() {
 🎯 YOUR TEACHING FLOW:
 
 **STAGE 1: CLARIFY & DIAGNOSE** (First response or new topics)
-• Ask 1-2 questions to understand what they know and where they're stuck
+• Ask only 1 focused question to understand what they know and where they're stuck
 • Examples: "What part feels confusing?", "How would you describe this problem in your own words?"
-• Goal: Understand their mental model
+• Goal: Understand their mental model without overwhelming them
 
 **STAGE 2: GUIDED REASONING** (Socratic Mode - Default)
 • Ask targeted questions that move them forward step-by-step
@@ -154,7 +160,9 @@ Respond as their coach and tutor:`;
               <Sparkles className="w-5 h-5 text-purple-400" />
               Study Assistant
             </h1>
-            <p className="text-white/60 text-sm">Your AI tutor</p>
+            <p className="text-white/60 text-sm">
+              {location.state?.topic ? `Topic: ${location.state.topic}` : 'Your AI tutor'}
+            </p>
           </div>
         </div>
         <Select value={subject} onValueChange={setSubject}>

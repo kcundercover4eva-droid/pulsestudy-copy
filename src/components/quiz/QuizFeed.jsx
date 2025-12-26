@@ -222,7 +222,13 @@ export default function QuizFeed({ selectedDeck = null, onBack = null }) {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={handleGetHelp}
+                  onClick={() => navigate(createPageUrl('StudyAssistant'), {
+                    state: {
+                      initialQuestion: currentQuiz.question,
+                      subject: currentQuiz.subject || 'General',
+                      topic: selectedDeck?.title
+                    }
+                  })}
                   className="border-purple-500/50 text-purple-400 hover:bg-purple-500/20"
                 >
                   <MessageSquare className="w-3 h-3 mr-1" />
