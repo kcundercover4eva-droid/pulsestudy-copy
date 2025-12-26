@@ -105,7 +105,9 @@ export default function DeckManager({ onSelectDeck, onBack }) {
     );
   }
 
-  const validDecks = decks?.filter(d => d.flashcardCount > 0) || [];
+  // Temporarily show all decks for debugging
+  const validDecks = decks || [];
+  console.log('Valid decks after filter:', validDecks);
 
   return (
     <div className="h-full flex flex-col p-6">

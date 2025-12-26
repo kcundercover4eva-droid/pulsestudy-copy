@@ -166,13 +166,15 @@ Begin now. Use ONLY the text provided.`,
       response.topics?.forEach(topic => {
         // Create flashcards from this topic
         topic.flashcards?.forEach(fc => {
-          allFlashcards.push({
+          const flashcard = {
             question: fc.front,
             answer: fc.back,
             subject,
             masteryLevel: 0,
             sourceId: material.id,
-          });
+          };
+          console.log('Creating flashcard with sourceId:', flashcard.sourceId, 'Material ID:', material.id);
+          allFlashcards.push(flashcard);
         });
 
         // Create notecards from this topic
