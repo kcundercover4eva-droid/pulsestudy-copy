@@ -24,21 +24,10 @@ export default function GenerateContent() {
     },
   });
 
-
-
   const generateMutation = useMutation({
     mutationFn: async ({ title, subject, file }) => {
       // Upload file
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
-
-      // Auto-create deck for this material
-      const deck = await base44.entities.Deck.create({
-        name: title,
-        description: `Auto-generated from uploaded material`,
-        subject,
-        color: '#10b981',
-        cardCount: 0
-      });
 
       // Create material record
       const material = await base44.entities.StudyMaterial.create({
@@ -181,7 +170,6 @@ Begin now. Use ONLY the text provided.`,
             question: fc.front,
             answer: fc.back,
             subject,
-            deckId: deck.id,
             masteryLevel: 0,
           });
         });
@@ -233,11 +221,6 @@ Begin now. Use ONLY the text provided.`,
       // Bulk create all content
       if (allFlashcards.length > 0) {
         await base44.entities.Flashcard.bulkCreate(allFlashcards);
-
-        // Update deck card count
-        await base44.entities.Deck.update(deck.id, {
-          cardCount: allFlashcards.length
-        });
       }
 
       if (allNotecards.length > 0) {
@@ -268,8 +251,7 @@ Begin now. Use ONLY the text provided.`,
     onSuccess: (data) => {
       queryClient.invalidateQueries(['studyMaterials']);
       queryClient.invalidateQueries(['flashcards']);
-      queryClient.invalidateQueries(['decks']);
-      toast.success(`Generated ${data.counts.flashcards} flashcards, ${data.counts.notecards} notecards, and ${data.counts.quizzes} quizzes in a new deck!`);
+      toast.success(`Generated ${data.counts.flashcards} flashcards, ${data.counts.notecards} notecards, and ${data.counts.quizzes} quizzes!`);
       setTitle('');
       setFile(null);
       setSubject('other');

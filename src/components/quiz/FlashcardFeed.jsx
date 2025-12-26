@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { Check, X, RotateCcw, Brain, Layers, Trophy, ArrowLeft } from 'lucide-react';
+import { Check, X, RotateCcw, Brain, Layers, Trophy } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -93,19 +93,13 @@ const Card = ({ data, onSwipe, index }) => {
   );
 };
 
-export default function FlashcardFeed({ deckId, deckName, onBack }) {
+export default function FlashcardFeed() {
   const queryClient = useQueryClient();
   const [swipedCards, setSwipedCards] = useState(0);
 
   const { data: cards, isLoading } = useQuery({
-    queryKey: ['flashcards', deckId],
-    queryFn: async () => {
-      const user = await base44.auth.me();
-      if (deckId) {
-        return base44.entities.Flashcard.filter({ deckId, created_by: user.email });
-      }
-      return base44.entities.Flashcard.filter({ created_by: user.email });
-    },
+    queryKey: ['flashcards'],
+    queryFn: () => base44.entities.Flashcard.list(),
     initialData: []
   });
 
@@ -138,15 +132,9 @@ export default function FlashcardFeed({ deckId, deckName, onBack }) {
     <div className="h-[calc(100vh-100px)] w-full max-w-md mx-auto relative flex flex-col">
       <div className="flex justify-between items-center mb-6 px-4">
         <div>
-          {onBack && (
-            <Button variant="ghost" onClick={onBack} className="text-white/60 hover:text-white mb-2 -ml-2">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Decks
-            </Button>
-          )}
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <Brain className="w-6 h-6 text-purple-400" />
-            {deckName || 'Study Mode'}
+            Study Mode
           </h2>
           <p className="text-white/40 text-sm">Swipe left to review later, right if you know it.</p>
         </div>

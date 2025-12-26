@@ -5,17 +5,9 @@ import { Brain, Layers, FileText, ArrowLeft } from 'lucide-react';
 import QuizFeed from './QuizFeed';
 import FlashcardFeed from './FlashcardFeed';
 import NotecardFeed from './NotecardFeed';
-import DeckSelector from './DeckSelector';
-import DeckManager from './DeckManager';
 
 export default function StudyHub() {
   const [selectedMode, setSelectedMode] = useState(null);
-  const [selectedDeck, setSelectedDeck] = useState(null);
-  const [showDeckManager, setShowDeckManager] = useState(false);
-
-  if (showDeckManager) {
-    return <DeckManager onBack={() => setShowDeckManager(false)} />;
-  }
 
   if (selectedMode === 'quiz') {
     return (
@@ -33,20 +25,17 @@ export default function StudyHub() {
   }
 
   if (selectedMode === 'flashcards') {
-    if (!selectedDeck) {
-      return (
-        <DeckSelector
-          onSelectDeck={(deck) => setSelectedDeck(deck)}
-          onManageDecks={() => setShowDeckManager(true)}
-        />
-      );
-    }
     return (
-      <FlashcardFeed
-        deckId={selectedDeck.id}
-        deckName={selectedDeck.name}
-        onBack={() => setSelectedDeck(null)}
-      />
+      <div className="h-full">
+        <button
+          onClick={() => setSelectedMode(null)}
+          className="absolute top-4 left-4 z-10 flex items-center gap-2 text-white/60 hover:text-white transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>Back</span>
+        </button>
+        <FlashcardFeed />
+      </div>
     );
   }
 
@@ -95,7 +84,7 @@ export default function StudyHub() {
           <Card className="bg-gradient-to-br from-blue-600 to-blue-800 border-2 border-blue-500 p-8 text-center cursor-pointer hover:shadow-2xl hover:shadow-blue-500/50 transition-all">
             <Layers className="w-16 h-16 text-white mx-auto mb-4" />
             <h3 className="text-2xl font-bold text-white mb-2">Flashcards</h3>
-            <p className="text-white/80 text-sm">Study by deck - organized learning</p>
+            <p className="text-white/80 text-sm">Review with swipeable flashcards</p>
           </Card>
         </motion.button>
 
