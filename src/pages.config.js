@@ -5,6 +5,7 @@ import Profile from './pages/Profile';
 import Quests from './pages/Quests';
 import Shop from './pages/Shop';
 import StudyAssistant from './pages/StudyAssistant';
+import PomodoroTimer from './pages/PomodoroTimer';
 
 
 export const PAGES = {
@@ -15,6 +16,7 @@ export const PAGES = {
     "Quests": Quests,
     "Shop": Shop,
     "StudyAssistant": StudyAssistant,
+    "PomodoroTimer": PomodoroTimer,
 }
 
 export const pagesConfig = {
