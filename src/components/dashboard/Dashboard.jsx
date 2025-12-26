@@ -47,6 +47,18 @@ const FocusTimer = ({ accentColor }) => {
   const [isActive, setIsActive] = useState(false);
   const [timeLeft, setTimeLeft] = useState(25 * 60); // 25 mins
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [motivationIndex, setMotivationIndex] = useState(0);
+
+  const motivationalMessages = [
+    "You're in the zone! Keep crushing it! 🔥",
+    "Deep work = Deep results 💪",
+    "Your future self will thank you 🌟",
+    "Focus now, flex later 💯",
+    "Champions are made in moments like these 🏆",
+    "You're unstoppable right now! ⚡",
+    "This is where magic happens ✨",
+    "Keep going! You're doing amazing! 🚀"
+  ];
 
   useEffect(() => {
     let interval = null;
@@ -55,10 +67,20 @@ const FocusTimer = ({ accentColor }) => {
     } else if (timeLeft === 0) {
       setIsActive(false);
       setIsFullScreen(false);
-      confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 } });
+      confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 } });
+      setTimeout(() => confetti({ particleCount: 150, spread: 100, origin: { y: 0.4 } }), 200);
     }
     return () => clearInterval(interval);
   }, [isActive, timeLeft]);
+
+  // Rotate motivational messages every 2 minutes
+  useEffect(() => {
+    if (!isActive) return;
+    const messageInterval = setInterval(() => {
+      setMotivationIndex(prev => (prev + 1) % motivationalMessages.length);
+    }, 120000); // 2 minutes
+    return () => clearInterval(messageInterval);
+  }, [isActive]);
 
   const toggleTimer = () => {
     if (!isActive) {
@@ -92,6 +114,13 @@ const FocusTimer = ({ accentColor }) => {
 
   // Full Screen Overlay
   if (isFullScreen) {
+    const progressPercent = ((25 * 60 - timeLeft) / (25 * 60)) * 100;
+    const milestone = progressPercent > 80 ? "Almost there! Final push! 🎯" 
+                    : progressPercent > 60 ? "You're crushing it! Keep going! 💪"
+                    : progressPercent > 40 ? "Halfway there! Stay strong! 🔥"
+                    : progressPercent > 20 ? "Great start! Momentum building! ⚡"
+                    : "Let's do this! 🚀";
+
     return (
       <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center text-center p-8">
         <motion.div 
@@ -99,18 +128,48 @@ const FocusTimer = ({ accentColor }) => {
            animate={{ opacity: 1, scale: 1 }}
            className="w-full max-w-md"
         >
-           <div className="mb-12">
-             <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-${c}-500/10 text-${c}-400 mb-6 border border-${c}-500/20`}>
+           <div className="mb-8">
+             <motion.div 
+               initial={{ scale: 0.9 }}
+               animate={{ scale: 1 }}
+               transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+               className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-${c}-500/10 text-${c}-400 mb-6 border border-${c}-500/20`}
+             >
                <Shield className="w-4 h-4" />
                <span className="font-bold tracking-wider text-sm">FOCUS SHIELD ACTIVE</span>
-             </div>
+             </motion.div>
              <h2 className="text-4xl font-bold text-white mb-2">Stay in the zone.</h2>
-             <p className="text-white/40">Instagram, TikTok, and Snap are blocked.</p>
+             <p className="text-white/40 mb-4">Distractions are locked out. You got this! 🔒</p>
+             
+             {/* Motivational Message */}
+             <motion.div
+               key={motivationIndex}
+               initial={{ opacity: 0, y: 10 }}
+               animate={{ opacity: 1, y: 0 }}
+               exit={{ opacity: 0, y: -10 }}
+               className="text-lg font-semibold text-white/80 mb-2"
+             >
+               {motivationalMessages[motivationIndex]}
+             </motion.div>
+             
+             {/* Milestone Message */}
+             <motion.p
+               key={milestone}
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               className={`text-${c}-400 font-bold`}
+             >
+               {milestone}
+             </motion.p>
            </div>
 
            {/* Large Timer */}
-           <div className="relative w-80 h-80 mx-auto mb-12 flex items-center justify-center">
-              <div className={`absolute inset-0 rounded-full border-4 border-${c}-500/10 animate-pulse-slow`} />
+           <div className="relative w-80 h-80 mx-auto mb-8 flex items-center justify-center">
+              <motion.div 
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className={`absolute inset-0 rounded-full border-4 border-${c}-500/10`} 
+              />
               <svg className="absolute inset-0 w-full h-full transform -rotate-90">
                 <circle cx="160" cy="160" r="140" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-white/5" />
                 <circle 
@@ -118,14 +177,26 @@ const FocusTimer = ({ accentColor }) => {
                   stroke="currentColor" strokeWidth="12" 
                   fill="transparent" 
                   strokeDasharray={2 * Math.PI * 140}
-                  strokeDashoffset={2 * Math.PI * 140 * (1 - progress / 100)}
-                  className={`text-${c}-400 transition-all duration-1000 ease-linear drop-shadow-[0_0_15px_rgba(74,222,128,0.5)]`}
+                  strokeDashoffset={2 * Math.PI * 140 * (1 - progressPercent / 100)}
+                  className={`text-${c}-400 transition-all duration-1000 ease-linear drop-shadow-[0_0_20px_currentColor]`}
                   strokeLinecap="round"
                 />
               </svg>
-              <div className="text-7xl font-black tabular-nums tracking-tighter text-white">
-                {formatTime(timeLeft)}
+              <div className="flex flex-col items-center">
+                <div className="text-7xl font-black tabular-nums tracking-tighter text-white">
+                  {formatTime(timeLeft)}
+                </div>
+                <div className="text-sm text-white/40 mt-2 font-mono">
+                  {Math.round(progressPercent)}% Complete
+                </div>
               </div>
+           </div>
+           
+           {/* Focus Tips Reminder */}
+           <div className="glass-card rounded-2xl p-4 mb-8 max-w-sm mx-auto">
+             <p className="text-xs text-white/60 leading-relaxed">
+               💡 <span className="font-semibold">Pro tip:</span> If you need a break, check social media AFTER this session. You're building willpower! 💪
+             </p>
            </div>
 
            <div className="flex flex-col gap-4">
@@ -137,10 +208,15 @@ const FocusTimer = ({ accentColor }) => {
                Minimize (Keep Running)
              </Button>
              <Button 
-               onClick={() => { setIsActive(false); setIsFullScreen(false); }}
+               onClick={() => { 
+                 if (window.confirm("Are you sure? Giving up will break your focus streak and you won't earn points for this session!")) {
+                   setIsActive(false); 
+                   setIsFullScreen(false); 
+                 }
+               }}
                className="h-14 rounded-2xl bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/20"
              >
-               Give Up (Reset Streak)
+               ⚠️ Give Up (Lose Points)
              </Button>
            </div>
         </motion.div>
