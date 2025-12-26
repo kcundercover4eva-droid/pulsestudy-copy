@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { Check, X, RotateCcw, Brain, Layers, Trophy, ArrowLeft } from 'lucide-react';
+import { Check, X, RotateCcw, Brain, Layers, Trophy, ArrowLeft, Star, AlertCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 // Card Component
 const Card = ({ data, onSwipe, index }) => {
@@ -69,22 +70,53 @@ const Card = ({ data, onSwipe, index }) => {
             WebkitBackfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)'
           }}
+          onClick={(e) => e.stopPropagation()}
         >
           <div className="flex-1 flex flex-col items-center justify-center">
             <div className="text-xs uppercase tracking-widest text-green-400 mb-4 font-bold">Definition</div>
             <h3 className="text-2xl font-medium leading-relaxed text-white/90 px-4">{data.answer}</h3>
           </div>
-          
-          <div className="flex justify-center gap-12 text-sm font-bold pb-4">
-            <div className="flex flex-col items-center text-red-400">
-              <X className="w-6 h-6 mb-1" />
-              <span>Need Review</span>
-              <span className="text-[10px] opacity-50">(Swipe Left)</span>
+
+          <div className="space-y-4 pb-4">
+            <div className="flex justify-center gap-12 text-sm font-bold">
+              <div className="flex flex-col items-center text-red-400">
+                <X className="w-6 h-6 mb-1" />
+                <span>Need Review</span>
+                <span className="text-[10px] opacity-50">(Swipe Left)</span>
+              </div>
+              <div className="flex flex-col items-center text-green-400">
+                <Check className="w-6 h-6 mb-1" />
+                <span>I Know This</span>
+                <span className="text-[10px] opacity-50">(Swipe Right)</span>
+              </div>
             </div>
-            <div className="flex flex-col items-center text-green-400">
-              <Check className="w-6 h-6 mb-1" />
-              <span>I Know This</span>
-              <span className="text-[10px] opacity-50">(Swipe Right)</span>
+
+            {/* Quick Action Buttons */}
+            <div className="flex gap-2 justify-center">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  markDifficult(data);
+                }}
+                className="border-orange-500/50 text-orange-400 hover:bg-orange-500/20"
+              >
+                <AlertCircle className="w-3 h-3 mr-1" />
+                Mark Difficult
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  markMastered(data);
+                }}
+                className="border-yellow-500/50 text-yellow-400 hover:bg-yellow-500/20"
+              >
+                <Star className="w-3 h-3 mr-1" />
+                Mark Mastered
+              </Button>
             </div>
           </div>
         </div>
@@ -96,8 +128,9 @@ const Card = ({ data, onSwipe, index }) => {
 export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
   const queryClient = useQueryClient();
   const [swipedCards, setSwipedCards] = useState(0);
+  const [filterMode, setFilterMode] = useState('all'); // 'all', 'difficult', 'mastered'
 
-  const { data: cards, isLoading } = useQuery({
+  const { data: allCards, isLoading } = useQuery({
     queryKey: ['flashcards', selectedDeck?.id],
     queryFn: async () => {
       const user = await base44.auth.me();
@@ -107,6 +140,24 @@ export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
       return await base44.entities.Flashcard.filter({ created_by: user.email });
     },
     initialData: []
+  });
+
+  // Filter cards based on mastery level
+  const cards = React.useMemo(() => {
+    if (filterMode === 'difficult') {
+      return allCards.filter(card => (card.masteryLevel || 0) <= 1);
+    } else if (filterMode === 'mastered') {
+      return allCards.filter(card => (card.masteryLevel || 0) >= 4);
+    }
+    return allCards;
+  }, [allCards, filterMode]);
+
+  const updateMasteryMutation = useMutation({
+    mutationFn: ({ cardId, masteryLevel }) => 
+      base44.entities.Flashcard.update(cardId, { masteryLevel }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['flashcards']);
+    }
   });
 
   const [activeCards, setActiveCards] = useState([]);
@@ -125,11 +176,35 @@ export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
   const handleSwipe = (direction) => {
     const currentCard = activeCards[0];
     
-    // In a real app, update mastery level here
-    // direction === 'right' ? mastery++ : mastery--
+    // Update mastery level based on swipe
+    const currentMastery = currentCard.masteryLevel || 0;
+    const newMastery = direction === 'right' 
+      ? Math.min(5, currentMastery + 1)
+      : Math.max(0, currentMastery - 1);
+    
+    updateMasteryMutation.mutate({
+      cardId: currentCard.id,
+      masteryLevel: newMastery
+    });
 
     setActiveCards(prev => prev.slice(1));
     setSwipedCards(prev => prev + 1);
+  };
+
+  const markDifficult = (card) => {
+    updateMasteryMutation.mutate({
+      cardId: card.id,
+      masteryLevel: 0
+    });
+    toast.success('Marked as difficult - will appear more often');
+  };
+
+  const markMastered = (card) => {
+    updateMasteryMutation.mutate({
+      cardId: card.id,
+      masteryLevel: 5
+    });
+    toast.success('Marked as mastered!');
   };
 
   const restart = () => {
@@ -141,14 +216,14 @@ export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
 
   return (
     <div className="h-[calc(100vh-100px)] w-full max-w-md mx-auto relative flex flex-col">
-      <div className="flex justify-between items-center mb-6 px-4">
+      <div className="flex justify-between items-center mb-4 px-4">
         <div className="flex-1">
           {onBack && (
             <button
               onClick={onBack}
               className="flex items-center gap-2 text-white/60 hover:text-white transition-colors mb-2"
             >
-              <Check className="w-4 h-4 rotate-180" />
+              <ArrowLeft className="w-4 h-4" />
               <span className="text-sm">Change Deck</span>
             </button>
           )}
@@ -162,6 +237,36 @@ export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
            <span className="text-2xl font-bold text-white">{cards.length - activeCards.length}</span>
            <span className="text-white/40 text-sm"> / {cards.length}</span>
         </div>
+      </div>
+
+      {/* Filter Buttons */}
+      <div className="flex gap-2 mb-4 px-4">
+        <Button
+          size="sm"
+          variant={filterMode === 'all' ? 'default' : 'outline'}
+          onClick={() => setFilterMode('all')}
+          className={filterMode === 'all' ? 'bg-purple-600' : 'border-white/20'}
+        >
+          All ({allCards.length})
+        </Button>
+        <Button
+          size="sm"
+          variant={filterMode === 'difficult' ? 'default' : 'outline'}
+          onClick={() => setFilterMode('difficult')}
+          className={filterMode === 'difficult' ? 'bg-orange-600' : 'border-white/20'}
+        >
+          <AlertCircle className="w-3 h-3 mr-1" />
+          Difficult ({allCards.filter(c => (c.masteryLevel || 0) <= 1).length})
+        </Button>
+        <Button
+          size="sm"
+          variant={filterMode === 'mastered' ? 'default' : 'outline'}
+          onClick={() => setFilterMode('mastered')}
+          className={filterMode === 'mastered' ? 'bg-yellow-600' : 'border-white/20'}
+        >
+          <Star className="w-3 h-3 mr-1" />
+          Mastered ({allCards.filter(c => (c.masteryLevel || 0) >= 4).length})
+        </Button>
       </div>
 
       <div className="flex-1 relative w-full perspective-1000">

@@ -15,6 +15,7 @@ export default function QuizFeed({ selectedDeck = null, onBack = null }) {
   const [shortAnswer, setShortAnswer] = useState('');
   const [score, setScore] = useState(0);
   const [completed, setCompleted] = useState(false);
+  const [results, setResults] = useState([]);
 
   const { data: quizzes = [], isLoading } = useQuery({
     queryKey: ['quizzes', selectedDeck?.id],
@@ -48,26 +49,83 @@ export default function QuizFeed({ selectedDeck = null, onBack = null }) {
   if (completed) {
     const percentage = Math.round((score / quizzes.length) * 100);
     return (
-      <div className="flex flex-col items-center justify-center h-full p-6 text-center">
-        <Trophy className="w-24 h-24 text-yellow-400 mb-4" />
-        <h2 className="text-4xl font-bold text-white mb-2">Quiz Complete!</h2>
-        <div className="text-6xl font-bold text-white mb-4">{percentage}%</div>
-        <p className="text-xl text-white/80 mb-6">
-          You got {score} out of {quizzes.length} correct
-        </p>
-        <Button
-          onClick={() => {
-            setCurrentIndex(0);
-            setScore(0);
-            setCompleted(false);
-            setShowResult(false);
-            setSelectedAnswer(null);
-          }}
-          className="bg-gradient-to-r from-purple-600 to-pink-600"
-        >
-          <RotateCcw className="w-4 h-4 mr-2" />
-          Try Again
-        </Button>
+      <div className="flex flex-col items-center justify-center h-full p-6 overflow-y-auto">
+        <div className="w-full max-w-3xl">
+          <div className="text-center mb-8">
+            <Trophy className="w-24 h-24 text-yellow-400 mb-4 mx-auto" />
+            <h2 className="text-4xl font-bold text-white mb-2">Quiz Complete!</h2>
+            <div className="text-6xl font-bold text-white mb-4">{percentage}%</div>
+            <p className="text-xl text-white/80 mb-2">
+              You got {score} out of {quizzes.length} correct
+            </p>
+          </div>
+
+          {/* Detailed Results */}
+          <Card className="bg-slate-800/50 border border-white/10 p-6 mb-6">
+            <h3 className="text-2xl font-bold text-white mb-4">Review Your Answers</h3>
+            <div className="space-y-4">
+              {results.map((result, idx) => (
+                <div
+                  key={idx}
+                  className={`p-4 rounded-lg border-2 ${
+                    result.isCorrect
+                      ? 'bg-green-500/10 border-green-500/50'
+                      : 'bg-red-500/10 border-red-500/50'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="mt-1">
+                      {result.isCorrect ? (
+                        <CheckCircle2 className="w-5 h-5 text-green-400" />
+                      ) : (
+                        <XCircle className="w-5 h-5 text-red-400" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-white font-medium mb-2">{result.question}</p>
+                      <div className="text-sm space-y-1">
+                        <p className={result.isCorrect ? 'text-green-400' : 'text-red-400'}>
+                          Your answer: {result.userAnswer}
+                        </p>
+                        {!result.isCorrect && (
+                          <p className="text-green-400">
+                            Correct answer: {result.correctAnswer}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <div className="flex gap-3 justify-center">
+            <Button
+              onClick={() => {
+                setCurrentIndex(0);
+                setScore(0);
+                setCompleted(false);
+                setShowResult(false);
+                setSelectedAnswer(null);
+                setResults([]);
+              }}
+              className="bg-gradient-to-r from-purple-600 to-pink-600"
+            >
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Try Again
+            </Button>
+            {onBack && (
+              <Button
+                onClick={onBack}
+                variant="outline"
+                className="border-white/20 hover:bg-white/5"
+              >
+                Back to Materials
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
     );
   }
@@ -79,6 +137,15 @@ export default function QuizFeed({ selectedDeck = null, onBack = null }) {
     setShowResult(true);
     
     const isCorrect = answer === currentQuiz.answer;
+    
+    // Track result
+    setResults([...results, {
+      question: currentQuiz.question,
+      userAnswer: answer,
+      correctAnswer: currentQuiz.answer,
+      isCorrect
+    }]);
+    
     if (isCorrect) {
       setScore(score + 1);
       confetti({
