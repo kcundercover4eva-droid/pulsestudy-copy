@@ -11,6 +11,11 @@ export default function StudyHub() {
   const [selectedMode, setSelectedMode] = useState(null);
   const [selectedDeck, setSelectedDeck] = useState(null);
 
+  // Debug logging
+  React.useEffect(() => {
+    console.log('StudyHub state:', { selectedMode, selectedDeck });
+  }, [selectedMode, selectedDeck]);
+
   if (selectedMode === 'quiz') {
     return (
       <div className="h-full">

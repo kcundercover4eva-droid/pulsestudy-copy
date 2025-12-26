@@ -111,6 +111,11 @@ export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
   const [activeCards, setActiveCards] = useState([]);
 
   React.useEffect(() => {
+    setActiveCards(cards);
+    setSwipedCards(0);
+  }, [selectedDeck?.id]);
+
+  React.useEffect(() => {
     if (cards.length > 0 && activeCards.length === 0 && swipedCards === 0) {
       setActiveCards(cards);
     }
