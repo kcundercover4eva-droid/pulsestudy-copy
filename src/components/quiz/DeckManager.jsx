@@ -16,10 +16,18 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from 'sonner';
 
-export default function DeckManager({ onSelectDeck, onBack }) {
+export default function DeckManager({ mode = 'flashcards', onSelectDeck, onBack }) {
   const queryClient = useQueryClient();
   const [editingDeck, setEditingDeck] = useState(null);
   const [deckToDelete, setDeckToDelete] = useState(null);
+
+  const headings = {
+    flashcards: { title: 'Your Flashcard Decks', subtitle: 'Choose a deck to study' },
+    quiz: { title: 'Quiz Stuff', subtitle: 'Choose material to quiz yourself on' },
+    notes: { title: 'Notable Notes', subtitle: 'Choose material to review' }
+  };
+
+  const heading = headings[mode] || headings.flashcards;
 
   // Fetch all study materials (decks)
   const { data: decks, isLoading } = useQuery({
@@ -120,8 +128,8 @@ export default function DeckManager({ onSelectDeck, onBack }) {
       </button>
 
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-white mb-2">Your Flashcard Decks</h1>
-        <p className="text-white/60">Choose a deck to study</p>
+        <h1 className="text-4xl font-bold text-white mb-2">{heading.title}</h1>
+        <p className="text-white/60">{heading.subtitle}</p>
       </div>
 
       {validDecks.length === 0 ? (

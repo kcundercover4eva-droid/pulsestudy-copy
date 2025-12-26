@@ -21,6 +21,7 @@ export default function StudyHub() {
   if (selectedMode === 'quiz' && !selectedQuizDeck) {
     return (
       <DeckManager
+        mode="quiz"
         onSelectDeck={setSelectedQuizDeck}
         onBack={() => setSelectedMode(null)}
       />
@@ -41,6 +42,7 @@ export default function StudyHub() {
   if (selectedMode === 'flashcards' && !selectedDeck) {
     return (
       <DeckManager
+        mode="flashcards"
         onSelectDeck={setSelectedDeck}
         onBack={() => setSelectedMode(null)}
       />
@@ -61,6 +63,7 @@ export default function StudyHub() {
   if (selectedMode === 'notes' && !selectedNoteDeck) {
     return (
       <DeckManager
+        mode="notes"
         onSelectDeck={setSelectedNoteDeck}
         onBack={() => setSelectedMode(null)}
       />
