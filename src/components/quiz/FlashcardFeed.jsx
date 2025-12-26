@@ -100,10 +100,11 @@ export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
   const { data: cards, isLoading } = useQuery({
     queryKey: ['flashcards', selectedDeck?.id],
     queryFn: async () => {
+      const user = await base44.auth.me();
       if (selectedDeck) {
-        return await base44.entities.Flashcard.filter({ sourceId: selectedDeck.id });
+        return await base44.entities.Flashcard.filter({ sourceId: selectedDeck.id, created_by: user.email });
       }
-      return await base44.entities.Flashcard.list();
+      return await base44.entities.Flashcard.filter({ created_by: user.email });
     },
     initialData: []
   });
