@@ -50,7 +50,7 @@ const ambientSounds = {
   rain: 'https://cdn.pixabay.com/audio/2022/05/13/audio_257112ce99.mp3',
   cafe: 'https://archive.org/download/1-hour-relaxing-jazz-coffee-shop-music-the-best-melodies-that-will-warm-your-heart/1%20Hour%20Relaxing%20Jazz%20Coffee%20Shop%20Music%20%20The%20Best%20Melodies%20That%20Will%20Warm%20Your%20Heart.mp3',
   whitenoise: 'https://assets.mixkit.co/active_storage/sfx/2395/2395.wav',
-  synth: 'https://archive.org/download/nostalgia-drive-a-nostalgic-synthwave-chillwave-retrowave-mix/NOSTALGIA%20DRIVE%20-%20A%20Nostalgic%20Synthwave%20-%20Chillwave%20-%20Retrowave%20Mix.mp3',
+  synth: 'https://cdn.pixabay.com/audio/2024/12/20/audio_a8c67f8a61.mp3',
 };
 
 // Ambient sound management
