@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { CheckCircle2, XCircle, Trophy, RotateCcw, ArrowLeft, MessageSquare } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useNavigate } from 'react-router-dom';
-import { createPageUrl } from '../utils';
+import { createPageUrl } from '@/utils';
 
 export default function QuizFeed({ selectedDeck = null, onBack = null }) {
   const navigate = useNavigate();
