@@ -48,7 +48,7 @@ export const soundManager = new SoundManager();
 // Ambient sound URLs (loopable ambient tracks)
 const ambientSounds = {
   rain: 'https://assets.mixkit.co/active_storage/sfx/2393/2393.wav',
-  cafe: 'https://assets.mixkit.co/active_storage/sfx/2531/2531.wav',
+  cafe: 'https://archive.org/download/1-hour-relaxing-jazz-coffee-shop-music-the-best-melodies-that-will-warm-your-heart/1%20Hour%20Relaxing%20Jazz%20Coffee%20Shop%20Music%20%20The%20Best%20Melodies%20That%20Will%20Warm%20Your%20Heart.mp3',
   whitenoise: 'https://assets.mixkit.co/active_storage/sfx/2395/2395.wav',
   synth: 'https://assets.mixkit.co/active_storage/sfx/2466/2466.wav',
 };
