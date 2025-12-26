@@ -4,6 +4,7 @@ import Leaderboard from './pages/Leaderboard';
 import Profile from './pages/Profile';
 import Quests from './pages/Quests';
 import Shop from './pages/Shop';
+import StudyAssistant from './pages/StudyAssistant';
 
 
 export const PAGES = {
@@ -13,6 +14,7 @@ export const PAGES = {
     "Profile": Profile,
     "Quests": Quests,
     "Shop": Shop,
+    "StudyAssistant": StudyAssistant,
 }
 
 export const pagesConfig = {

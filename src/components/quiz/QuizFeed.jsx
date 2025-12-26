@@ -5,10 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { CheckCircle2, XCircle, Trophy, RotateCcw, ArrowLeft } from 'lucide-react';
+import { CheckCircle2, XCircle, Trophy, RotateCcw, ArrowLeft, MessageSquare } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '../utils';
 
 export default function QuizFeed({ selectedDeck = null, onBack = null }) {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
@@ -210,10 +213,21 @@ export default function QuizFeed({ selectedDeck = null, onBack = null }) {
           <Card className="bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-purple-500/30 p-8">
             {/* Question */}
             <div className="mb-6">
-              <div className="text-sm text-purple-400 uppercase tracking-wide mb-2">
-                {currentQuiz.type === 'multiple_choice' && 'Multiple Choice'}
-                {currentQuiz.type === 'true_false' && 'True or False'}
-                {currentQuiz.type === 'short_answer' && 'Short Answer'}
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-sm text-purple-400 uppercase tracking-wide">
+                  {currentQuiz.type === 'multiple_choice' && 'Multiple Choice'}
+                  {currentQuiz.type === 'true_false' && 'True or False'}
+                  {currentQuiz.type === 'short_answer' && 'Short Answer'}
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleGetHelp}
+                  className="border-purple-500/50 text-purple-400 hover:bg-purple-500/20"
+                >
+                  <MessageSquare className="w-3 h-3 mr-1" />
+                  Get Help
+                </Button>
               </div>
               <h3 className="text-2xl font-bold text-white leading-relaxed">
                 {currentQuiz.question}
