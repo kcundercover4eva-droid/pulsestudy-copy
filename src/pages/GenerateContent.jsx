@@ -171,6 +171,7 @@ Begin now. Use ONLY the text provided.`,
             answer: fc.back,
             subject,
             masteryLevel: 0,
+            sourceId: material.id,
           });
         });
 
