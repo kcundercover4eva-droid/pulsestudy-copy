@@ -15,7 +15,6 @@ export default function GenerateContent() {
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('other');
   const [file, setFile] = useState(null);
-  const [selectedDeckId, setSelectedDeckId] = useState('');
 
   const { data: materials = [] } = useQuery({
     queryKey: ['studyMaterials'],
@@ -25,18 +24,21 @@ export default function GenerateContent() {
     },
   });
 
-  const { data: decks = [] } = useQuery({
-    queryKey: ['decks'],
-    queryFn: async () => {
-      const user = await base44.auth.me();
-      return base44.entities.Deck.filter({ created_by: user.email }, '-created_date');
-    },
-  });
+
 
   const generateMutation = useMutation({
     mutationFn: async ({ title, subject, file }) => {
       // Upload file
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
+
+      // Auto-create deck for this material
+      const deck = await base44.entities.Deck.create({
+        name: title,
+        description: `Auto-generated from uploaded material`,
+        subject,
+        color: '#10b981',
+        cardCount: 0
+      });
 
       // Create material record
       const material = await base44.entities.StudyMaterial.create({
@@ -179,7 +181,7 @@ Begin now. Use ONLY the text provided.`,
             question: fc.front,
             answer: fc.back,
             subject,
-            deckId: selectedDeckId || undefined,
+            deckId: deck.id,
             masteryLevel: 0,
           });
         });
@@ -232,17 +234,10 @@ Begin now. Use ONLY the text provided.`,
       if (allFlashcards.length > 0) {
         await base44.entities.Flashcard.bulkCreate(allFlashcards);
 
-        // Update deck card count if a deck was selected
-        if (selectedDeckId) {
-          const deck = await base44.entities.Deck.list().then(decks => 
-            decks.find(d => d.id === selectedDeckId)
-          );
-          if (deck) {
-            await base44.entities.Deck.update(selectedDeckId, {
-              cardCount: (deck.cardCount || 0) + allFlashcards.length
-            });
-          }
-        }
+        // Update deck card count
+        await base44.entities.Deck.update(deck.id, {
+          cardCount: allFlashcards.length
+        });
       }
 
       if (allNotecards.length > 0) {
@@ -274,11 +269,10 @@ Begin now. Use ONLY the text provided.`,
       queryClient.invalidateQueries(['studyMaterials']);
       queryClient.invalidateQueries(['flashcards']);
       queryClient.invalidateQueries(['decks']);
-      toast.success(`Generated ${data.counts.flashcards} flashcards, ${data.counts.notecards} notecards, and ${data.counts.quizzes} quizzes!`);
+      toast.success(`Generated ${data.counts.flashcards} flashcards, ${data.counts.notecards} notecards, and ${data.counts.quizzes} quizzes in a new deck!`);
       setTitle('');
       setFile(null);
       setSubject('other');
-      setSelectedDeckId('');
     },
     onError: (error) => {
       toast.error('Failed to generate content: ' + error.message);
