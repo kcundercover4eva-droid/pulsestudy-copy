@@ -57,28 +57,28 @@ const Card = ({ data, onSwipe, index }) => {
 
         {/* Back - Definition/Answer */}
         <div 
-          className="absolute inset-0 glass-card rounded-3xl p-8 flex flex-col items-center justify-center text-center border border-white/10 shadow-2xl bg-gradient-to-br from-slate-900 to-slate-800"
+          className="absolute inset-0 glass-card rounded-3xl p-8 flex flex-col justify-between text-center border border-white/10 shadow-2xl bg-gradient-to-br from-slate-900 to-slate-800"
           style={{ 
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)'
           }}
         >
-          <div className="relative z-10 w-full">
+          <div className="flex-1 flex flex-col items-center justify-center">
             <div className="text-xs uppercase tracking-widest text-green-400 mb-4 font-bold">Definition</div>
-            <h3 className="text-2xl font-medium leading-relaxed text-white/90 mb-8">{data.answer}</h3>
-            
-            <div className="absolute bottom-8 left-0 right-0 flex justify-center gap-8 text-sm font-bold">
-              <div className="flex flex-col items-center text-red-400">
-                <X className="w-6 h-6 mb-1" />
-                <span>Need Review</span>
-                <span className="text-[10px] opacity-50">(Swipe Left)</span>
-              </div>
-              <div className="flex flex-col items-center text-green-400">
-                <Check className="w-6 h-6 mb-1" />
-                <span>I Know This</span>
-                <span className="text-[10px] opacity-50">(Swipe Right)</span>
-              </div>
+            <h3 className="text-2xl font-medium leading-relaxed text-white/90 px-4">{data.answer}</h3>
+          </div>
+          
+          <div className="flex justify-center gap-12 text-sm font-bold pb-4">
+            <div className="flex flex-col items-center text-red-400">
+              <X className="w-6 h-6 mb-1" />
+              <span>Need Review</span>
+              <span className="text-[10px] opacity-50">(Swipe Left)</span>
+            </div>
+            <div className="flex flex-col items-center text-green-400">
+              <Check className="w-6 h-6 mb-1" />
+              <span>I Know This</span>
+              <span className="text-[10px] opacity-50">(Swipe Right)</span>
             </div>
           </div>
         </div>
