@@ -47,7 +47,7 @@ const Card = ({ data, onSwipe, index }) => {
       >
         {/* Front - Concept/Question */}
         <div 
-          className="absolute inset-0 rounded-3xl p-8 flex flex-col items-center justify-center text-center border border-white/10 shadow-2xl bg-slate-800/95 backdrop-blur-xl"
+          className="absolute inset-0 rounded-3xl p-8 flex flex-col items-center justify-center text-center border border-white/10 shadow-2xl bg-slate-800"
           style={{ 
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden'
@@ -63,7 +63,7 @@ const Card = ({ data, onSwipe, index }) => {
 
         {/* Back - Definition/Answer */}
         <div 
-          className="absolute inset-0 glass-card rounded-3xl p-8 flex flex-col justify-between text-center border border-white/10 shadow-2xl bg-gradient-to-br from-slate-900 to-slate-800"
+          className="absolute inset-0 rounded-3xl p-8 flex flex-col justify-between text-center border border-white/10 shadow-2xl bg-slate-900"
           style={{ 
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
