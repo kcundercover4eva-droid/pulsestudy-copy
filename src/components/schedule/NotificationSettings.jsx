@@ -90,7 +90,7 @@ export default function NotificationSettings() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="border-white/10 hover:bg-white/5 text-white/60 hover:text-white">
+        <Button variant="outline" className="bg-transparent border-white/10 hover:bg-white/5 text-white/60 hover:text-white">
           <Bell className="w-4 h-4 mr-2" />
           Notifications
         </Button>

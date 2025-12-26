@@ -408,7 +408,7 @@ export default function ScheduleBuilder() {
                   setIsEraseMode(!isEraseMode);
                   setIsCreationMode(false);
                 }}
-                className={`border-white/10 hover:bg-white/5 ${isEraseMode ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'text-white/60 hover:text-white'}`}
+                className={`border-white/10 hover:bg-white/5 ${isEraseMode ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-transparent text-white/60 hover:text-white'}`}
             >
                 <X className="w-4 h-4 mr-2" /> {isEraseMode ? 'Cancel Erase' : 'Erase Mode'}
             </Button>
