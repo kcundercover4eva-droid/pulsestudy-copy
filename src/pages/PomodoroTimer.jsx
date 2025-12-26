@@ -260,11 +260,13 @@ export default function PomodoroTimer() {
   };
 
   const getColorByProgress = () => {
-    const progress = getProgress();
-    if (progress < 30) return 'from-blue-500 to-cyan-500';
-    if (progress < 60) return 'from-purple-500 to-pink-500';
-    if (progress < 90) return 'from-orange-500 to-red-500';
-    return 'from-yellow-400 to-orange-400';
+    // Use the user's chosen accent color
+    const colorMap = {
+      coral: 'from-rose-500 to-pink-500',
+      electricBlue: 'from-cyan-500 to-blue-500',
+      neonGreen: 'from-green-500 to-emerald-500'
+    };
+    return colorMap[accentColor] || 'from-green-500 to-emerald-500';
   };
 
   const getMilestone = () => {

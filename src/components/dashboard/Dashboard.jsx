@@ -405,17 +405,18 @@ export default function Dashboard() {
         {/* AI Study Assistant Button */}
         <button
           onClick={() => navigate(createPageUrl('StudyAssistant'))}
-          className="w-full glass-card rounded-2xl p-6 hover:shadow-2xl hover:shadow-purple-500/20 transition-all group"
+          className="w-full glass-card rounded-2xl p-6 hover:shadow-2xl transition-all group"
+          style={{ boxShadow: `0 0 60px -15px ${themeColor === 'green' ? '#4ade80' : themeColor === 'rose' ? '#fb7185' : '#06b6d4'}33` }}
         >
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div className={`w-14 h-14 rounded-full bg-gradient-to-br from-${themeColor}-600 to-${themeColor === 'green' ? 'emerald' : themeColor === 'rose' ? 'pink' : 'blue'}-600 flex items-center justify-center group-hover:scale-110 transition-transform`}>
               <MessageSquare className="w-7 h-7 text-white" />
             </div>
             <div className="text-left flex-1">
               <h3 className="text-xl font-bold text-white mb-1">Ask the Study Assistant</h3>
               <p className="text-white/60 text-sm">Get step-by-step help on any topic</p>
             </div>
-            <div className="text-purple-400 group-hover:translate-x-1 transition-transform">→</div>
+            <div className={`text-${themeColor}-400 group-hover:translate-x-1 transition-transform`}>→</div>
           </div>
         </button>
         
