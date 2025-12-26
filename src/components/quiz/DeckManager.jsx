@@ -25,9 +25,10 @@ export default function DeckManager({ onSelectDeck, onBack }) {
   const { data: decks, isLoading } = useQuery({
     queryKey: ['studyMaterials'],
     queryFn: async () => {
-      const materials = await base44.entities.StudyMaterial.list();
+      const user = await base44.auth.me();
+      const materials = await base44.entities.StudyMaterial.filter({ created_by: user.email }, '-created_date');
       // Fetch flashcard counts for each deck
-      const allFlashcards = await base44.entities.Flashcard.list();
+      const allFlashcards = await base44.entities.Flashcard.filter({ created_by: user.email });
       return materials.map(deck => ({
         ...deck,
         flashcardCount: allFlashcards.filter(f => f.sourceId === deck.id).length
