@@ -10,12 +10,11 @@ import { toast } from 'sonner';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-export default function TaskPanel({ selectedBlock = null, blocks = [] }) {
+export default function TaskPanel() {
   const queryClient = useQueryClient();
   const [selectedDay, setSelectedDay] = useState(0);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newTaskPriority, setNewTaskPriority] = useState('medium');
-  const [selectedBlockId, setSelectedBlockId] = useState(null);
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks'],
@@ -58,7 +57,6 @@ export default function TaskPanel({ selectedBlock = null, blocks = [] }) {
       day: selectedDay,
       priority: newTaskPriority,
       isCompleted: false,
-      blockId: selectedBlockId || undefined,
     });
   };
 
@@ -69,15 +67,8 @@ export default function TaskPanel({ selectedBlock = null, blocks = [] }) {
     });
   };
 
-  const dayTasks = tasks.filter(t => {
-    if (t.day !== selectedDay) return false;
-    if (selectedBlockId === 'all') return !t.blockId;
-    if (selectedBlockId) return t.blockId === selectedBlockId;
-    return true;
-  });
+  const dayTasks = tasks.filter(t => t.day === selectedDay);
   const completedCount = dayTasks.filter(t => t.isCompleted).length;
-  
-  const dayBlocks = blocks.filter(b => b.day === selectedDay);
 
   const priorityColors = {
     high: 'border-red-500/50 bg-red-500/10',
@@ -105,26 +96,6 @@ export default function TaskPanel({ selectedBlock = null, blocks = [] }) {
           </button>
         ))}
       </div>
-
-      {/* Block Filter */}
-      {dayBlocks.length > 0 && (
-        <div className="mb-3">
-          <label className="text-xs text-white/60 mb-2 block">Link to Block</label>
-          <select
-            value={selectedBlockId || 'all'}
-            onChange={(e) => setSelectedBlockId(e.target.value === 'all' ? null : e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white/80 text-sm"
-          >
-            <option value="">All Tasks</option>
-            <option value="all">Unlinked Tasks</option>
-            {dayBlocks.map((block) => (
-              <option key={block.id} value={block.id}>
-                {block.title} ({block.start}:00-{block.end}:00)
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
 
       {/* Add Task Form */}
       <form onSubmit={handleAddTask} className="mb-4">

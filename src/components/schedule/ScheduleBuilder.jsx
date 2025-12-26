@@ -45,15 +45,6 @@ export default function ScheduleBuilder() {
   const [editingTitle, setEditingTitle] = useState('');
   const [blockToDelete, setBlockToDelete] = useState(null);
 
-  // Fetch tasks for block badges
-  const { data: allTasks = [] } = useQuery({
-    queryKey: ['tasks'],
-    queryFn: async () => {
-      const user = await base44.auth.me();
-      return base44.entities.Task.filter({ created_by: user.email });
-    },
-  });
-
   // Seeding Default Blocks - School 8am-3pm Mon-Fri, Sleep 10pm-6am all days
   useEffect(() => {
     if (!isLoading && dbBlocks && dbBlocks.length === 0) {
@@ -604,47 +595,36 @@ export default function ScheduleBuilder() {
 
                       {/* Content / Move Handle */}
                       <div 
-                       className="w-full h-full p-2 flex flex-col cursor-move"
-                       onPointerDown={(e) => handlePointerDown(e, block, 'move')}
-                       onDoubleClick={() => {
-                         setEditingBlockId(block.id);
-                         setEditingTitle(block.title);
-                       }}
+                        className="w-full h-full p-2 flex flex-col cursor-move"
+                        onPointerDown={(e) => handlePointerDown(e, block, 'move')}
+                        onDoubleClick={() => {
+                          setEditingBlockId(block.id);
+                          setEditingTitle(block.title);
+                        }}
                       >
-                        {editingBlockId === block.id ? (
-                          <input
-                            autoFocus
-                            value={editingTitle}
-                            onChange={(e) => setEditingTitle(e.target.value)}
-                            onBlur={() => {
-                              updateBlockMutation.mutate({ ...block, title: editingTitle });
-                              setEditingBlockId(null);
-                            }}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                updateBlockMutation.mutate({ ...block, title: editingTitle });
-                                setEditingBlockId(null);
-                              }
-                            }}
-                            className="bg-white/20 text-white font-bold text-xs px-1 py-0.5 rounded border-none outline-none w-full"
-                          />
-                        ) : (
-                          <>
-                            <div className="font-bold text-xs truncate text-white">{block.title}</div>
-                            {(() => {
-                              const blockTaskCount = allTasks.filter(t => t.blockId === block.id).length;
-                              const completedCount = allTasks.filter(t => t.blockId === block.id && t.isCompleted).length;
-                              return blockTaskCount > 0 ? (
-                                <div className="text-[9px] text-white/80 mt-0.5">
-                                  ✓ {completedCount}/{blockTaskCount} tasks
-                                </div>
-                              ) : null;
-                            })()}
-                          </>
-                        )}
-                        <div className="text-[10px] opacity-70 font-mono text-white mt-auto">
-                          {formatTime(block.start)} - {formatTime(block.end)}
-                        </div>
+                         {editingBlockId === block.id ? (
+                           <input
+                             autoFocus
+                             value={editingTitle}
+                             onChange={(e) => setEditingTitle(e.target.value)}
+                             onBlur={() => {
+                               updateBlockMutation.mutate({ ...block, title: editingTitle });
+                               setEditingBlockId(null);
+                             }}
+                             onKeyDown={(e) => {
+                               if (e.key === 'Enter') {
+                                 updateBlockMutation.mutate({ ...block, title: editingTitle });
+                                 setEditingBlockId(null);
+                               }
+                             }}
+                             className="bg-white/20 text-white font-bold text-xs px-1 py-0.5 rounded border-none outline-none w-full"
+                           />
+                         ) : (
+                           <div className="font-bold text-xs truncate text-white">{block.title}</div>
+                         )}
+                         <div className="text-[10px] opacity-70 font-mono text-white">
+                           {formatTime(block.start)} - {formatTime(block.end)}
+                         </div>
                       </div>
 
                       {/* Bottom Handle */}
@@ -723,7 +703,7 @@ export default function ScheduleBuilder() {
       
       {/* Task Panel */}
       <div className="w-full lg:w-80 flex-shrink-0">
-        <TaskPanel blocks={localBlocks} />
+        <TaskPanel />
       </div>
     </div>
   );
