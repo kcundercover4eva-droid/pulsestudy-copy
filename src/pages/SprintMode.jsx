@@ -98,6 +98,74 @@ export default function SprintMode() {
     setPhase('active');
   };
 
+  const generateMoreQuestions = async () => {
+    if (isGeneratingQuestions) return;
+    
+    setIsGeneratingQuestions(true);
+    try {
+      const user = await base44.auth.me();
+      
+      // Get the subject/topic from existing quizzes
+      const existingSubjects = quizzes.map(q => q.subject).filter(Boolean);
+      const subject = existingSubjects[0] || 'general knowledge';
+      
+      // Generate 3 more questions
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `Generate 3 multiple choice quiz questions about ${subject}. Make them challenging and probing to test deep understanding.
+        
+Return ONLY a JSON array with this exact structure:
+[
+  {
+    "question": "question text here",
+    "options": ["option1", "option2", "option3", "option4"],
+    "answer": "correct option text",
+    "subject": "${subject}",
+    "type": "multiple_choice"
+  }
+]`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            questions: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  question: { type: "string" },
+                  options: { type: "array", items: { type: "string" } },
+                  answer: { type: "string" },
+                  subject: { type: "string" },
+                  type: { type: "string" }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      const newQuestions = response.questions || [];
+      
+      // Create quiz records
+      for (const q of newQuestions) {
+        await base44.entities.Quiz.create({
+          question: q.question,
+          options: q.options,
+          answer: q.answer,
+          subject: q.subject,
+          type: q.type,
+          isCompleted: false
+        });
+      }
+      
+      // Add to current quiz pool
+      setQuizzes(prev => [...prev, ...newQuestions]);
+    } catch (error) {
+      console.error('Failed to generate questions:', error);
+    } finally {
+      setIsGeneratingQuestions(false);
+    }
+  };
+
   const handleAnswer = (isCorrect) => {
     if (isCorrect) {
       const xp = 15; // Quick XP for sprint mode
@@ -109,6 +177,12 @@ export default function SprintMode() {
       updateProfileMutation.mutate({
         totalPoints: (userProfile?.totalPoints || 0) + xp
       });
+    }
+
+    // Check if we're running low on questions
+    const questionsRemaining = quizzes.length - currentQuizIndex - 1;
+    if (questionsRemaining <= 2 && phase === 'active' && !isGeneratingQuestions) {
+      generateMoreQuestions();
     }
 
     if (currentQuizIndex < quizzes.length - 1) {
