@@ -117,7 +117,7 @@ export default function OnboardingWizard({ onComplete }) {
                         <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${theme.gradient} shadow-lg`} />
                         <span className="font-bold text-lg">{theme.name}</span>
                       </div>
-                      {data.accentColor === theme.id && <Check className="w-6 h-6" />}
+                      {data.accentColor === theme.id && <Check className="w-5 h-5" />}
                     </button>
                   ))}
                 </div>
@@ -191,14 +191,14 @@ export default function OnboardingWizard({ onComplete }) {
 
                   <button
                     onClick={() => update('motivationStyle', 'negative')}
-                    className={`rounded-2xl p-6 flex flex-col items-center gap-4 text-center transition-all ${data.motivationStyle === 'negative' ? 'bg-red-500/20 border border-red-500/50' : 'bg-white/5 hover:bg-white/10 border border-transparent'}`}
+                    className={`rounded-xl p-3 flex flex-col items-center gap-2 text-center transition-all ${data.motivationStyle === 'negative' ? 'bg-red-500/20 border border-red-500/50' : 'bg-white/5 hover:bg-white/10 border border-transparent'}`}
                   >
-                    <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center text-red-400">
-                      <Zap className="w-8 h-8" />
+                    <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center text-red-400">
+                      <Zap className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg mb-1">Hard Truths</h3>
-                      <p className="text-sm text-white/60">"Do you want to fail? Get back to work."</p>
+                      <h3 className="font-bold text-sm mb-0.5">Hard Truths</h3>
+                      <p className="text-[11px] text-white/60">"Do you want to fail? Get back to work."</p>
                     </div>
                   </button>
                 </div>
@@ -209,7 +209,7 @@ export default function OnboardingWizard({ onComplete }) {
         </div>
 
         {/* Navigation Buttons */}
-        <div className="flex justify-between mt-10">
+        <div className="flex justify-between mt-3">
           <Button 
             onClick={back} 
             variant="ghost" 
@@ -221,7 +221,7 @@ export default function OnboardingWizard({ onComplete }) {
           
           <Button 
             onClick={next}
-            className={`bg-white text-slate-900 hover:bg-white/90 font-bold px-8 rounded-xl`}
+            className={`bg-white text-slate-900 hover:bg-white/90 font-bold px-6 rounded-xl text-sm h-10`}
           >
             {step === STEPS.length - 1 ? 'Finish' : 'Next'}
             {step !== STEPS.length - 1 && <ChevronRight className="w-4 h-4 ml-2" />}
