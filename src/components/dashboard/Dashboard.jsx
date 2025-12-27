@@ -575,17 +575,11 @@ export default function Dashboard() {
 
       <div className="max-w-6xl mx-auto relative z-10 space-y-4 md:space-y-8">
         
-        {/* Title and Subheading */}
-        <div className="mb-4 md:mb-6">
-          <h1 className="text-2xl md:text-4xl font-bold text-white mb-1 md:mb-2">Dashboard</h1>
-          <p className="text-white/60 text-sm md:text-base">Track your progress and stay on top of your goals</p>
-        </div>
-
         {/* Header */}
         <header className="flex justify-between items-center">
           <div>
-            <h2 className="text-xl md:text-2xl font-bold">Good afternoon, {currentUser?.full_name?.split(' ')[0] || 'Friend'}</h2>
-            <p className="text-white/40 text-xs md:text-sm">Ready to crush your {userProfile?.weeklyGoalHours || 10}h goal this week?</p>
+            <h1 className="text-2xl md:text-4xl font-bold text-white mb-1 md:mb-2">Good afternoon, {currentUser?.full_name?.split(' ')[0] || 'Friend'}</h1>
+            <p className="text-white/60 text-sm md:text-base">Ready to crush your {userProfile?.weeklyGoalHours || 10}h goal this week?</p>
           </div>
           <div className="flex items-center gap-2 md:gap-4">
             <NotificationSettings />
