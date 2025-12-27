@@ -65,7 +65,7 @@ export default function Home() {
         style={{ 
           bottom: '0',
           paddingTop: '4px',
-          paddingBottom: 'env(safe-area-inset-bottom)',
+          paddingBottom: 'max(6px, env(safe-area-inset-bottom))',
           touchAction: 'manipulation'
         }}
       >
