@@ -406,7 +406,7 @@ export default function ScheduleBuilder() {
   }, [dragState, updateBlockMutation]); // Removed localBlocks from dependency to prevent listener churn
 
   return (
-    <div className="h-full flex flex-col lg:flex-row gap-6 pt-6">
+    <div className="h-full flex flex-col lg:flex-row gap-6 pt-8">
       <NotificationChecker blocks={localBlocks} />
       
       {/* Main Schedule Section */}
