@@ -5,6 +5,9 @@ import { Check, X, RotateCcw, Brain, Layers, Trophy, ArrowLeft, Star, AlertCircl
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import XPPopup from '../rewards/XPPopup';
+import React from 'react';
+import confetti from 'canvas-confetti';
 
 // Card Component
 const Card = ({ data, onSwipe, index, markDifficult, markMastered }) => {
@@ -128,7 +131,13 @@ const Card = ({ data, onSwipe, index, markDifficult, markMastered }) => {
 export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
   const queryClient = useQueryClient();
   const [swipedCards, setSwipedCards] = useState(0);
-  const [filterMode, setFilterMode] = useState('all'); // 'all', 'difficult', 'mastered'
+  const [filterMode, setFilterMode] = useState('all');
+  const [showXPPopup, setShowXPPopup] = useState(false);
+  const [earnedXP, setEarnedXP] = useState(0);
+  const [isCritical, setIsCritical] = useState(false);
+  const [sessionXP, setSessionXP] = useState(0);
+  const [currentDifficulty, setCurrentDifficulty] = useState('medium');
+  const [correctStreak, setCorrectStreak] = useState(0);
 
   const { data: allCards, isLoading } = useQuery({
     queryKey: ['flashcards', selectedDeck?.id],
@@ -142,14 +151,58 @@ export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
     initialData: []
   });
 
-  // Filter cards based on mastery level
+  const { data: userProfile } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: async () => {
+      const profiles = await base44.entities.UserProfile.list();
+      return profiles[0] || { totalPoints: 0 };
+    },
+  });
+
+  const { data: activeEvents = [] } = useQuery({
+    queryKey: ['randomEvents'],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      const events = await base44.entities.RandomEvent.filter({ 
+        created_by: user.email,
+        isActive: true
+      });
+      return events.filter(event => {
+        if (!event.expiresAt) return true;
+        return new Date(event.expiresAt) > new Date();
+      });
+    },
+  });
+
+  const updateProfileMutation = useMutation({
+    mutationFn: async (updates) => {
+      const profiles = await base44.entities.UserProfile.list();
+      if (profiles[0]) {
+        return await base44.entities.UserProfile.update(profiles[0].id, updates);
+      }
+      return await base44.entities.UserProfile.create(updates);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userProfile']);
+    },
+  });
+
+  const createInteractionMutation = useMutation({
+    mutationFn: (data) => base44.entities.UserInteraction.create(data),
+  });
+
+  // Adaptive difficulty: filter and prioritize cards based on mastery
   const cards = React.useMemo(() => {
+    let filtered = allCards;
+    
     if (filterMode === 'difficult') {
-      return allCards.filter(card => (card.masteryLevel || 0) <= 1);
+      filtered = allCards.filter(card => (card.masteryLevel || 0) <= 1);
     } else if (filterMode === 'mastered') {
-      return allCards.filter(card => (card.masteryLevel || 0) >= 4);
+      filtered = allCards.filter(card => (card.masteryLevel || 0) >= 4);
     }
-    return allCards;
+    
+    // Sort by mastery level (lowest first) for adaptive learning
+    return [...filtered].sort((a, b) => (a.masteryLevel || 0) - (b.masteryLevel || 0));
   }, [allCards, filterMode]);
 
   const updateMasteryMutation = useMutation({
@@ -175,10 +228,11 @@ export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
 
   const handleSwipe = (direction) => {
     const currentCard = activeCards[0];
+    const isCorrect = direction === 'right';
     
     // Update mastery level based on swipe
     const currentMastery = currentCard.masteryLevel || 0;
-    const newMastery = direction === 'right' 
+    const newMastery = isCorrect
       ? Math.min(5, currentMastery + 1)
       : Math.max(0, currentMastery - 1);
     
@@ -186,6 +240,55 @@ export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
       cardId: currentCard.id,
       masteryLevel: newMastery
     });
+
+    if (isCorrect) {
+      // Award XP with critical hit chance
+      const baseXP = 8;
+      const criticalHit = Math.random() < 0.1;
+      const eventMultiplier = activeEvents.find(e => e.subject === currentCard.subject || e.subject === 'all')?.multiplier || 1;
+      const finalXP = Math.round(baseXP * (criticalHit ? 2 : 1) * eventMultiplier);
+      
+      setEarnedXP(finalXP);
+      setIsCritical(criticalHit);
+      setShowXPPopup(true);
+      setSessionXP(prev => prev + finalXP);
+      
+      // Update streak
+      const newStreak = correctStreak + 1;
+      setCorrectStreak(newStreak);
+      
+      // Celebrate milestones
+      if (newStreak % 5 === 0) {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+        toast.success(`🔥 ${newStreak} card streak!`);
+      }
+      
+      updateProfileMutation.mutate({
+        totalPoints: (userProfile?.totalPoints || 0) + finalXP
+      });
+      
+      createInteractionMutation.mutate({
+        contentId: currentCard.id,
+        interactionType: 'completed',
+        wasSuccessful: true,
+        accuracy: 1,
+        timeSpent: 0
+      });
+    } else {
+      setCorrectStreak(0);
+      
+      createInteractionMutation.mutate({
+        contentId: currentCard.id,
+        interactionType: 'completed',
+        wasSuccessful: false,
+        accuracy: 0,
+        timeSpent: 0
+      });
+    }
 
     setActiveCards(prev => prev.slice(1));
     setSwipedCards(prev => prev + 1);
@@ -216,6 +319,13 @@ export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
 
   return (
     <div className="h-[calc(100vh-100px)] w-full max-w-md mx-auto relative flex flex-col">
+      <XPPopup 
+        show={showXPPopup} 
+        xp={earnedXP} 
+        isCritical={isCritical}
+        onComplete={() => setShowXPPopup(false)}
+      />
+      
       {onBack && (
         <div className="px-4 py-3 relative z-[9999]" style={{ touchAction: 'auto' }}>
           <button
@@ -243,8 +353,16 @@ export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
           <p className="text-white/40 text-sm">Swipe left to review later, right if you know it.</p>
         </div>
         <div className="text-right">
-           <span className="text-2xl font-bold text-white">{cards.length - activeCards.length}</span>
-           <span className="text-white/40 text-sm"> / {cards.length}</span>
+           <div className="text-yellow-400 font-bold text-sm mb-1">+{sessionXP} XP</div>
+           <div>
+             <span className="text-2xl font-bold text-white">{cards.length - activeCards.length}</span>
+             <span className="text-white/40 text-sm"> / {cards.length}</span>
+           </div>
+           {correctStreak > 0 && (
+             <div className="text-orange-400 text-xs font-bold mt-1">
+               🔥 {correctStreak} streak
+             </div>
+           )}
         </div>
       </div>
 
@@ -302,7 +420,8 @@ export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
           >
             <Trophy className="w-20 h-20 text-yellow-400 mb-4" />
             <h3 className="text-3xl font-bold mb-2">Session Complete!</h3>
-            <p className="text-white/60 mb-8">You reviewed {cards.length} cards.</p>
+            <p className="text-white/60 mb-2">You reviewed {cards.length} cards.</p>
+            <div className="text-3xl font-bold text-yellow-400 mb-8">+{sessionXP} XP</div>
             <Button onClick={restart} className="bg-white text-black font-bold rounded-xl h-12 px-8">
               <RotateCcw className="w-4 h-4 mr-2" />
               Review Again
