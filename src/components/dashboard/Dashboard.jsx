@@ -610,19 +610,26 @@ export default function Dashboard() {
 
   // Get today's schedule blocks
   const { data: todaySchedule = [] } = useQuery({
-    queryKey: ['todaySchedule'],
+    queryKey: ['todaySchedule', 'scheduleBlocks'],
     queryFn: async () => {
-      const user = await base44.auth.me();
-      const today = new Date().getDay(); // 0 = Sunday, 1 = Monday, etc.
-      const dayIndex = today === 0 ? 6 : today - 1; // Convert to 0 = Monday, 6 = Sunday
+      try {
+        const user = await base44.auth.me();
+        const today = new Date().getDay(); // 0 = Sunday, 1 = Monday, etc.
+        const dayIndex = today === 0 ? 6 : today - 1; // Convert to 0 = Monday, 6 = Sunday
 
-      const blocks = await base44.entities.ScheduleBlock.filter({
-        created_by: user.email,
-        day: dayIndex
-      });
+        const blocks = await base44.entities.ScheduleBlock.filter({
+          created_by: user.email,
+          day: dayIndex
+        });
 
-      return blocks.sort((a, b) => a.start - b.start);
+        return blocks.sort((a, b) => a.start - b.start);
+      } catch (error) {
+        console.error('Error fetching schedule blocks:', error);
+        return [];
+      }
     },
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   const createSessionMutation = useMutation({
