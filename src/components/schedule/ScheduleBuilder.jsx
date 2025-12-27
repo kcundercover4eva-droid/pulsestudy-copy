@@ -121,10 +121,18 @@ export default function ScheduleBuilder() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleAddBlock = async () => {
+    const start = parseFloat(newBlock.start);
+    const end = start + parseFloat(newBlock.duration);
+    
+    if (checkOverlap(parseInt(newBlock.day), start, end)) {
+      alert('This block overlaps with an existing block. Please choose a different time.');
+      return;
+    }
+    
     await createBlockMutation.mutateAsync({
       day: parseInt(newBlock.day),
-      start: parseFloat(newBlock.start),
-      end: parseFloat(newBlock.start) + parseFloat(newBlock.duration),
+      start,
+      end,
       type: newBlock.type,
       title: newBlock.title || 'New Block',
       color: newBlock.color
@@ -159,6 +167,15 @@ export default function ScheduleBuilder() {
     }
     
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  };
+
+  const checkOverlap = (day, start, end, excludeId = null) => {
+    return localBlocksRef.current.some(block => {
+      if (block.id === excludeId) return false;
+      if (block.day !== day) return false;
+      // Check if ranges overlap
+      return !(end <= block.start || start >= block.end);
+    });
   };
 
   // --- EVENT HANDLERS ---
@@ -330,6 +347,11 @@ export default function ScheduleBuilder() {
         const duration = newEnd - newStart;
         if (newStart < 0) { newStart = 0; newEnd = duration; }
         if (newEnd > 24) { newEnd = 24; newStart = 24 - duration; }
+      }
+
+      // Check for overlap before updating
+      if (checkOverlap(currentBlock.day, newStart, newEnd, dragState.blockId)) {
+        return; // Don't update if it would cause overlap
       }
 
       // Optimistic Update (Local State)
