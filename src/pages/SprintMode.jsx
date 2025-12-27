@@ -227,7 +227,7 @@ export default function SprintMode() {
                     </button>
                   ))}
                 </div>
-              ) : (
+              ) : currentQuiz.type === 'true_false' ? (
                 <div className="grid grid-cols-2 gap-4">
                   {['True', 'False'].map(option => (
                     <button
@@ -238,6 +238,13 @@ export default function SprintMode() {
                       {option}
                     </button>
                   ))}
+                </div>
+              ) : (
+                <div className="text-center text-white/60 py-8">
+                  <p className="mb-4">This question type is not supported in Sprint Mode</p>
+                  <Button onClick={() => handleAnswer(false)} variant="outline">
+                    Skip Question
+                  </Button>
                 </div>
               )}
             </div>
