@@ -12,7 +12,6 @@ import { createPageUrl } from '@/utils';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import XPPopup from '../rewards/XPPopup';
 import { toast } from 'sonner';
-import React from 'react';
 
 export default function QuizFeed({ selectedDeck = null, onBack = null }) {
   const navigate = useNavigate();
