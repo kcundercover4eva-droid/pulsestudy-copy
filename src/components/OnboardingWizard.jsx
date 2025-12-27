@@ -89,7 +89,7 @@ export default function OnboardingWizard({ onComplete }) {
           <span className="text-xs font-medium text-white/50 uppercase tracking-widest">{STEPS[step].title}</span>
         </div>
 
-        <div className="min-h-[300px] flex flex-col justify-center">
+        <div className="min-h-[240px] flex flex-col justify-center">
           <AnimatePresence mode="wait">
             
             {/* Step 0: Color Selection */}
