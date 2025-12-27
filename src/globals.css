@@ -13,6 +13,14 @@ css
   body {
     @apply bg-slate-950 text-white font-sans antialiased;
   }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
 
 @layer utilities {
