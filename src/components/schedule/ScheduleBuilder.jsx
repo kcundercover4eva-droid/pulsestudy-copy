@@ -406,13 +406,13 @@ export default function ScheduleBuilder() {
   }, [dragState, updateBlockMutation]); // Removed localBlocks from dependency to prevent listener churn
 
   return (
-    <div className="h-full flex flex-col lg:flex-row gap-6 pt-8">
+    <div className="h-full flex flex-col lg:flex-row gap-6">
       <NotificationChecker blocks={localBlocks} />
       
       {/* Main Schedule Section */}
       <div className="flex-1 flex flex-col min-w-0">
       {/* Header */}
-      <div className="mb-6 px-1">
+      <div className="mb-6 px-1 pt-8">
         <h2 className="text-2xl font-bold">Weekly Schedule</h2>
         <p className="text-white/40 text-sm mb-4">Drag to resize. Plan your perfect week.</p>
         
