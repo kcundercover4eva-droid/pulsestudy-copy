@@ -71,6 +71,15 @@ export default function Home() {
           touchAction: 'manipulation'
         }}
       >
+        <style>
+          {`
+            @media (min-width: 768px) {
+              nav {
+                padding-bottom: max(env(safe-area-inset-bottom, 26px), 26px) !important;
+              }
+            }
+          `}
+        </style>
         <div className="w-full max-w-screen-lg mx-auto">
           <div className="grid grid-cols-4 gap-0">
             {/* Schedule Tab */}
