@@ -54,83 +54,63 @@ export default function GenerateContent() {
         status: 'processing',
       });
 
-      // Generate content using AI
+      // Generate content using AI with quality filters
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are an AI study assistant. The user has uploaded study material. Your task is to extract ONLY the most important information and convert it into structured study tools.
+        prompt: `You are an expert tutor creating high-quality study materials from uploaded documents. Your goal: extract ONLY the most important, exam-useful information.
 
-      Your output must include:
-      Flashcard sets (SEPARATED BY TOPIC)
-      Notecards (SEPARATED BY TOPIC)
-      Quizzes (SEPARATED BY TOPIC)
+**EXTRACTION RULES:**
+• IGNORE: filler text, formatting noise, disclaimers, headers/footers, citations, page numbers, repeated content
+• FOCUS ON: core concepts, definitions, key facts, formulas, processes, important relationships, testable information
+• Prioritize what a teacher would test or what appears in study guides
+• No trivial details, minor examples, or random throwaway sentences
 
-      CRITICAL RULES
-      • DO NOT combine flashcards and quizzes together.
-      • DO NOT mix topics. Each topic must have its own flashcard set, notecard set, and quiz set.
-      • DO NOT create one giant set. Automatically detect distinct topics and separate them.
-      • Use ONLY the information from the uploaded text.
-      • Do NOT invent facts.
-      • Keep everything concise and easy to study.
+**TOPIC DETECTION:**
+1. Identify major topics/sections in the document
+2. Each topic = one study module with its own flashcards, notes, quizzes
+3. Keep topics focused and separate
 
-      TOPIC DETECTION
-      Before generating any study materials:
-      1. Identify the major topics or sections in the uploaded text.
-      2. Treat each topic as its own independent study module.
-      3. For each topic, generate:
-      - Flashcards
-      - Notecards
-      - Quizzes
+**FLASHCARD RULES (per topic):**
+• One clear concept per card
+• Q: Concise, specific question
+• A: Accurate, complete answer directly from document
+• Avoid: trivial questions, overly broad questions ("Explain everything about..."), minor details
+• Example GOOD: Q: "What is the formula for photosynthesis?" A: "6CO2 + 6H2O + light → C6H12O6 + 6O2"
+• Example BAD: Q: "What is mentioned on page 5?" or random dates/minor facts
 
-      FLASHCARDS (PER TOPIC)
-      Flashcards must:
-      • Be short and direct.
-      • Contain ONE concept per card.
-      • Focus on definitions, key facts, formulas, and cause–effect.
-      • Stay within the topic they belong to.
+**NOTECARD RULES (per topic):**
+• Use headings, bullet points, definitions
+• 2-4 clear sentences per note
+• Include key takeaways and important examples only
+• Remove irrelevant content
+• Accurate summaries, no hallucinations
 
-      Flashcard format:
-      { "front": "A short question or prompt", "back": "A short, direct answer" }
+**QUIZ RULES (per topic):**
+• Mix types: multiple choice, true/false, short answer
+• Every question MUST be directly from the document
+• Focus on understanding, not memorization of minor details
+• All multiple choice need 4 options with one correct answer
+• Avoid questions about trivial info
 
-      NOTECARDS (PER TOPIC)
-      Notecards must:
-      • Summarize broader concepts.
-      • Use 2–4 clear sentences.
-      • Explain ideas, processes, or relationships.
-      • Avoid duplicating flashcards.
-      • Stay within the topic they belong to.
+**QUALITY FILTER:**
+If information is not helpful for learning/testing, DO NOT include it. If unclear, summarize core ideas rather than guessing.
 
-      Notecard format:
-      { "topic": "Topic name", "summary": "A concise 2–4 sentence explanation." }
-
-      QUIZZES (PER TOPIC)
-      Generate three types of quiz questions for EACH topic:
-      1. Multiple Choice (MCQ)
-      2. True/False
-      3. Short Answer
-
-      Quiz formats:
-      Multiple choice: { "question": "...", "options": ["A) ...", "B) ...", "C) ...", "D) ..."], "answer": "B" }
-      True/false: { "statement": "...", "answer": true }
-      Short answer: { "question": "...", "answer": "..." }
-
-      FINAL OUTPUT FORMAT (MANDATORY)
-      Return everything in ONE JSON object structured by topic:
-      {
-      "topics": [
-      {
-      "topic_name": "...",
-      "flashcards": [ {"front": "...", "back": "..."} ],
-      "notecards": [ {"topic": "...", "summary": "..."} ],
+**OUTPUT FORMAT:**
+{
+  "topics": [
+    {
+      "topic_name": "Clear topic name",
+      "flashcards": [{"front": "Clear question", "back": "Accurate answer"}],
+      "notecards": [{"topic": "Concept name", "summary": "Concise explanation"}],
       "quizzes": {
-      "multiple_choice": [...],
-      "true_false": [...],
-      "short_answer": [...]
+        "multiple_choice": [{"question": "...", "options": ["A) ...", "B) ...", "C) ...", "D) ..."], "answer": "B) ..."}],
+        "true_false": [{"statement": "...", "answer": true}],
+        "short_answer": [{"question": "...", "answer": "..."}]
       }
-      },
-      ...
-      ]
-      }
+    }
+  ]
+}
 
-      Output structure must reflect this separation. Begin now. Use ONLY the text provided.`,
+Begin extraction. Use ONLY document content. No invention.`,
         file_urls: [file_url],
         response_json_schema: {
           type: 'object',
