@@ -26,6 +26,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import confetti from 'canvas-confetti';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
+import NotificationSettings from '../schedule/NotificationSettings';
 
 // --- SUB-COMPONENTS ---
 
