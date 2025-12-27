@@ -465,8 +465,8 @@ export default function ScheduleBuilder() {
         </div>
       </div>
 
-      {/* Scheduler Grid */}
-      <div className="flex-1 glass-card rounded-3xl overflow-hidden flex flex-col relative shadow-2xl">
+      {/* Scheduler Grid - Desktop: days horizontal, time vertical */}
+      <div className="hidden md:flex flex-1 glass-card rounded-3xl overflow-hidden flex-col relative shadow-2xl">
         {/* Days Header */}
         <div className="flex border-b border-white/10 bg-black/40 backdrop-blur-xl z-10">
           <div className="w-14 border-r border-white/10" />
@@ -668,6 +668,119 @@ export default function ScheduleBuilder() {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* Scheduler Grid - Mobile: days vertical, time horizontal */}
+      <div className="md:hidden flex-1 glass-card rounded-3xl overflow-hidden relative shadow-2xl">
+        <div className="flex flex-col h-full overflow-x-auto overflow-y-hidden bg-slate-900/50">
+          {DAYS.map((day, dayIndex) => (
+            <div key={dayIndex} className="min-h-[120px] border-b border-white/10 last:border-b-0 flex">
+              {/* Day Label */}
+              <div className="w-16 flex-shrink-0 bg-black/40 border-r border-white/10 flex items-center justify-center sticky left-0 z-10">
+                <span className="text-sm font-bold text-white/80 uppercase tracking-wider -rotate-0">{day}</span>
+              </div>
+              
+              {/* Timeline for this day */}
+              <div 
+                className="flex-1 relative"
+                style={{ width: HOURS.length * PIXELS_PER_HOUR }}
+                onPointerDown={(e) => handleGridPointerDown(e, dayIndex)}
+              >
+                {/* Hour markers */}
+                {HOURS.map(h => {
+                  let displayHour = h;
+                  if (is12Hour) {
+                    displayHour = h === 0 ? 12 : h > 12 ? h - 12 : h;
+                  }
+                  return (
+                    <div 
+                      key={h}
+                      className="absolute top-0 bottom-0 border-l border-white/5"
+                      style={{ left: h * PIXELS_PER_HOUR }}
+                    >
+                      <span className="absolute -top-4 left-1 text-[10px] text-white/40 font-mono">
+                        {displayHour}
+                      </span>
+                    </div>
+                  );
+                })}
+
+                {/* Blocks for this day */}
+                <AnimatePresence>
+                  {localBlocks.filter(b => b.day === dayIndex).map((block) => (
+                    <motion.div
+                      layout
+                      key={block.id}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ 
+                        opacity: 1, 
+                        scale: dragState?.blockId === block.id ? 1.02 : 1,
+                        zIndex: dragState?.blockId === block.id ? 50 : 1
+                      }}
+                      className={`absolute top-2 bottom-2 rounded-xl border-2 overflow-hidden select-none touch-none transition-all ${
+                        dragState?.blockId === block.id 
+                          ? 'shadow-[0_0_30px_rgba(6,182,212,0.6)] ring-2 ring-cyan-400/70 brightness-110' 
+                          : 'shadow-md'
+                      } ${isEraseMode ? 'cursor-pointer hover:ring-2 hover:ring-red-500 hover:opacity-80' : ''}`}
+                      style={{
+                        left: `${block.start * PIXELS_PER_HOUR}px`,
+                        width: `${(block.end - block.start) * PIXELS_PER_HOUR}px`,
+                        backgroundColor: block.color || '#10b981',
+                        borderColor: block.color || '#10b981'
+                      }}
+                    >
+                      {/* Content */}
+                      <div 
+                        className="w-full h-full p-2 flex flex-col justify-center cursor-move"
+                        onPointerDown={(e) => handlePointerDown(e, block, 'move')}
+                        onDoubleClick={() => {
+                          setEditingBlockId(block.id);
+                          setEditingTitle(block.title);
+                        }}
+                      >
+                        {editingBlockId === block.id ? (
+                          <input
+                            autoFocus
+                            value={editingTitle}
+                            onChange={(e) => setEditingTitle(e.target.value)}
+                            onBlur={() => {
+                              updateBlockMutation.mutate({ ...block, title: editingTitle });
+                              setEditingBlockId(null);
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                updateBlockMutation.mutate({ ...block, title: editingTitle });
+                                setEditingBlockId(null);
+                              }
+                            }}
+                            className="bg-white/20 text-white font-bold text-xs px-1 py-0.5 rounded border-none outline-none w-full"
+                          />
+                        ) : (
+                          <div className="font-bold text-xs truncate text-white">{block.title}</div>
+                        )}
+                        <div className="text-[9px] opacity-70 font-mono text-white whitespace-nowrap">
+                          {formatTime(block.start)} - {formatTime(block.end)}
+                        </div>
+                      </div>
+
+                      {/* Floating Tooltip during drag */}
+                      {dragState?.blockId === block.id && (
+                        <motion.div 
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/95 text-white text-xs px-3 py-2 rounded-xl shadow-2xl whitespace-nowrap z-50 pointer-events-none border-2 border-cyan-400/50"
+                        >
+                          <Clock className="w-3 h-3 inline mr-1" />
+                          <span className="font-bold">{formatTime(block.start)} - {formatTime(block.end)}</span>
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
