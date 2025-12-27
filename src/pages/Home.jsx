@@ -77,13 +77,13 @@ export default function Home() {
             >
               <div className={`flex flex-col items-center gap-1 ${appTab === 'schedule' ? 'transform scale-105' : ''}`}>
                 <Calendar 
-                  className="w-7 h-7 mb-0.5" 
+                  className="w-7 h-7 mb-0.5 text-white" 
                   strokeWidth={2.5}
-                  style={{ color: appTab === 'schedule' ? theme.primary : '#ffffff' }}
+                  style={appTab === 'schedule' ? { color: theme.primary } : {}}
                 />
                 <span 
-                  className="text-[11px] font-semibold whitespace-nowrap"
-                  style={{ color: appTab === 'schedule' ? theme.primary : '#ffffff' }}
+                  className="text-[11px] font-semibold whitespace-nowrap text-white"
+                  style={appTab === 'schedule' ? { color: theme.primary } : {}}
                 >
                   Schedule
                 </span>
