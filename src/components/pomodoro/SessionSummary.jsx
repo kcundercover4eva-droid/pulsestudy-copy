@@ -2,9 +2,21 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Trophy, Zap, Flame, Shield, Coffee, ArrowRight, Check } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 
 export default function SessionSummary({ data, onContinue, onFinish }) {
   const { duration, pointsEarned, pauseCount, distractionAttempts, isPerfect, streak } = data;
+  
+  const { data: userProfile } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: async () => {
+      const profiles = await base44.entities.UserProfile.list();
+      return profiles[0] || {};
+    },
+  });
+  
+  const isNegative = userProfile?.motivationStyle === 'negative';
 
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6 relative overflow-hidden">
@@ -36,7 +48,10 @@ export default function SessionSummary({ data, onContinue, onFinish }) {
           transition={{ delay: 0.3 }}
           className="text-4xl font-black text-white text-center mb-2"
         >
-          {isPerfect ? 'Perfect Session!' : 'Session Complete!'}
+          {isNegative 
+            ? (isPerfect ? 'Finally. A Perfect Session.' : 'Session Done.')
+            : (isPerfect ? 'Perfect Session!' : 'Session Complete!')
+          }
         </motion.h1>
 
         {/* Subtitle */}
@@ -46,9 +61,14 @@ export default function SessionSummary({ data, onContinue, onFinish }) {
           transition={{ delay: 0.4 }}
           className="text-white/60 text-center mb-8"
         >
-          {isPerfect 
-            ? "🎯 Flawless focus! You're unstoppable!"
-            : "Great work! Every session builds momentum! 🚀"}
+          {isNegative
+            ? (isPerfect 
+              ? "🎯 About time you showed discipline. Can you repeat it?"
+              : "💀 You paused. That's weakness showing through.")
+            : (isPerfect 
+              ? "🎯 Flawless focus! You're unstoppable!"
+              : "Great work! Every session builds momentum! 🚀")
+          }
         </motion.p>
 
         {/* Stats Grid */}
@@ -125,13 +145,22 @@ export default function SessionSummary({ data, onContinue, onFinish }) {
           className="glass-card rounded-2xl p-4 mb-6"
         >
           <p className="text-white/80 text-center text-sm leading-relaxed">
-            {isPerfect 
-              ? "🌟 You just proved that deep focus is your superpower! This is what champions do."
-              : pauseCount === 0
-              ? "💪 Zero pauses! Your focus game is leveling up fast!"
-              : pauseCount <= 2
-              ? "🎯 Solid session! You're building incredible mental endurance."
-              : "✨ Every session makes you stronger. Keep going!"}
+            {isNegative
+              ? (isPerfect 
+                ? "💀 This is the minimum expected. Don't let it go to your head."
+                : pauseCount === 0
+                ? "⚠️ No pauses, but there's still room to improve your speed."
+                : pauseCount <= 2
+                ? "🔥 Two pauses? Your competitors don't pause. Step it up."
+                : "💀 Too many pauses. You need better discipline. Period.")
+              : (isPerfect 
+                ? "🌟 You just proved that deep focus is your superpower! This is what champions do."
+                : pauseCount === 0
+                ? "💪 Zero pauses! Your focus game is leveling up fast!"
+                : pauseCount <= 2
+                ? "🎯 Solid session! You're building incredible mental endurance."
+                : "✨ Every session makes you stronger. Keep going!")
+            }
           </p>
         </motion.div>
 
