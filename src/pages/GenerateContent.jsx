@@ -323,11 +323,11 @@ export default function GenerateContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4 md:p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-3 md:p-6">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Generate Study Content</h1>
-          <p className="text-white/60">Upload your study material and let AI create flashcards, notes, and quizzes</p>
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-4xl font-bold text-white mb-1 md:mb-2">Generate Study Content</h1>
+          <p className="text-white/60 text-sm md:text-base">Upload your study material and let AI create flashcards, notes, and quizzes</p>
         </div>
 
         {/* Upload Form */}
