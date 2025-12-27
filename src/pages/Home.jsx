@@ -60,45 +60,49 @@ export default function Home() {
       </main>
 
       {/* Bottom Nav */}
-      <div className="fixed bottom-0 left-0 right-0 h-20 glass border-t border-white/10 z-[100] flex justify-around items-center px-2 backdrop-blur-xl bg-slate-950/95">
-        <button 
-          onClick={() => setAppTab('schedule')}
-          className={`flex flex-col items-center gap-1 transition-all duration-300 ${appTab === 'schedule' ? 'scale-110' : 'text-white/40 hover:text-white/70'}`}
-          style={appTab === 'schedule' ? { color: 'var(--accent-primary)' } : {}}
-        >
-          <Calendar className="w-5 h-5" />
-          <span className="text-[9px] font-bold uppercase tracking-wider">Schedule</span>
-        </button>
-
-        <button 
-          onClick={() => setAppTab('generate')}
-          className={`flex flex-col items-center gap-1 transition-all duration-300 ${appTab === 'generate' ? 'scale-110' : 'text-white/40 hover:text-white/70'}`}
-          style={appTab === 'generate' ? { color: 'var(--accent-primary)' } : {}}
-        >
-          <Upload className="w-5 h-5" />
-          <span className="text-[9px] font-bold uppercase tracking-wider">Upload</span>
-        </button>
-
-        <button 
-          onClick={() => setAppTab('dashboard')}
-          className="relative -top-6 group"
-        >
-          <div 
-            className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg ${appTab === 'dashboard' ? `bg-gradient-to-tr ${theme.gradient} scale-110` : 'bg-slate-800 border border-white/10 group-hover:scale-105'}`}
-            style={appTab === 'dashboard' ? { boxShadow: `0 10px 25px -5px ${theme.primary}33` } : {}}
+      <div className="fixed bottom-0 left-0 right-0 h-20 glass border-t border-white/10 z-[100] backdrop-blur-xl bg-slate-950/95">
+        <div className="max-w-md mx-auto h-full flex justify-between items-center px-4">
+          <button 
+            onClick={() => setAppTab('schedule')}
+            className={`flex flex-col items-center gap-0.5 transition-all duration-300 min-w-[60px] ${appTab === 'schedule' ? 'scale-110' : 'text-white/40 hover:text-white/70'}`}
+            style={appTab === 'schedule' ? { color: 'var(--accent-primary)' } : {}}
           >
-            <HomeIcon className={`w-6 h-6 ${appTab === 'dashboard' ? 'text-white' : 'text-white/60'}`} />
-          </div>
-        </button>
+            <Calendar className="w-5 h-5" />
+            <span className="text-[8px] font-bold uppercase tracking-wider">Schedule</span>
+          </button>
 
-        <button 
-          onClick={() => setAppTab('quiz')}
-          className={`flex flex-col items-center gap-1 transition-all duration-300 ${appTab === 'quiz' ? 'scale-110' : 'text-white/40 hover:text-white/70'}`}
-          style={appTab === 'quiz' ? { color: 'var(--accent-primary)' } : {}}
-        >
-          <Brain className="w-5 h-5" />
-          <span className="text-[9px] font-bold uppercase tracking-wider">Quiz</span>
-        </button>
+          <button 
+            onClick={() => setAppTab('generate')}
+            className={`flex flex-col items-center gap-0.5 transition-all duration-300 min-w-[60px] ${appTab === 'generate' ? 'scale-110' : 'text-white/40 hover:text-white/70'}`}
+            style={appTab === 'generate' ? { color: 'var(--accent-primary)' } : {}}
+          >
+            <Upload className="w-5 h-5" />
+            <span className="text-[8px] font-bold uppercase tracking-wider">Upload</span>
+          </button>
+
+          <button 
+            onClick={() => setAppTab('dashboard')}
+            className="relative -top-6 group min-w-[60px] flex justify-center"
+          >
+            <div 
+              className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg ${appTab === 'dashboard' ? `bg-gradient-to-tr ${theme.gradient} scale-110` : 'bg-slate-800 border border-white/10 group-hover:scale-105'}`}
+              style={appTab === 'dashboard' ? { boxShadow: `0 10px 25px -5px ${theme.primary}33` } : {}}
+            >
+              <HomeIcon className={`w-6 h-6 ${appTab === 'dashboard' ? 'text-white' : 'text-white/60'}`} />
+            </div>
+          </button>
+
+          <button 
+            onClick={() => setAppTab('quiz')}
+            className={`flex flex-col items-center gap-0.5 transition-all duration-300 min-w-[60px] ${appTab === 'quiz' ? 'scale-110' : 'text-white/40 hover:text-white/70'}`}
+            style={appTab === 'quiz' ? { color: 'var(--accent-primary)' } : {}}
+          >
+            <Brain className="w-5 h-5" />
+            <span className="text-[8px] font-bold uppercase tracking-wider">Quiz</span>
+          </button>
+
+          <div className="min-w-[60px]"></div>
+        </div>
       </div>
     </div>
   );
