@@ -354,7 +354,7 @@ export default function QuizFeed({ selectedDeck = null, onBack = null }) {
         </div>
       )}
       {/* Progress */}
-      <div className="w-full max-w-2xl mb-2">
+      <div className="w-full max-w-2xl mb-4">
         <div className="flex justify-between text-white/60 text-sm mb-2">
           <span>Question {currentIndex + 1} of {quizzes.length}</span>
           <div className="flex items-center gap-4">

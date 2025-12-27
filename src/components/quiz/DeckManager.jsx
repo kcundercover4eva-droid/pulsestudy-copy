@@ -127,7 +127,7 @@ export default function DeckManager({ mode = 'flashcards', onSelectDeck, onBack 
         <span>Back</span>
       </button>
 
-      <div className="text-center mb-3">
+      <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-white mb-2">{heading.title}</h1>
         <p className="text-white/60">{heading.subtitle}</p>
       </div>
