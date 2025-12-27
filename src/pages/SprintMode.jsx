@@ -392,6 +392,9 @@ Return ONLY a JSON array with this exact structure:
   }
 
   if (phase === 'complete') {
+    const isNegative = userProfile?.motivationStyle === 'negative';
+    const accuracy = quizzes.length > 0 ? (score / quizzes.length) * 100 : 0;
+    
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-6">
         <motion.div
@@ -400,7 +403,15 @@ Return ONLY a JSON array with this exact structure:
           className="max-w-2xl w-full glass-card rounded-3xl p-8 text-center"
         >
           <Trophy className="w-24 h-24 text-yellow-400 mx-auto mb-6" />
-          <h1 className="text-4xl font-bold text-white mb-4">Sprint Complete!</h1>
+          <h1 className="text-4xl font-bold text-white mb-4">
+            {isNegative ? "Time's Up. 💀" : "Sprint Complete! 🎉"}
+          </h1>
+          <p className="text-white/60 mb-6">
+            {isNegative 
+              ? (accuracy >= 80 ? "Not terrible. But can you do it again?" : accuracy >= 50 ? "Mediocre performance. You need to study harder." : "That was embarrassing. Hit the books.")
+              : (accuracy >= 80 ? "Amazing work! You're on fire! 🔥" : accuracy >= 50 ? "Great effort! Keep practicing! 💪" : "Good try! You'll improve with practice! ⭐")
+            }
+          </p>
           
           <div className="grid grid-cols-2 gap-6 mb-8">
             <div className="glass-card p-6 rounded-xl">

@@ -19,15 +19,26 @@ const MODES = {
   deepFocus: { focus: 90, break: 15, name: 'Deep Focus', icon: '🔥' }
 };
 
-const FOCUS_QUOTES = [
+const FOCUS_QUOTES_POSITIVE = [
   "Deep work creates deep results 💪",
   "Your future self will thank you 🌟",
   "Focus is your superpower ⚡",
-  "Every second counts 🎯",
-  "You're in the zone! 🔥",
+  "You're crushing it! Keep going! 🔥",
   "Building something great takes time ✨",
   "Champions are made in moments like these 🏆",
-  "This is where magic happens 🚀"
+  "This is where magic happens 🚀",
+  "You've got this! Stay strong! ⭐"
+];
+
+const FOCUS_QUOTES_NEGATIVE = [
+  "No distractions. Focus or fail. 💀",
+  "Your competitors aren't taking breaks. ⚠️",
+  "Weak focus = weak results. Push harder! ⚡",
+  "Time wasted now = regrets later. 🎯",
+  "Are you really trying your best? 🔥",
+  "Excuses won't get you results. ⏰",
+  "Winners don't quit. Are you a winner? 🏆",
+  "Stop thinking. Start doing. 🚀"
 ];
 
 const AMBIENT_SOUNDS = [
@@ -124,12 +135,13 @@ export default function PomodoroTimer() {
   // Rotate quotes every 2 minutes
   useEffect(() => {
     if (phase === 'focus' && isActive) {
+      const quotes = userProfile?.motivationStyle === 'negative' ? FOCUS_QUOTES_NEGATIVE : FOCUS_QUOTES_POSITIVE;
       const quoteInterval = setInterval(() => {
-        setQuoteIndex(prev => (prev + 1) % FOCUS_QUOTES.length);
+        setQuoteIndex(prev => (prev + 1) % quotes.length);
       }, 120000);
       return () => clearInterval(quoteInterval);
     }
-  }, [phase, isActive]);
+  }, [phase, isActive, userProfile?.motivationStyle]);
 
   // Ambient sound management
   useEffect(() => {
@@ -284,12 +296,23 @@ export default function PomodoroTimer() {
 
   const getMilestone = () => {
     const progress = getProgress();
-    if (progress < 10) return "Let's do this! 🚀";
-    if (progress < 25) return "Great start! Keep going! ⚡";
-    if (progress < 50) return "You're crushing it! 💪";
-    if (progress < 75) return "Halfway there! Stay strong! 🔥";
-    if (progress < 90) return "Almost done! Final push! 🎯";
-    return "You're a champion! Finish strong! 🏆";
+    const isNegative = userProfile?.motivationStyle === 'negative';
+    
+    if (isNegative) {
+      if (progress < 10) return "Don't quit already. Prove yourself. 🚀";
+      if (progress < 25) return "Barely started. Work harder. ⚡";
+      if (progress < 50) return "Halfway. Don't get comfortable. 💪";
+      if (progress < 75) return "Push through or lose. Your choice. 🔥";
+      if (progress < 90) return "Almost there. Don't choke now. 🎯";
+      return "Finish it. No excuses. 🏆";
+    } else {
+      if (progress < 10) return "Let's do this! 🚀";
+      if (progress < 25) return "Great start! Keep going! ⚡";
+      if (progress < 50) return "You're crushing it! 💪";
+      if (progress < 75) return "Halfway there! Stay strong! 🔥";
+      if (progress < 90) return "Almost done! Final push! 🎯";
+      return "You're a champion! Finish strong! 🏆";
+    }
   };
 
   // Show summary
@@ -445,8 +468,12 @@ export default function PomodoroTimer() {
               exit={{ opacity: 0, y: -10 }}
               className="text-center mb-4"
             >
-              <p className="text-xl font-semibold text-white mb-2">{FOCUS_QUOTES[quoteIndex]}</p>
-              <p className="text-purple-400 font-bold">{getMilestone()}</p>
+              <p className="text-xl font-semibold text-white mb-2">
+                {(userProfile?.motivationStyle === 'negative' ? FOCUS_QUOTES_NEGATIVE : FOCUS_QUOTES_POSITIVE)[quoteIndex]}
+              </p>
+              <p className={`font-bold ${userProfile?.motivationStyle === 'negative' ? 'text-red-400' : 'text-purple-400'}`}>
+                {getMilestone()}
+              </p>
             </motion.div>
           )}
 
@@ -575,7 +602,11 @@ export default function PomodoroTimer() {
           {phase === 'focus' && (
             <div className="glass-card rounded-2xl p-4 mt-8 max-w-md">
               <p className="text-xs text-white/60 text-center leading-relaxed">
-                💡 <span className="font-semibold">Pro tip:</span> Stay off social media until your break. You're building incredible willpower! 💪
+                {userProfile?.motivationStyle === 'negative' ? (
+                  <>💀 <span className="font-semibold">Reality check:</span> Every second you waste scrolling is a second you'll regret. Focus now or suffer later.</>
+                ) : (
+                  <>💡 <span className="font-semibold">Pro tip:</span> Stay off social media until your break. You're building incredible willpower! 💪</>
+                )}
               </p>
             </div>
           )}
