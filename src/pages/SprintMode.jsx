@@ -18,8 +18,10 @@ export default function SprintMode() {
   const [totalXP, setTotalXP] = useState(0);
   const [showXPPopup, setShowXPPopup] = useState(false);
   const [earnedXP, setEarnedXP] = useState(0);
+  const [quizzes, setQuizzes] = useState([]);
+  const [isGeneratingQuestions, setIsGeneratingQuestions] = useState(false);
 
-  const { data: quizzes = [] } = useQuery({
+  const { data: initialQuizzes = [] } = useQuery({
     queryKey: ['sprintQuizzes'],
     queryFn: async () => {
       const user = await base44.auth.me();
@@ -27,11 +29,25 @@ export default function SprintMode() {
         created_by: user.email,
         isCompleted: false
       });
+      // Filter to only include questions with proper answer formats
+      const validQuizzes = allQuizzes.filter(quiz => {
+        // Must have options array OR be true_false type
+        const hasOptions = quiz.options && quiz.options.length > 0;
+        const isTrueFalse = quiz.type === 'true_false';
+        return hasOptions || isTrueFalse;
+      });
       // Randomly select 5-10 quizzes
-      const count = Math.min(10, allQuizzes.length);
-      return allQuizzes.sort(() => 0.5 - Math.random()).slice(0, count);
+      const count = Math.min(10, validQuizzes.length);
+      return validQuizzes.sort(() => 0.5 - Math.random()).slice(0, count);
     },
   });
+
+  // Initialize quizzes when data loads
+  useEffect(() => {
+    if (initialQuizzes.length > 0 && quizzes.length === 0) {
+      setQuizzes(initialQuizzes);
+    }
+  }, [initialQuizzes]);
 
   const { data: userProfile } = useQuery({
     queryKey: ['userProfile'],
