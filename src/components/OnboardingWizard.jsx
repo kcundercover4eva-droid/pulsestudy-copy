@@ -99,23 +99,23 @@ export default function OnboardingWizard({ onComplete }) {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-5"
+                className="space-y-6"
               >
                 <div className="text-center">
-                  <h2 className="text-2xl md:text-3xl font-bold mb-2">Pick your dopamine.</h2>
-                  <p className="text-sm text-white/60">This color will define your study vibe.</p>
+                  <h2 className="text-3xl md:text-4xl font-bold mb-3">Pick your dopamine.</h2>
+                  <p className="text-base text-white/60">This color will define your study vibe.</p>
                 </div>
 
-                <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-1 gap-4">
                   {THEMES.map((theme) => (
                     <button
                       key={theme.id}
                       onClick={() => update('accentColor', theme.id)}
-                      className={`relative overflow-hidden rounded-2xl p-3.5 flex items-center justify-between transition-all duration-300 ${data.accentColor === theme.id ? 'ring-2 ring-white scale-[1.02] bg-white/10' : 'bg-white/5 hover:bg-white/10'}`}
+                      className={`relative overflow-hidden rounded-2xl p-4 flex items-center justify-between transition-all duration-300 ${data.accentColor === theme.id ? 'ring-2 ring-white scale-[1.02] bg-white/10' : 'bg-white/5 hover:bg-white/10'}`}
                     >
-                      <div className="flex items-center gap-3.5">
-                        <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${theme.gradient} shadow-lg`} />
-                        <span className="font-bold text-lg">{theme.name}</span>
+                      <div className="flex items-center gap-4">
+                        <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${theme.gradient} shadow-lg`} />
+                        <span className="font-bold text-xl">{theme.name}</span>
                       </div>
                       {data.accentColor === theme.id && <Check className="w-6 h-6" />}
                     </button>
@@ -131,7 +131,7 @@ export default function OnboardingWizard({ onComplete }) {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-5"
+                className="space-y-4"
               >
                 <div className="text-center">
                   <h2 className="text-2xl md:text-3xl font-bold mb-2">What type of commitment do you have?</h2>
@@ -168,7 +168,7 @@ export default function OnboardingWizard({ onComplete }) {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-5"
+                className="space-y-4"
               >
                 <div className="text-center">
                   <h2 className="text-2xl md:text-3xl font-bold mb-2">How should we push you?</h2>
