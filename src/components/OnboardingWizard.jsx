@@ -66,18 +66,18 @@ export default function OnboardingWizard({ onComplete }) {
   const currentTheme = THEMES.find(t => t.id === data.accentColor);
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-slate-900 text-white p-6 relative overflow-hidden">
+    <div className="h-screen w-full flex items-center justify-center bg-slate-900 text-white p-3 relative overflow-hidden">
       
       {/* Background based on selection */}
       <div className={`absolute inset-0 bg-gradient-to-br ${currentTheme.gradient} opacity-20 blur-[100px] transition-all duration-700`} />
 
       <motion.div 
-        className="relative z-10 w-full max-w-lg glass rounded-3xl p-8 md:p-10 pb-16 shadow-2xl border border-white/20"
+        className="relative z-10 w-full max-w-lg glass rounded-3xl p-4 md:p-8 max-h-[90vh] flex flex-col shadow-2xl border border-white/20"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
       >
         {/* Progress */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-2">
           <div className="flex gap-1">
             {STEPS.map((_, i) => (
               <div 
@@ -89,7 +89,7 @@ export default function OnboardingWizard({ onComplete }) {
           <span className="text-xs font-medium text-white/50 uppercase tracking-widest">{STEPS[step].title}</span>
         </div>
 
-        <div className="min-h-[300px] flex flex-col justify-center">
+        <div className="flex-1 flex flex-col justify-center overflow-hidden">
           <AnimatePresence mode="wait">
             
             {/* Step 0: Color Selection */}
@@ -99,23 +99,23 @@ export default function OnboardingWizard({ onComplete }) {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-6"
+                className="space-y-3"
               >
                 <div className="text-center">
-                  <h2 className="text-3xl font-bold mb-2">Pick your dopamine.</h2>
-                  <p className="text-white/60">This color will define your study vibe.</p>
+                  <h2 className="text-xl md:text-3xl font-bold mb-1">Pick your dopamine.</h2>
+                  <p className="text-xs text-white/60">This color will define your study vibe.</p>
                 </div>
 
-                <div className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-1 gap-2">
                   {THEMES.map((theme) => (
                     <button
                       key={theme.id}
                       onClick={() => update('accentColor', theme.id)}
-                      className={`relative overflow-hidden rounded-2xl p-4 flex items-center justify-between transition-all duration-300 ${data.accentColor === theme.id ? 'ring-2 ring-white scale-[1.02] bg-white/10' : 'bg-white/5 hover:bg-white/10'}`}
+                      className={`relative overflow-hidden rounded-xl p-2.5 flex items-center justify-between transition-all duration-300 ${data.accentColor === theme.id ? 'ring-2 ring-white scale-[1.02] bg-white/10' : 'bg-white/5 hover:bg-white/10'}`}
                     >
-                      <div className="flex items-center gap-4">
-                        <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${theme.gradient} shadow-lg`} />
-                        <span className="font-bold text-lg">{theme.name}</span>
+                      <div className="flex items-center gap-2.5">
+                        <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${theme.gradient} shadow-lg`} />
+                        <span className="font-bold text-base">{theme.name}</span>
                       </div>
                       {data.accentColor === theme.id && <Check className="w-5 h-5" />}
                     </button>
@@ -131,14 +131,14 @@ export default function OnboardingWizard({ onComplete }) {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-6"
+                className="space-y-3"
               >
                 <div className="text-center">
-                  <h2 className="text-3xl font-bold mb-2">What type of commitment do you have?</h2>
-                  <p className="text-white/60">We'll adapt the schedule to your pace.</p>
+                  <h2 className="text-xl md:text-3xl font-bold mb-1">What type of commitment do you have?</h2>
+                  <p className="text-xs text-white/60">We'll adapt the schedule to your pace.</p>
                 </div>
 
-                <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-1 gap-2">
                   {COMMITMENT_LEVELS.map((level) => (
                     <button
                       key={level.id}
@@ -146,15 +146,15 @@ export default function OnboardingWizard({ onComplete }) {
                         update('commitmentLevel', level.id);
                         update('weeklyGoalHours', level.hours);
                       }}
-                      className={`relative overflow-hidden rounded-2xl p-4 flex items-center justify-between transition-all duration-300 ${data.commitmentLevel === level.id ? 'bg-white text-slate-900 scale-[1.02]' : 'bg-white/5 hover:bg-white/10'}`}
+                      className={`relative overflow-hidden rounded-xl p-2.5 flex items-center justify-between transition-all duration-300 ${data.commitmentLevel === level.id ? 'bg-white text-slate-900 scale-[1.02]' : 'bg-white/5 hover:bg-white/10'}`}
                     >
                       <div>
-                        <div className="font-bold text-lg text-left">{level.label}</div>
-                        <div className={`text-sm text-left ${data.commitmentLevel === level.id ? 'text-slate-600' : 'text-white/50'}`}>
+                        <div className="font-bold text-sm text-left">{level.label}</div>
+                        <div className={`text-[11px] text-left ${data.commitmentLevel === level.id ? 'text-slate-600' : 'text-white/50'}`}>
                           {level.desc}
                         </div>
                       </div>
-                      {data.commitmentLevel === level.id && <Target className="w-5 h-5 text-cyan-600" />}
+                      {data.commitmentLevel === level.id && <Target className="w-4 h-4 text-cyan-600" />}
                     </button>
                   ))}
                 </div>
@@ -168,24 +168,24 @@ export default function OnboardingWizard({ onComplete }) {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="space-y-6"
+                className="space-y-3"
               >
                 <div className="text-center">
-                  <h2 className="text-3xl font-bold mb-2">How should we push you?</h2>
-                  <p className="text-white/60">Choose your coaching style.</p>
+                  <h2 className="text-xl md:text-3xl font-bold mb-1">How should we push you?</h2>
+                  <p className="text-xs text-white/60">Choose your coaching style.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                   <button
                     onClick={() => update('motivationStyle', 'positive')}
-                    className={`rounded-2xl p-6 flex flex-col items-center gap-4 text-center transition-all ${data.motivationStyle === 'positive' ? 'bg-green-500/20 border border-green-500/50' : 'bg-white/5 hover:bg-white/10 border border-transparent'}`}
+                    className={`rounded-xl p-3 flex flex-col items-center gap-2 text-center transition-all ${data.motivationStyle === 'positive' ? 'bg-green-500/20 border border-green-500/50' : 'bg-white/5 hover:bg-white/10 border border-transparent'}`}
                   >
-                    <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
-                      <Sun className="w-8 h-8" />
+                    <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center text-green-400">
+                      <Sun className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg mb-1">Positive Vibes</h3>
-                      <p className="text-sm text-white/60">"You're doing great! Keep the streak alive!"</p>
+                      <h3 className="font-bold text-sm mb-0.5">Positive Vibes</h3>
+                      <p className="text-[11px] text-white/60">"You're doing great! Keep the streak alive!"</p>
                     </div>
                   </button>
 
