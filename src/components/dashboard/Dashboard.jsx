@@ -18,7 +18,8 @@ import {
   MessageSquare,
   Shield,
   Settings,
-  X
+  X,
+  Settings2
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
@@ -30,6 +31,7 @@ import NotificationSettings from '../schedule/NotificationSettings';
 import RandomEventBanner from '../rewards/RandomEventBanner';
 import MysteryBoxUnbox from '../rewards/MysteryBoxUnbox';
 import StreakDisplay from '../rewards/StreakDisplay';
+import SettingsModal from './SettingsModal';
 
 // --- SUB-COMPONENTS ---
 
@@ -547,6 +549,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [loginReward, setLoginReward] = useState(null);
   const [mysteryBoxToOpen, setMysteryBoxToOpen] = useState(null);
+  const [showSettings, setShowSettings] = useState(false);
   const queryClient = useQueryClient();
 
   // Get Auth User for Name
@@ -782,6 +785,12 @@ export default function Dashboard() {
         <div className="flex items-center justify-center gap-2 md:gap-4">
           <StreakDisplay currentStreak={userProfile?.currentStreak || 0} />
           <NotificationSettings />
+          <button
+            onClick={() => setShowSettings(true)}
+            className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center transition-colors"
+          >
+            <Settings2 className="w-4 h-4 md:w-5 md:h-5 text-white" />
+          </button>
           <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 border border-white/10 flex items-center justify-center text-xs md:text-sm font-bold">
             {currentUser?.full_name?.charAt(0) || 'U'}
           </div>
@@ -978,6 +987,15 @@ export default function Dashboard() {
         isOpen={!!loginReward} 
         onClose={() => setLoginReward(null)} 
         reward={loginReward}
+      />
+
+      <SettingsModal
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        userProfile={userProfile}
+        onSave={(updatedSettings) => {
+          updateProfileMutation.mutate(updatedSettings);
+        }}
       />
     </div>
   );
