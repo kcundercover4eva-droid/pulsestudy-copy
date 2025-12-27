@@ -104,13 +104,13 @@ export default function Home() {
             >
               <div className={`flex flex-col items-center gap-1 ${appTab === 'generate' ? 'transform scale-105' : ''}`}>
                 <Upload 
-                  className="w-7 h-7 mb-0.5" 
+                  className="w-7 h-7 mb-0.5 text-white" 
                   strokeWidth={2.5}
-                  style={{ color: appTab === 'generate' ? theme.primary : '#ffffff' }}
+                  style={appTab === 'generate' ? { color: theme.primary } : {}}
                 />
                 <span 
-                  className="text-[11px] font-semibold whitespace-nowrap"
-                  style={{ color: appTab === 'generate' ? theme.primary : '#ffffff' }}
+                  className="text-[11px] font-semibold whitespace-nowrap text-white"
+                  style={appTab === 'generate' ? { color: theme.primary } : {}}
                 >
                   Upload
                 </span>
