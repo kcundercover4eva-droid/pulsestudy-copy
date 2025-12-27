@@ -72,20 +72,18 @@ export default function Home() {
             {/* Schedule Tab */}
             <button 
               onClick={() => setAppTab('schedule')}
-              className={`flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative ${
-                appTab === 'schedule' ? 'bg-white/5' : 'opacity-70 hover:opacity-100'
-              }`}
+              className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
               style={{ minWidth: '44px', minHeight: '44px' }}
             >
               <div className={`flex flex-col items-center gap-1 ${appTab === 'schedule' ? 'transform scale-105' : ''}`}>
                 <Calendar 
-                  className="w-6 h-6 mb-0.5" 
+                  className="w-7 h-7 mb-0.5" 
                   strokeWidth={2.5}
-                  style={{ color: appTab === 'schedule' ? theme.primary : 'rgba(255, 255, 255, 0.7)' }}
+                  style={{ color: appTab === 'schedule' ? theme.primary : '#ffffff' }}
                 />
                 <span 
                   className="text-[11px] font-semibold whitespace-nowrap"
-                  style={{ color: appTab === 'schedule' ? theme.primary : 'rgba(255, 255, 255, 0.7)' }}
+                  style={{ color: appTab === 'schedule' ? theme.primary : '#ffffff' }}
                 >
                   Schedule
                 </span>
@@ -101,20 +99,18 @@ export default function Home() {
             {/* Upload Tab */}
             <button 
               onClick={() => setAppTab('generate')}
-              className={`flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative ${
-                appTab === 'generate' ? 'bg-white/5' : 'opacity-70 hover:opacity-100'
-              }`}
+              className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
               style={{ minWidth: '44px', minHeight: '44px' }}
             >
               <div className={`flex flex-col items-center gap-1 ${appTab === 'generate' ? 'transform scale-105' : ''}`}>
                 <Upload 
-                  className="w-6 h-6 mb-0.5" 
+                  className="w-7 h-7 mb-0.5" 
                   strokeWidth={2.5}
-                  style={{ color: appTab === 'generate' ? theme.primary : 'rgba(255, 255, 255, 0.7)' }}
+                  style={{ color: appTab === 'generate' ? theme.primary : '#ffffff' }}
                 />
                 <span 
                   className="text-[11px] font-semibold whitespace-nowrap"
-                  style={{ color: appTab === 'generate' ? theme.primary : 'rgba(255, 255, 255, 0.7)' }}
+                  style={{ color: appTab === 'generate' ? theme.primary : '#ffffff' }}
                 >
                   Upload
                 </span>
@@ -130,20 +126,18 @@ export default function Home() {
             {/* Home Tab */}
             <button 
               onClick={() => setAppTab('dashboard')}
-              className={`flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative ${
-                appTab === 'dashboard' ? 'bg-white/5' : 'opacity-70 hover:opacity-100'
-              }`}
+              className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
               style={{ minWidth: '44px', minHeight: '44px' }}
             >
               <div className={`flex flex-col items-center gap-1 ${appTab === 'dashboard' ? 'transform scale-105' : ''}`}>
                 <HomeIcon 
-                  className="w-6 h-6 mb-0.5" 
+                  className="w-7 h-7 mb-0.5" 
                   strokeWidth={2.5}
-                  style={{ color: appTab === 'dashboard' ? theme.primary : 'rgba(255, 255, 255, 0.7)' }}
+                  style={{ color: appTab === 'dashboard' ? theme.primary : '#ffffff' }}
                 />
                 <span 
                   className="text-[11px] font-semibold whitespace-nowrap"
-                  style={{ color: appTab === 'dashboard' ? theme.primary : 'rgba(255, 255, 255, 0.7)' }}
+                  style={{ color: appTab === 'dashboard' ? theme.primary : '#ffffff' }}
                 >
                   Home
                 </span>
@@ -159,20 +153,18 @@ export default function Home() {
             {/* Quiz Tab */}
             <button 
               onClick={() => setAppTab('quiz')}
-              className={`flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative ${
-                appTab === 'quiz' ? 'bg-white/5' : 'opacity-70 hover:opacity-100'
-              }`}
+              className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
               style={{ minWidth: '44px', minHeight: '44px' }}
             >
               <div className={`flex flex-col items-center gap-1 ${appTab === 'quiz' ? 'transform scale-105' : ''}`}>
                 <Brain 
-                  className="w-6 h-6 mb-0.5" 
+                  className="w-7 h-7 mb-0.5" 
                   strokeWidth={2.5}
-                  style={{ color: appTab === 'quiz' ? theme.primary : 'rgba(255, 255, 255, 0.7)' }}
+                  style={{ color: appTab === 'quiz' ? theme.primary : '#ffffff' }}
                 />
                 <span 
                   className="text-[11px] font-semibold whitespace-nowrap"
-                  style={{ color: appTab === 'quiz' ? theme.primary : 'rgba(255, 255, 255, 0.7)' }}
+                  style={{ color: appTab === 'quiz' ? theme.primary : '#ffffff' }}
                 >
                   Quiz
                 </span>
