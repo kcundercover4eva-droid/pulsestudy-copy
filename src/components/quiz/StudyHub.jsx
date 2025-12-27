@@ -101,7 +101,7 @@ export default function StudyHub() {
   }
 
   return (
-    <div className="flex flex-col p-3 md:p-6 pb-4 min-h-mobile">
+    <div className="flex flex-col p-3 md:p-6 min-h-mobile">
       <div className="mb-4 md:mb-6">
         <h1 className="text-2xl md:text-4xl font-bold text-white mb-1 md:mb-2">Study Tools</h1>
         <p className="text-white/60 text-sm md:text-base">Choose how you want to study</p>

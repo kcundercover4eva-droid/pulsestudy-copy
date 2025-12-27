@@ -51,7 +51,7 @@ export default function Home() {
           {appTab === 'dashboard' && <Dashboard />}
           {appTab === 'quiz' && <StudyHub />}
           {appTab === 'schedule' && (
-            <div className="p-3 md:p-4 pb-4 min-h-mobile">
+            <div className="p-3 md:p-4 min-h-mobile">
               <ScheduleBuilder />
             </div>
           )}
