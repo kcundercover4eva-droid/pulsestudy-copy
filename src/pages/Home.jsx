@@ -158,13 +158,13 @@ export default function Home() {
             >
               <div className={`flex flex-col items-center gap-1 ${appTab === 'quiz' ? 'transform scale-105' : ''}`}>
                 <Brain 
-                  className="w-7 h-7 mb-0.5" 
+                  className="w-7 h-7 mb-0.5 text-white" 
                   strokeWidth={2.5}
-                  style={{ color: appTab === 'quiz' ? theme.primary : '#ffffff' }}
+                  style={appTab === 'quiz' ? { color: theme.primary } : {}}
                 />
                 <span 
-                  className="text-[11px] font-semibold whitespace-nowrap"
-                  style={{ color: appTab === 'quiz' ? theme.primary : '#ffffff' }}
+                  className="text-[11px] font-semibold whitespace-nowrap text-white"
+                  style={appTab === 'quiz' ? { color: theme.primary } : {}}
                 >
                   Quiz
                 </span>
