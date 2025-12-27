@@ -316,7 +316,7 @@ export default function PomodoroTimer() {
   const themeColor = accentColor === 'coral' ? 'rose' : accentColor === 'electricBlue' ? 'cyan' : 'green';
 
   return (
-    <div className={`min-h-screen relative overflow-hidden ${
+    <div className={`min-h-screen pb-20 relative overflow-hidden ${
       currentTheme === 'dark-neon' ? 'bg-slate-950' :
       currentTheme === 'glass' ? 'bg-slate-900' :
       'bg-white'

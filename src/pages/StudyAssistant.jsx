@@ -211,7 +211,7 @@ Generate an engaging mnemonic, analogy, or memory technique to help them remembe
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pb-safe">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 glass">
         <div className="flex items-center gap-4">
