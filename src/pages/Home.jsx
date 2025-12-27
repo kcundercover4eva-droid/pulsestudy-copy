@@ -59,44 +59,132 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Bottom Nav - Responsive */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-slate-900 border-t-2 border-white/20 z-[9999] shadow-2xl py-3 md:py-0" style={{ paddingBottom: 'max(12px, env(safe-area-inset-bottom))' }}>
-        <div className="w-full grid grid-cols-4 gap-1 max-w-screen-lg mx-auto px-3 md:px-4 md:h-20">
-          <button 
-            onClick={() => setAppTab('schedule')}
-            className={`flex flex-col items-center justify-center gap-1.5 py-2 md:gap-0.5 md:py-0 rounded-xl transition-all active:scale-95 ${appTab === 'schedule' ? 'bg-white/10' : ''}`}
-            style={appTab === 'schedule' ? { color: 'var(--accent-primary)' } : { color: '#94a3b8' }}
-          >
-            <Calendar className="w-7 h-7 md:w-6 md:h-6" strokeWidth={2.5} />
-            <span className="text-[10px] md:text-[9px] font-bold whitespace-nowrap md:uppercase md:tracking-wider">Schedule</span>
-          </button>
+      {/* Bottom Navigation - Mobile Optimized */}
+      <nav 
+        className="fixed bottom-0 left-0 right-0 z-[9999] bg-slate-900/95 backdrop-blur-xl border-t border-white/10 shadow-[0_-4px_24px_rgba(0,0,0,0.4)]"
+        style={{ 
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+          touchAction: 'manipulation'
+        }}
+      >
+        <div className="w-full max-w-screen-lg mx-auto">
+          <div className="grid grid-cols-4 gap-0">
+            {/* Schedule Tab */}
+            <button 
+              onClick={() => setAppTab('schedule')}
+              className={`flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative ${
+                appTab === 'schedule' ? 'bg-white/5' : 'opacity-70 hover:opacity-100'
+              }`}
+              style={{ minWidth: '44px', minHeight: '44px' }}
+            >
+              <div className={`flex flex-col items-center gap-1 ${appTab === 'schedule' ? 'transform scale-105' : ''}`}>
+                <Calendar 
+                  className="w-6 h-6 mb-0.5" 
+                  strokeWidth={2.5}
+                  style={{ color: appTab === 'schedule' ? theme.primary : 'rgba(255, 255, 255, 0.7)' }}
+                />
+                <span 
+                  className="text-[11px] font-semibold whitespace-nowrap"
+                  style={{ color: appTab === 'schedule' ? theme.primary : 'rgba(255, 255, 255, 0.7)' }}
+                >
+                  Schedule
+                </span>
+              </div>
+              {appTab === 'schedule' && (
+                <div 
+                  className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 rounded-b-full"
+                  style={{ backgroundColor: theme.primary, boxShadow: `0 0 12px ${theme.primary}` }}
+                />
+              )}
+            </button>
 
-          <button 
-            onClick={() => setAppTab('generate')}
-            className={`flex flex-col items-center justify-center gap-1.5 py-2 md:gap-0.5 md:py-0 rounded-xl transition-all active:scale-95 ${appTab === 'generate' ? 'bg-white/10' : ''}`}
-            style={appTab === 'generate' ? { color: 'var(--accent-primary)' } : { color: '#94a3b8' }}
-          >
-            <Upload className="w-7 h-7 md:w-6 md:h-6" strokeWidth={2.5} />
-            <span className="text-[10px] md:text-[9px] font-bold whitespace-nowrap md:uppercase md:tracking-wider">Upload</span>
-          </button>
+            {/* Upload Tab */}
+            <button 
+              onClick={() => setAppTab('generate')}
+              className={`flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative ${
+                appTab === 'generate' ? 'bg-white/5' : 'opacity-70 hover:opacity-100'
+              }`}
+              style={{ minWidth: '44px', minHeight: '44px' }}
+            >
+              <div className={`flex flex-col items-center gap-1 ${appTab === 'generate' ? 'transform scale-105' : ''}`}>
+                <Upload 
+                  className="w-6 h-6 mb-0.5" 
+                  strokeWidth={2.5}
+                  style={{ color: appTab === 'generate' ? theme.primary : 'rgba(255, 255, 255, 0.7)' }}
+                />
+                <span 
+                  className="text-[11px] font-semibold whitespace-nowrap"
+                  style={{ color: appTab === 'generate' ? theme.primary : 'rgba(255, 255, 255, 0.7)' }}
+                >
+                  Upload
+                </span>
+              </div>
+              {appTab === 'generate' && (
+                <div 
+                  className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 rounded-b-full"
+                  style={{ backgroundColor: theme.primary, boxShadow: `0 0 12px ${theme.primary}` }}
+                />
+              )}
+            </button>
 
-          <button 
-            onClick={() => setAppTab('dashboard')}
-            className={`flex flex-col items-center justify-center gap-1.5 py-2 md:gap-0.5 md:py-0 rounded-xl transition-all active:scale-95 ${appTab === 'dashboard' ? 'bg-white/10' : ''}`}
-            style={appTab === 'dashboard' ? { color: 'var(--accent-primary)' } : { color: '#94a3b8' }}
-          >
-            <HomeIcon className="w-7 h-7 md:w-6 md:h-6" strokeWidth={2.5} />
-            <span className="text-[10px] md:text-[9px] font-bold whitespace-nowrap md:uppercase md:tracking-wider">Home</span>
-          </button>
+            {/* Home Tab */}
+            <button 
+              onClick={() => setAppTab('dashboard')}
+              className={`flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative ${
+                appTab === 'dashboard' ? 'bg-white/5' : 'opacity-70 hover:opacity-100'
+              }`}
+              style={{ minWidth: '44px', minHeight: '44px' }}
+            >
+              <div className={`flex flex-col items-center gap-1 ${appTab === 'dashboard' ? 'transform scale-105' : ''}`}>
+                <HomeIcon 
+                  className="w-6 h-6 mb-0.5" 
+                  strokeWidth={2.5}
+                  style={{ color: appTab === 'dashboard' ? theme.primary : 'rgba(255, 255, 255, 0.7)' }}
+                />
+                <span 
+                  className="text-[11px] font-semibold whitespace-nowrap"
+                  style={{ color: appTab === 'dashboard' ? theme.primary : 'rgba(255, 255, 255, 0.7)' }}
+                >
+                  Home
+                </span>
+              </div>
+              {appTab === 'dashboard' && (
+                <div 
+                  className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 rounded-b-full"
+                  style={{ backgroundColor: theme.primary, boxShadow: `0 0 12px ${theme.primary}` }}
+                />
+              )}
+            </button>
 
-          <button 
-            onClick={() => setAppTab('quiz')}
-            className={`flex flex-col items-center justify-center gap-1.5 py-2 md:gap-0.5 md:py-0 rounded-xl transition-all active:scale-95 ${appTab === 'quiz' ? 'bg-white/10' : ''}`}
-            style={appTab === 'quiz' ? { color: 'var(--accent-primary)' } : { color: '#94a3b8' }}
-          >
-            <Brain className="w-7 h-7 md:w-6 md:h-6" strokeWidth={2.5} />
-            <span className="text-[10px] md:text-[9px] font-bold whitespace-nowrap md:uppercase md:tracking-wider">Quiz</span>
-          </button>
+            {/* Quiz Tab */}
+            <button 
+              onClick={() => setAppTab('quiz')}
+              className={`flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative ${
+                appTab === 'quiz' ? 'bg-white/5' : 'opacity-70 hover:opacity-100'
+              }`}
+              style={{ minWidth: '44px', minHeight: '44px' }}
+            >
+              <div className={`flex flex-col items-center gap-1 ${appTab === 'quiz' ? 'transform scale-105' : ''}`}>
+                <Brain 
+                  className="w-6 h-6 mb-0.5" 
+                  strokeWidth={2.5}
+                  style={{ color: appTab === 'quiz' ? theme.primary : 'rgba(255, 255, 255, 0.7)' }}
+                />
+                <span 
+                  className="text-[11px] font-semibold whitespace-nowrap"
+                  style={{ color: appTab === 'quiz' ? theme.primary : 'rgba(255, 255, 255, 0.7)' }}
+                >
+                  Quiz
+                </span>
+              </div>
+              {appTab === 'quiz' && (
+                <div 
+                  className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 rounded-b-full"
+                  style={{ backgroundColor: theme.primary, boxShadow: `0 0 12px ${theme.primary}` }}
+                />
+              )}
+            </button>
+          </div>
         </div>
       </nav>
     </div>
