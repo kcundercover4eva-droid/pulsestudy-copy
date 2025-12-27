@@ -64,8 +64,8 @@ export default function Home() {
         className="fixed left-0 right-0 z-[99999] bg-slate-900 border-t-2 border-white/20 shadow-[0_-4px_24px_rgba(0,0,0,0.6)]"
         style={{ 
           bottom: '0',
-          paddingTop: '8px',
-          paddingBottom: 'max(12px, env(safe-area-inset-bottom))',
+          paddingTop: '6px',
+          paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
           touchAction: 'manipulation'
         }}
       >
