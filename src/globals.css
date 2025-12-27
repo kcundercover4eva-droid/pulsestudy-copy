@@ -23,7 +23,7 @@ css
   }
 
   .pb-nav {
-    padding-bottom: calc(env(safe-area-inset-bottom) + 140px);
+    padding-bottom: calc(env(safe-area-inset-bottom) + 160px);
   }
 
   .min-h-mobile {
