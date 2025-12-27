@@ -23,7 +23,7 @@ export function useBottomPadding() {
       );
 
       // Add buffer for comfortable spacing
-      const buffer = 20;
+      const buffer = 15;
       
       // Calculate total padding needed
       const totalPadding = navHeight + safeAreaBottom + buffer;
