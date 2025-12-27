@@ -744,7 +744,7 @@ export default function Dashboard() {
     };
 
   return (
-    <div className="bg-slate-950 text-white pt-6 px-3 pb-3 md:p-8 relative overflow-x-hidden">
+    <div className="bg-slate-950 text-white pt-8 px-3 pb-3 md:p-8 relative overflow-x-hidden">
       <RandomEventBanner />
       
       {mysteryBoxToOpen && (
