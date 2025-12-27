@@ -27,6 +27,9 @@ import confetti from 'canvas-confetti';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import NotificationSettings from '../schedule/NotificationSettings';
+import RandomEventBanner from '../rewards/RandomEventBanner';
+import MysteryBoxUnbox from '../rewards/MysteryBoxUnbox';
+import StreakDisplay from '../rewards/StreakDisplay';
 
 // --- SUB-COMPONENTS ---
 
@@ -490,6 +493,7 @@ const DopamineDropModal = ({ isOpen, onClose }) => (
 export default function Dashboard() {
   const navigate = useNavigate();
   const [showDrop, setShowDrop] = useState(false);
+  const [mysteryBoxToOpen, setMysteryBoxToOpen] = useState(null);
   const queryClient = useQueryClient();
 
   // Get Auth User for Name
@@ -535,6 +539,18 @@ export default function Dashboard() {
     },
   });
 
+  // Query mystery boxes
+  const { data: mysteryBoxes = [] } = useQuery({
+    queryKey: ['mysteryBoxes'],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      return await base44.entities.MysteryBox.filter({ 
+        created_by: user.email,
+        isOpened: false
+      });
+    },
+  });
+
   // Handle Daily Dopamine Drop Logic
   useEffect(() => {
     if (!userProfile) return;
@@ -553,7 +569,17 @@ export default function Dashboard() {
       }, 1500);
       return () => clearTimeout(timer);
     }
-  }, [userProfile?.id]); // Only run when profile loads/changes
+  }, [userProfile?.id]);
+
+  // Auto-open mystery box if available
+  useEffect(() => {
+    if (mysteryBoxes.length > 0 && !mysteryBoxToOpen) {
+      const timer = setTimeout(() => {
+        setMysteryBoxToOpen(mysteryBoxes[0]);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [mysteryBoxes, mysteryBoxToOpen]);
 
   const accentColor = userProfile?.accentColor || 'neonGreen';
   
@@ -567,6 +593,18 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white p-3 md:p-8 relative overflow-x-hidden">
+      <RandomEventBanner />
+      
+      {mysteryBoxToOpen && (
+        <MysteryBoxUnbox 
+          box={mysteryBoxToOpen}
+          onClose={() => {
+            setMysteryBoxToOpen(null);
+            queryClient.invalidateQueries(['mysteryBoxes']);
+          }}
+        />
+      )}
+      
       {/* Background Gradients */}
       <div className="fixed inset-0 pointer-events-none">
         <div className={`absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-${themeColor}-600/10 blur-[120px]`} />
@@ -583,10 +621,7 @@ export default function Dashboard() {
 
         {/* User Info Bar */}
         <div className="flex items-center justify-center gap-2 md:gap-4">
-          <div className="glass px-2 md:px-4 py-1.5 md:py-2 rounded-full flex items-center gap-1.5 md:gap-2">
-            <Flame className="w-3.5 h-3.5 md:w-4 md:h-4 text-orange-400 fill-orange-400" />
-            <span className="font-bold text-xs md:text-sm">{userProfile?.currentStreak || 0}</span>
-          </div>
+          <StreakDisplay currentStreak={userProfile?.currentStreak || 0} />
           <NotificationSettings />
           <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 border border-white/10 flex items-center justify-center text-xs md:text-sm font-bold">
             {currentUser?.full_name?.charAt(0) || 'U'}
@@ -617,21 +652,39 @@ export default function Dashboard() {
           </div>
 
           {/* AI Study Assistant */}
-          <div className="md:col-span-4 h-full">
+          <div className="md:col-span-2 h-full">
             <button
               onClick={() => navigate(createPageUrl('StudyAssistant'))}
               className="w-full glass-card rounded-2xl md:rounded-3xl p-4 md:p-6 hover:shadow-2xl transition-all group h-full"
               style={{ boxShadow: `0 0 60px -15px ${themeColor === 'green' ? '#4ade80' : themeColor === 'rose' ? '#fb7185' : '#06b6d4'}33` }}
             >
               <div className="flex flex-col items-center justify-center gap-3 md:gap-4 h-full">
-                <div className={`w-14 h-14 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-${themeColor}-600 to-${themeColor === 'green' ? 'emerald' : themeColor === 'rose' ? 'pink' : 'blue'}-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg`}>
-                  <MessageSquare className="w-7 h-7 md:w-10 md:h-10 text-white" />
+                <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-${themeColor}-600 to-${themeColor === 'green' ? 'emerald' : themeColor === 'rose' ? 'pink' : 'blue'}-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg`}>
+                  <MessageSquare className="w-7 h-7 md:w-8 md:h-8 text-white" />
                 </div>
                 <div className="text-center">
-                  <h3 className="text-lg md:text-2xl font-bold text-white mb-1 md:mb-2">Ask the Study Assistant</h3>
-                  <p className="text-white/60 text-xs md:text-sm">Get step-by-step help on any topic</p>
+                  <h3 className="text-base md:text-xl font-bold text-white mb-1">Study Assistant</h3>
+                  <p className="text-white/60 text-xs">Get instant help</p>
                 </div>
-                <div className={`text-${themeColor}-400 text-xl md:text-2xl group-hover:translate-y-1 transition-transform`}>↓</div>
+              </div>
+            </button>
+          </div>
+
+          {/* Sprint Mode */}
+          <div className="md:col-span-2 h-full">
+            <button
+              onClick={() => navigate(createPageUrl('SprintMode'))}
+              className="w-full glass-card rounded-2xl md:rounded-3xl p-4 md:p-6 hover:shadow-2xl hover:shadow-yellow-500/30 transition-all group h-full relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-600/10 to-orange-600/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative flex flex-col items-center justify-center gap-3 md:gap-4 h-full">
+                <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                  <Zap className="w-7 h-7 md:w-8 md:h-8 text-white" />
+                </div>
+                <div className="text-center">
+                  <h3 className="text-base md:text-xl font-bold text-white mb-1">Sprint Mode ⚡</h3>
+                  <p className="text-white/60 text-xs">2-10 min speed rounds</p>
+                </div>
               </div>
             </button>
           </div>
