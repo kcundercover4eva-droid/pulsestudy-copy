@@ -46,7 +46,7 @@ export default function Home() {
       '--accent-primary': theme.primary,
       '--accent-secondary': theme.secondary
     }}>
-      <main className="flex-1 overflow-y-auto overflow-x-hidden pb-32">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden" style={{ paddingBottom: '100px' }}>
         <div className="min-h-full">
           {appTab === 'dashboard' && <Dashboard />}
           {appTab === 'quiz' && <StudyHub />}
@@ -60,42 +60,42 @@ export default function Home() {
       </main>
 
       {/* Bottom Nav - Large and Visible */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-slate-900 border-t-2 border-white/20 z-[9999] shadow-2xl" style={{ height: '88px' }}>
-        <div className="h-full w-full grid grid-cols-4 gap-0 max-w-screen-lg mx-auto">
+      <nav className="fixed bottom-0 left-0 right-0 bg-slate-900 border-t-2 border-white/20 z-[9999] shadow-2xl pt-3 pb-safe" style={{ minHeight: '96px' }}>
+        <div className="w-full grid grid-cols-4 gap-1 max-w-screen-lg mx-auto px-2">
           <button 
             onClick={() => setAppTab('schedule')}
-            className={`flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 ${appTab === 'schedule' ? 'bg-white/10' : ''}`}
+            className={`flex flex-col items-center justify-center gap-2 py-2 rounded-xl transition-all active:scale-95 ${appTab === 'schedule' ? 'bg-white/10' : ''}`}
             style={appTab === 'schedule' ? { color: 'var(--accent-primary)' } : { color: '#94a3b8' }}
           >
             <Calendar className="w-7 h-7" strokeWidth={2.5} />
-            <span className="text-xs font-bold">Schedule</span>
+            <span className="text-[11px] font-bold">Schedule</span>
           </button>
 
           <button 
             onClick={() => setAppTab('generate')}
-            className={`flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 ${appTab === 'generate' ? 'bg-white/10' : ''}`}
+            className={`flex flex-col items-center justify-center gap-2 py-2 rounded-xl transition-all active:scale-95 ${appTab === 'generate' ? 'bg-white/10' : ''}`}
             style={appTab === 'generate' ? { color: 'var(--accent-primary)' } : { color: '#94a3b8' }}
           >
             <Upload className="w-7 h-7" strokeWidth={2.5} />
-            <span className="text-xs font-bold">Upload</span>
+            <span className="text-[11px] font-bold">Upload</span>
           </button>
 
           <button 
             onClick={() => setAppTab('dashboard')}
-            className={`flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 ${appTab === 'dashboard' ? 'bg-white/10' : ''}`}
+            className={`flex flex-col items-center justify-center gap-2 py-2 rounded-xl transition-all active:scale-95 ${appTab === 'dashboard' ? 'bg-white/10' : ''}`}
             style={appTab === 'dashboard' ? { color: 'var(--accent-primary)' } : { color: '#94a3b8' }}
           >
             <HomeIcon className="w-7 h-7" strokeWidth={2.5} />
-            <span className="text-xs font-bold">Home</span>
+            <span className="text-[11px] font-bold">Home</span>
           </button>
 
           <button 
             onClick={() => setAppTab('quiz')}
-            className={`flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 ${appTab === 'quiz' ? 'bg-white/10' : ''}`}
+            className={`flex flex-col items-center justify-center gap-2 py-2 rounded-xl transition-all active:scale-95 ${appTab === 'quiz' ? 'bg-white/10' : ''}`}
             style={appTab === 'quiz' ? { color: 'var(--accent-primary)' } : { color: '#94a3b8' }}
           >
             <Brain className="w-7 h-7" strokeWidth={2.5} />
-            <span className="text-xs font-bold">Quiz</span>
+            <span className="text-[11px] font-bold">Quiz</span>
           </button>
         </div>
       </nav>
