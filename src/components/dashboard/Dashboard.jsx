@@ -583,11 +583,11 @@ export default function Dashboard() {
 
         {/* User Info Bar */}
         <div className="flex items-center justify-end gap-2 md:gap-4">
-          <NotificationSettings />
           <div className="glass px-2 md:px-4 py-1.5 md:py-2 rounded-full flex items-center gap-1.5 md:gap-2">
             <Flame className="w-3.5 h-3.5 md:w-4 md:h-4 text-orange-400 fill-orange-400" />
             <span className="font-bold text-xs md:text-sm">{userProfile?.currentStreak || 0}</span>
           </div>
+          <NotificationSettings />
           <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 border border-white/10 flex items-center justify-center text-xs md:text-sm font-bold">
             {currentUser?.full_name?.charAt(0) || 'U'}
           </div>
