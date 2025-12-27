@@ -46,7 +46,7 @@ export default function Home() {
       '--accent-primary': theme.primary,
       '--accent-secondary': theme.secondary
     }}>
-      <main className="flex-1 overflow-y-auto overflow-x-hidden pb-32">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden pb-24 pt-2">
         <div>
           {appTab === 'dashboard' && <Dashboard />}
           {appTab === 'quiz' && <StudyHub />}
@@ -64,8 +64,8 @@ export default function Home() {
         className="fixed left-0 right-0 z-[99999] bg-slate-900 border-t-2 border-white/20 shadow-[0_-4px_24px_rgba(0,0,0,0.6)]"
         style={{ 
           bottom: '0',
-          paddingTop: '12px',
-          paddingBottom: 'max(env(safe-area-inset-bottom, 56px), 56px)',
+          paddingTop: '8px',
+          paddingBottom: 'max(12px, env(safe-area-inset-bottom))',
           touchAction: 'manipulation'
         }}
       >
@@ -74,7 +74,7 @@ export default function Home() {
             {/* Schedule Tab */}
             <button 
               onClick={() => setAppTab('schedule')}
-              className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
+              className="flex flex-col items-center justify-center px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
               style={{ minWidth: '44px', minHeight: '44px' }}
             >
               <div className={`flex flex-col items-center gap-1 ${appTab === 'schedule' ? 'transform scale-105' : ''}`}>
@@ -101,7 +101,7 @@ export default function Home() {
             {/* Upload Tab */}
             <button 
               onClick={() => setAppTab('generate')}
-              className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
+              className="flex flex-col items-center justify-center px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
               style={{ minWidth: '44px', minHeight: '44px' }}
             >
               <div className={`flex flex-col items-center gap-1 ${appTab === 'generate' ? 'transform scale-105' : ''}`}>
@@ -128,7 +128,7 @@ export default function Home() {
             {/* Home Tab */}
             <button 
               onClick={() => setAppTab('dashboard')}
-              className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
+              className="flex flex-col items-center justify-center px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
               style={{ minWidth: '44px', minHeight: '44px' }}
             >
               <div className={`flex flex-col items-center gap-1 ${appTab === 'dashboard' ? 'transform scale-105' : ''}`}>
@@ -155,7 +155,7 @@ export default function Home() {
             {/* Quiz Tab */}
             <button 
               onClick={() => setAppTab('quiz')}
-              className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
+              className="flex flex-col items-center justify-center px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
               style={{ minWidth: '44px', minHeight: '44px' }}
             >
               <div className={`flex flex-col items-center gap-1 ${appTab === 'quiz' ? 'transform scale-105' : ''}`}>
