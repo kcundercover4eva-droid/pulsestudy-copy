@@ -46,7 +46,7 @@ export default function Home() {
       '--accent-primary': theme.primary,
       '--accent-secondary': theme.secondary
     }}>
-      <main className="flex-1 overflow-y-auto overflow-x-hidden pb-24">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden pb-32">
         <div className="min-h-full">
           {appTab === 'dashboard' && <Dashboard />}
           {appTab === 'quiz' && <StudyHub />}
@@ -59,43 +59,43 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Bottom Nav */}
-      <nav className="fixed bottom-0 left-0 right-0 h-20 glass border-t border-white/10 z-[100] backdrop-blur-xl bg-slate-950/95 safe-area-inset">
-        <div className="h-full max-w-screen-sm mx-auto grid grid-cols-4 gap-0">
+      {/* Bottom Nav - Large and Visible */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-slate-900 border-t-2 border-white/20 z-[9999] shadow-2xl" style={{ height: '88px' }}>
+        <div className="h-full w-full grid grid-cols-4 gap-0 max-w-screen-lg mx-auto">
           <button 
             onClick={() => setAppTab('schedule')}
-            className={`flex flex-col items-center justify-center gap-1 transition-colors touch-manipulation ${appTab === 'schedule' ? '' : 'text-white/40'}`}
-            style={appTab === 'schedule' ? { color: 'var(--accent-primary)' } : {}}
+            className={`flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 ${appTab === 'schedule' ? 'bg-white/10' : ''}`}
+            style={appTab === 'schedule' ? { color: 'var(--accent-primary)' } : { color: '#94a3b8' }}
           >
-            <Calendar className="w-6 h-6" />
-            <span className="text-[10px] font-semibold">Schedule</span>
+            <Calendar className="w-7 h-7" strokeWidth={2.5} />
+            <span className="text-xs font-bold">Schedule</span>
           </button>
 
           <button 
             onClick={() => setAppTab('generate')}
-            className={`flex flex-col items-center justify-center gap-1 transition-colors touch-manipulation ${appTab === 'generate' ? '' : 'text-white/40'}`}
-            style={appTab === 'generate' ? { color: 'var(--accent-primary)' } : {}}
+            className={`flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 ${appTab === 'generate' ? 'bg-white/10' : ''}`}
+            style={appTab === 'generate' ? { color: 'var(--accent-primary)' } : { color: '#94a3b8' }}
           >
-            <Upload className="w-6 h-6" />
-            <span className="text-[10px] font-semibold">Upload</span>
+            <Upload className="w-7 h-7" strokeWidth={2.5} />
+            <span className="text-xs font-bold">Upload</span>
           </button>
 
           <button 
             onClick={() => setAppTab('dashboard')}
-            className={`flex flex-col items-center justify-center gap-1 transition-colors touch-manipulation ${appTab === 'dashboard' ? '' : 'text-white/40'}`}
-            style={appTab === 'dashboard' ? { color: 'var(--accent-primary)' } : {}}
+            className={`flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 ${appTab === 'dashboard' ? 'bg-white/10' : ''}`}
+            style={appTab === 'dashboard' ? { color: 'var(--accent-primary)' } : { color: '#94a3b8' }}
           >
-            <HomeIcon className="w-6 h-6" />
-            <span className="text-[10px] font-semibold">Home</span>
+            <HomeIcon className="w-7 h-7" strokeWidth={2.5} />
+            <span className="text-xs font-bold">Home</span>
           </button>
 
           <button 
             onClick={() => setAppTab('quiz')}
-            className={`flex flex-col items-center justify-center gap-1 transition-colors touch-manipulation ${appTab === 'quiz' ? '' : 'text-white/40'}`}
-            style={appTab === 'quiz' ? { color: 'var(--accent-primary)' } : {}}
+            className={`flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 ${appTab === 'quiz' ? 'bg-white/10' : ''}`}
+            style={appTab === 'quiz' ? { color: 'var(--accent-primary)' } : { color: '#94a3b8' }}
           >
-            <Brain className="w-6 h-6" />
-            <span className="text-[10px] font-semibold">Quiz</span>
+            <Brain className="w-7 h-7" strokeWidth={2.5} />
+            <span className="text-xs font-bold">Quiz</span>
           </button>
         </div>
       </nav>
