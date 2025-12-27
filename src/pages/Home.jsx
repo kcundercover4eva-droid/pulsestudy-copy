@@ -7,11 +7,13 @@ import Dashboard from '@/components/dashboard/Dashboard';
 import StudyHub from '@/components/quiz/StudyHub';
 import ScheduleBuilder from '@/components/schedule/ScheduleBuilder';
 import GenerateContent from './GenerateContent';
+import { useBottomPadding } from '@/components/utils/useBottomPadding';
 import { Calendar, Brain, LayoutDashboard, Home as HomeIcon, Upload } from 'lucide-react';
 
 export default function Home() {
   const [view, setView] = useState('landing'); // landing, onboarding, app
   const [appTab, setAppTab] = useState('dashboard'); // dashboard, quiz, schedule, generate
+  const dynamicPadding = useBottomPadding();
 
   // Fetch user profile for accent color
   const { data: userProfile } = useQuery({
@@ -46,7 +48,7 @@ export default function Home() {
       '--accent-primary': theme.primary,
       '--accent-secondary': theme.secondary
     }}>
-      <main className="flex-1 overflow-y-auto overflow-x-hidden pb-nav pt-safe">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden pt-safe" style={{ paddingBottom: `${dynamicPadding}px` }}>
         <div>
           {appTab === 'dashboard' && <Dashboard />}
           {appTab === 'quiz' && <StudyHub />}
