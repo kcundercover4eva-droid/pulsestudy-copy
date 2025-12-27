@@ -101,16 +101,14 @@ export default function StudyHub() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col p-3 md:p-6">
-      <div className="mb-6 md:mb-8">
+    <div className="flex flex-col p-3 md:p-6">
+      <div className="mb-4 md:mb-6">
         <h1 className="text-2xl md:text-4xl font-bold text-white mb-1 md:mb-2">Study Tools</h1>
         <p className="text-white/60 text-sm md:text-base">Choose how you want to study</p>
       </div>
 
-      <div className="flex-1 flex items-center justify-center">
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl w-full">
-          {/* Quiz */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 max-w-4xl w-full mx-auto">
+        {/* Quiz */}
           <motion.button
             onClick={() => setSelectedMode('quiz')}
             whileHover={{ scale: 1.05 }}
@@ -146,10 +144,9 @@ export default function StudyHub() {
               <FileText className="w-12 h-12 md:w-16 md:h-16 text-white mx-auto mb-3 md:mb-4" />
               <h3 className="text-xl md:text-2xl font-bold text-white mb-1 md:mb-2">Notes</h3>
               <p className="text-white/80 text-xs md:text-sm">Read concise study notes</p>
-            </Card>
-          </motion.button>
-        </div>
-      </div>
-    </div>
-  );
+              </Card>
+              </motion.button>
+              </div>
+              </div>
+              );
 }
