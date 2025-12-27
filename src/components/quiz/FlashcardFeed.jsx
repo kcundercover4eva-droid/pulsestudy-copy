@@ -343,7 +343,7 @@ export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
           </button>
         </div>
       )}
-      <div className="flex justify-between items-center mb-4 px-4">
+      <div className="flex justify-between items-center mb-2 px-4">
         <div className="flex-1">
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <Brain className="w-6 h-6 text-purple-400" />
