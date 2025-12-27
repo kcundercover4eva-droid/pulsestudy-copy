@@ -791,27 +791,27 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
           
           {/* Pomodoro CTA Banner */}
-          <div className="md:col-span-8">
+          <div className="md:col-span-12">
             <button
               onClick={() => navigate(createPageUrl('PomodoroTimer'))}
-              className="w-full glass-card rounded-2xl md:rounded-3xl p-4 md:p-6 hover:shadow-2xl hover:shadow-purple-500/30 transition-all group relative overflow-hidden h-full"
+              className="w-full glass-card rounded-2xl md:rounded-3xl p-6 md:p-8 hover:shadow-2xl hover:shadow-purple-500/30 transition-all group relative overflow-hidden h-full"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative flex items-center gap-4 md:gap-6">
-                <div className="w-14 h-14 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-purple-500/50 flex-shrink-0">
-                  <Zap className="w-7 h-7 md:w-10 md:h-10 text-white" />
+              <div className="relative flex items-center gap-6 md:gap-8">
+                <div className="w-20 h-20 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-purple-500/50 flex-shrink-0">
+                  <Zap className="w-10 h-10 md:w-14 md:h-14 text-white" />
                 </div>
                 <div className="text-left flex-1 min-w-0">
-                  <h3 className="text-lg md:text-2xl font-bold text-white mb-0.5 md:mb-1">Pomodoro Focus Timer</h3>
-                  <p className="text-white/60 text-xs md:text-base">Enter deep work mode with gamified focus sessions</p>
+                  <h3 className="text-2xl md:text-4xl font-bold text-white mb-1 md:mb-2">Pomodoro Focus Timer</h3>
+                  <p className="text-white/60 text-sm md:text-lg">Enter deep work mode with gamified focus sessions</p>
                 </div>
-                <div className="text-purple-400 text-2xl md:text-3xl group-hover:translate-x-2 transition-transform flex-shrink-0">→</div>
+                <div className="text-purple-400 text-3xl md:text-4xl group-hover:translate-x-2 transition-transform flex-shrink-0">→</div>
               </div>
             </button>
           </div>
 
           {/* AI Study Assistant */}
-          <div className="md:col-span-2 h-full">
+          <div className="md:col-span-6 h-full">
             <button
               onClick={() => navigate(createPageUrl('StudyAssistant'))}
               className="w-full glass-card rounded-2xl md:rounded-3xl p-4 md:p-6 hover:shadow-2xl transition-all group h-full"
@@ -830,7 +830,7 @@ export default function Dashboard() {
           </div>
 
           {/* Sprint Mode */}
-          <div className="md:col-span-2 h-full">
+          <div className="md:col-span-6 h-full">
             <button
               onClick={() => navigate(createPageUrl('SprintMode'))}
               className="w-full glass-card rounded-2xl md:rounded-3xl p-4 md:p-6 hover:shadow-2xl hover:shadow-yellow-500/30 transition-all group h-full relative overflow-hidden"
