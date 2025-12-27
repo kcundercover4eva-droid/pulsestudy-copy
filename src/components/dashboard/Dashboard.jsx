@@ -130,9 +130,21 @@ const FocusTimer = ({ accentColor, userProfile, updateProfileMutation, createSes
       focusProfile: mode
     });
 
+    // Check if we should increment streak (only once per day)
+    const today = moment().format('YYYY-MM-DD');
+    const lastStreakDate = userProfile?.lastStreakDate 
+      ? moment(userProfile.lastStreakDate).format('YYYY-MM-DD') 
+      : null;
+
+    const shouldIncrementStreak = lastStreakDate !== today;
+    const newStreak = shouldIncrementStreak 
+      ? (userProfile?.currentStreak || 0) + 1 
+      : (userProfile?.currentStreak || 0);
+
     updateProfileMutation.mutate({
       totalPoints: (userProfile?.totalPoints || 0) + pointsEarned,
-      currentStreak: (userProfile?.currentStreak || 0) + 1
+      currentStreak: newStreak,
+      lastStreakDate: shouldIncrementStreak ? today : userProfile?.lastStreakDate
     });
 
     setSessionData({
@@ -140,7 +152,8 @@ const FocusTimer = ({ accentColor, userProfile, updateProfileMutation, createSes
       pointsEarned,
       pauseCount,
       isPerfect,
-      streak: (userProfile?.currentStreak || 0) + 1
+      streak: newStreak,
+      streakIncremented: shouldIncrementStreak
     });
 
     setCompletedSessions(prev => prev + 1);
