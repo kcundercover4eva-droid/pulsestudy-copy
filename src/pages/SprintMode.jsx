@@ -215,9 +215,9 @@ export default function SprintMode() {
               </div>
               <h2 className="text-2xl font-bold text-white mb-6">{currentQuiz.question}</h2>
 
-              {(currentQuiz.type === 'multiple_choice' || currentQuiz.options) && (
+              {currentQuiz.options && currentQuiz.options.length > 0 ? (
                 <div className="space-y-3">
-                  {currentQuiz.options?.map((option, idx) => (
+                  {currentQuiz.options.map((option, idx) => (
                     <button
                       key={idx}
                       onClick={() => handleAnswer(option === currentQuiz.answer)}
@@ -227,9 +227,7 @@ export default function SprintMode() {
                     </button>
                   ))}
                 </div>
-              )}
-
-              {currentQuiz.type === 'true_false' && !currentQuiz.options && (
+              ) : (
                 <div className="grid grid-cols-2 gap-4">
                   {['True', 'False'].map(option => (
                     <button
