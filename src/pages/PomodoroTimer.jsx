@@ -57,7 +57,6 @@ export default function PomodoroTimer() {
   // Session State
   const [mode, setMode] = useState('standard');
   const [phase, setPhase] = useState('configure'); // configure, idle, focus, break, summary
-  const [showIntro, setShowIntro] = useState(false);
   const [timeLeft, setTimeLeft] = useState(MODES.standard.focus * 60);
   const [isActive, setIsActive] = useState(false);
   const [sessionStartTime, setSessionStartTime] = useState(null);
@@ -74,6 +73,7 @@ export default function PomodoroTimer() {
   const [customBreak, setCustomBreak] = useState(10);
   const [currentTheme, setCurrentTheme] = useState('dark-neon');
   const [sessionData, setSessionData] = useState(null);
+  const [showFirstTimePrompt, setShowFirstTimePrompt] = useState(false);
   
   const timerRef = useRef(null);
 
@@ -85,13 +85,6 @@ export default function PomodoroTimer() {
       return profiles[0] || { totalPoints: 0, currentStreak: 0 };
     },
   });
-
-  // Check if first time and show intro
-  useEffect(() => {
-    if (userProfile && !userProfile.hasSeenPomodoroIntro) {
-      setShowIntro(true);
-    }
-  }, [userProfile]);
 
   // Update profile mutation
   const updateProfileMutation = useMutation({
@@ -161,6 +154,13 @@ export default function PomodoroTimer() {
     }
     return () => stopAmbient();
   }, [phase, isActive, ambientSound, soundEnabled]);
+
+  // Check if first time visiting Pomodoro
+  useEffect(() => {
+    if (userProfile && !userProfile.hasSeenPomodoroPrompt) {
+      setShowFirstTimePrompt(true);
+    }
+  }, [userProfile]);
 
   const handleStart = () => {
     setIsActive(true);
@@ -329,34 +329,6 @@ export default function PomodoroTimer() {
     }
   };
 
-  // Show intro prompt
-  if (showIntro) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl p-6">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="glass-card rounded-3xl p-8 max-w-md text-center"
-        >
-          <div className={`w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br ${getColorByProgress()} flex items-center justify-center`}>
-            <Zap className="w-10 h-10 text-white" />
-          </div>
-          <h2 className="text-2xl font-bold text-white mb-4">Focus to earn Focus points...</h2>
-          <p className="text-white/60 mb-8">very simple.</p>
-          <Button
-            onClick={() => {
-              setShowIntro(false);
-              updateProfileMutation.mutate({ hasSeenPomodoroIntro: true });
-            }}
-            className={`w-full h-14 rounded-2xl font-bold text-lg bg-gradient-to-r ${getColorByProgress()} hover:scale-105 transition-transform`}
-          >
-            Got it! 👍
-          </Button>
-        </motion.div>
-      </div>
-    );
-  }
-
   // Show configuration screen
   if (phase === 'configure') {
     return (
@@ -470,6 +442,26 @@ export default function PomodoroTimer() {
       currentTheme === 'glass' ? 'bg-slate-900' :
       'bg-white'
     }`}>
+      {/* First Time Prompt */}
+      {showFirstTimePrompt && (
+        <div className="fixed inset-0 z-[100000]" style={{ pointerEvents: 'auto' }}>
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-md" />
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100002] rounded-2xl p-6 w-80 max-w-[90vw] bg-slate-900 border-2 border-purple-500/50 shadow-2xl">
+            <p className="text-white text-lg font-bold mb-4 text-center leading-tight">
+              Focus here to earn Focus points... very simple.
+            </p>
+            <Button
+              onClick={() => {
+                setShowFirstTimePrompt(false);
+                updateProfileMutation.mutate({ hasSeenPomodoroPrompt: true });
+              }}
+              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:scale-105 transition-transform h-12 font-bold"
+            >
+              Got it! ✓
+            </Button>
+          </div>
+        </div>
+      )}
       {/* Background Effects */}
       <div className="fixed inset-0 pointer-events-none">
         <div className={`absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-gradient-to-br ${getColorByProgress()} opacity-20 blur-[120px]`} />
