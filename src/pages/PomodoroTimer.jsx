@@ -55,7 +55,7 @@ export default function PomodoroTimer() {
   
   // Session State
   const [mode, setMode] = useState('standard');
-  const [phase, setPhase] = useState('idle'); // idle, focus, break, summary
+  const [phase, setPhase] = useState('configure'); // configure, idle, focus, break, summary
   const [timeLeft, setTimeLeft] = useState(MODES.standard.focus * 60);
   const [isActive, setIsActive] = useState(false);
   const [sessionStartTime, setSessionStartTime] = useState(null);
@@ -314,6 +314,87 @@ export default function PomodoroTimer() {
       return "You're a champion! Finish strong! 🏆";
     }
   };
+
+  // Show configuration screen
+  if (phase === 'configure') {
+    return (
+      <div className="min-h-screen bg-slate-950 p-6 flex items-center justify-center relative overflow-hidden">
+        <div className="fixed inset-0 pointer-events-none">
+          <div className={`absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-gradient-to-br ${getColorByProgress()} opacity-20 blur-[120px]`} />
+          <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-purple-600/10 blur-[120px]" />
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative z-10 w-full max-w-md"
+        >
+          <div className="text-center mb-8">
+            <div className={`w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br ${getColorByProgress()} flex items-center justify-center`}>
+              <Zap className="w-10 h-10 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-white mb-2">Configure Your Session</h1>
+            <p className="text-white/60">Set your preferences before starting</p>
+          </div>
+
+          <div className="glass-card rounded-3xl p-6 space-y-6">
+            {/* Mode Selection */}
+            <div>
+              <label className="text-white font-semibold mb-3 block">Focus Duration</label>
+              <div className="grid grid-cols-3 gap-3">
+                {Object.entries(MODES).map(([key, config]) => (
+                  <button
+                    key={key}
+                    onClick={() => {
+                      setMode(key);
+                      setTimeLeft(config.focus * 60);
+                    }}
+                    className={`p-4 rounded-2xl border-2 transition-all ${
+                      mode === key 
+                        ? 'border-purple-500 bg-purple-500/20' 
+                        : 'border-white/10 bg-white/5 hover:bg-white/10'
+                    }`}
+                  >
+                    <div className="text-2xl mb-2">{config.icon}</div>
+                    <div className="text-white font-semibold text-sm">{config.name}</div>
+                    <div className="text-white/60 text-xs mt-1">{config.focus}m</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Ambient Sound */}
+            <div>
+              <label className="text-white font-semibold mb-3 block">Ambient Sound</label>
+              <div className="grid grid-cols-3 gap-2">
+                {AMBIENT_SOUNDS.map(sound => (
+                  <button
+                    key={sound.id}
+                    onClick={() => setAmbientSound(sound.id)}
+                    className={`p-3 rounded-xl text-center transition-all ${
+                      ambientSound === sound.id
+                        ? 'bg-purple-500/20 border-2 border-purple-500'
+                        : 'bg-white/5 border border-white/10 hover:bg-white/10'
+                    }`}
+                  >
+                    <div className="text-2xl mb-1">{sound.emoji}</div>
+                    <div className="text-white text-xs">{sound.name}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <Button
+              onClick={() => setPhase('idle')}
+              className={`w-full h-14 rounded-2xl font-bold text-lg bg-gradient-to-r ${getColorByProgress()} hover:scale-105 transition-transform`}
+            >
+              Save & Continue
+            </Button>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
 
   // Show summary
   if (phase === 'summary') {
