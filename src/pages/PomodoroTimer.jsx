@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import SessionSummary from '@/components/pomodoro/SessionSummary';
 import BreakTimer from '@/components/pomodoro/BreakTimer';
 import { playSound, stopAmbient, playAmbient } from '@/components/utils/soundManager';
@@ -447,10 +448,10 @@ export default function PomodoroTimer() {
               if (phase === 'focus' && isActive) {
                 if (window.confirm('Are you sure you want to leave? Your current focus session will be lost and you will not earn points.')) {
                   stopAmbient();
-                  navigate(-1);
+                  navigate(createPageUrl('Home'));
                 }
               } else {
-                navigate(-1);
+                navigate(createPageUrl('Home'));
               }
             }}
             className={`flex items-center gap-2 transition-colors ${
