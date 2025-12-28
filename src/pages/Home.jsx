@@ -12,20 +12,20 @@ import { useBottomPadding } from '@/components/utils/useBottomPadding';
 import { Calendar, Brain, LayoutDashboard, Home as HomeIcon, Upload } from 'lucide-react';
 
 export default function Home() {
-  const [view, setView] = useState('landing'); // landing, onboarding, app
+  const [view, setView] = useState('checking'); // checking, landing, onboarding, app
   const [appTab, setAppTab] = useState('dashboard'); // dashboard, quiz, schedule, generate
   const [guideStep, setGuideStep] = useState(0);
+  const [landingShownThisSession, setLandingShownThisSession] = useState(false);
   const dynamicPadding = useBottomPadding();
   const queryClient = useQueryClient();
 
   // Fetch user profile for accent color
-  const { data: userProfile } = useQuery({
+  const { data: userProfile, isLoading: profileLoading } = useQuery({
     queryKey: ['userProfile'],
     queryFn: async () => {
       const profiles = await base44.entities.UserProfile.list();
       return profiles[0] || { accentColor: 'neonGreen', hasCompletedOnboarding: false };
     },
-    enabled: view === 'app',
   });
 
   const updateProfileMutation = useMutation({
@@ -42,16 +42,42 @@ export default function Home() {
     },
   });
 
-  if (view === 'landing') {
-    return <LandingScreen onGetStarted={() => setView('onboarding')} />;
+  // Determine initial view based on profile
+  React.useEffect(() => {
+    if (profileLoading || view !== 'checking') return;
+    
+    if (!userProfile?.hasCompletedOnboarding) {
+      // First time user - show onboarding wizard
+      setView('onboarding');
+    } else if (!landingShownThisSession) {
+      // Returning user - show landing once per session
+      setView('landing');
+      setLandingShownThisSession(true);
+    } else {
+      // Already shown landing this session
+      setView('app');
+    }
+  }, [userProfile, profileLoading, view, landingShownThisSession]);
+
+  if (view === 'checking' || profileLoading) {
+    return (
+      <div className="fixed inset-0 bg-slate-950 flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    );
   }
 
   if (view === 'onboarding') {
     return <OnboardingWizard onComplete={() => {
+      updateProfileMutation.mutate({ hasCompletedOnboarding: true });
       setView('app');
       // Start the guide after a short delay
       setTimeout(() => setGuideStep(1), 500);
     }} />;
+  }
+
+  if (view === 'landing') {
+    return <LandingScreen onGetStarted={() => setView('app')} />;
   }
 
   // Map accent colors to CSS color values
