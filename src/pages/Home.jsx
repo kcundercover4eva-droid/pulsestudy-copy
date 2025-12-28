@@ -18,7 +18,6 @@ export default function Home() {
   const [guideStep, setGuideStep] = useState(0);
   const [showScheduleHelp, setShowScheduleHelp] = useState(false);
   const [showGenerateHelp, setShowGenerateHelp] = useState(false);
-  const [showQuizHelp, setShowQuizHelp] = useState(false);
   const dynamicPadding = useBottomPadding();
   const queryClient = useQueryClient();
 
@@ -143,27 +142,6 @@ export default function Home() {
               onClick={() => {
                 setShowGenerateHelp(false);
                 updateProfileMutation.mutate({ hasSeenGenerateIntro: true });
-              }}
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:scale-105 transition-transform h-12 font-bold"
-            >
-              Got it! ✓
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* Quiz Help Prompt */}
-      {showQuizHelp && (
-        <div className="fixed inset-0 z-[100000]" style={{ pointerEvents: 'auto' }}>
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-md" />
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100002] rounded-2xl p-6 w-80 max-w-[90vw] bg-slate-900 border-2 border-purple-500/50 shadow-2xl">
-            <p className="text-white text-lg font-bold mb-4 text-center leading-tight drop-shadow-lg">
-              Test, review, & grow after material uploaded
-            </p>
-            <Button
-              onClick={() => {
-                setShowQuizHelp(false);
-                updateProfileMutation.mutate({ hasSeenQuizIntro: true });
               }}
               className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:scale-105 transition-transform h-12 font-bold"
             >
@@ -302,12 +280,7 @@ export default function Home() {
             {/* Quiz Tab */}
             <button 
               data-tab="study"
-              onClick={() => {
-                setAppTab('quiz');
-                if (guideStep === 0 && !userProfile?.hasSeenQuizIntro) {
-                  setTimeout(() => setShowQuizHelp(true), 300);
-                }
-              }}
+              onClick={() => setAppTab('quiz')}
               className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
               style={{ minWidth: '44px', minHeight: '44px' }}
             >
