@@ -257,23 +257,23 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
   return (
     <>
       {/* Blocking Overlay */}
-      <div className="fixed inset-0 z-[99999] bg-black/60 backdrop-blur-sm" />
+      <div className="fixed inset-0 z-[100000] bg-black/60 backdrop-blur-sm" />
 
       {/* Highlight target element */}
       {targetRect && (
         <>
           {/* Pulsing ring */}
           <motion.div
-            animate={{ 
-              scale: [1, 1.08, 1],
-              opacity: [1, 0.5, 1]
-            }}
-            transition={{ 
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="fixed z-[100000] rounded-2xl pointer-events-none"
+      animate={{ 
+        scale: [1, 1.08, 1],
+        opacity: [1, 0.5, 1]
+      }}
+      transition={{ 
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}
+      className="fixed z-[100001] rounded-2xl pointer-events-none"
             style={{
               top: targetRect.top - 8,
               left: targetRect.left - 8,
