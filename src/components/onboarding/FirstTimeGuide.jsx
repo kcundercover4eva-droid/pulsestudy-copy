@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import confetti from 'canvas-confetti';
-import { ArrowDown, Sparkles } from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
 
 const steps = [
   {
@@ -45,6 +45,7 @@ const steps = [
 
 export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
   const step = steps[currentStep - 1];
+  const [targetRect, setTargetRect] = useState(null);
 
   useEffect(() => {
     if (step?.showConfetti) {
@@ -65,6 +66,35 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
       return () => clearTimeout(timer);
     }
   }, [step?.showConfetti]);
+
+  // Update target element rect
+  useEffect(() => {
+    if (!step || step.type === "fullscreen") return;
+    
+    const updateRect = () => {
+      let element = null;
+      if (step.targetTab === "schedule") {
+        element = document.querySelector('[data-tab="schedule"]');
+      } else if (step.targetTab === "study") {
+        element = document.querySelector('[data-tab="study"]');
+      } else if (step.targetElement) {
+        element = document.querySelector(`[data-guide="${step.targetElement}"]`);
+      }
+      
+      if (element) {
+        setTargetRect(element.getBoundingClientRect());
+      }
+    };
+
+    updateRect();
+    window.addEventListener('resize', updateRect);
+    window.addEventListener('scroll', updateRect);
+    
+    return () => {
+      window.removeEventListener('resize', updateRect);
+      window.removeEventListener('scroll', updateRect);
+    };
+  }, [step]);
 
   if (!step) return null;
 
@@ -98,92 +128,122 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
     );
   }
 
-  // Pointer tooltip step
-  const getPosition = () => {
-    if (step.targetTab === "schedule") {
-      const scheduleBtn = document.querySelector('[data-tab="schedule"]');
-      if (scheduleBtn) {
-        const rect = scheduleBtn.getBoundingClientRect();
-        return {
-          top: rect.top - 120,
-          left: rect.left + rect.width / 2,
-          transform: 'translateX(-50%)'
-        };
-      }
-    }
+  // Get tooltip position and arrow direction
+  const getPositionAndArrow = () => {
+    if (!targetRect) return { position: {}, arrow: null };
+
+    const padding = 20;
+    const tooltipWidth = 320;
+    const tooltipHeight = 200;
     
-    if (step.targetTab === "study") {
-      const studyBtn = document.querySelector('[data-tab="study"]');
-      if (studyBtn) {
-        const rect = studyBtn.getBoundingClientRect();
-        return {
-          top: rect.top - 120,
-          left: rect.left + rect.width / 2,
+    // For nav tabs (schedule/study) - position above
+    if (step.targetTab === "schedule" || step.targetTab === "study") {
+      return {
+        position: {
+          bottom: window.innerHeight - targetRect.top + 20,
+          left: targetRect.left + targetRect.width / 2,
           transform: 'translateX(-50%)'
-        };
-      }
+        },
+        arrow: <ArrowDown className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-10 h-10 text-purple-400 animate-bounce" />
+      };
     }
 
+    // For streak - position below
     if (step.targetElement === "streak") {
-      const streakEl = document.querySelector('[data-guide="streak"]');
-      if (streakEl) {
-        const rect = streakEl.getBoundingClientRect();
-        return {
-          top: rect.bottom + 20,
-          left: rect.left + rect.width / 2,
+      return {
+        position: {
+          top: targetRect.bottom + 20,
+          left: targetRect.left + targetRect.width / 2,
           transform: 'translateX(-50%)'
-        };
-      }
+        },
+        arrow: <ArrowUp className="absolute -top-10 left-1/2 -translate-x-1/2 w-10 h-10 text-purple-400 animate-bounce" />
+      };
     }
 
-    if (step.targetElement === "timer") {
-      const timerEl = document.querySelector('[data-guide="timer"]');
-      if (timerEl) {
-        const rect = timerEl.getBoundingClientRect();
+    // For timer and assistant - check if they fit on the right, otherwise position above
+    if (step.targetElement === "timer" || step.targetElement === "assistant") {
+      const fitsOnRight = targetRect.right + tooltipWidth + padding < window.innerWidth;
+      
+      if (fitsOnRight) {
         return {
-          top: rect.top + rect.height / 2,
-          left: rect.right + 20,
-          transform: 'translateY(-50%)'
+          position: {
+            top: Math.max(padding, Math.min(targetRect.top + targetRect.height / 2 - tooltipHeight / 2, window.innerHeight - tooltipHeight - padding)),
+            left: targetRect.right + 20
+          },
+          arrow: <ArrowLeft className="absolute left-[-40px] top-1/2 -translate-y-1/2 w-10 h-10 text-purple-400 animate-pulse" />
         };
-      }
-    }
-
-    if (step.targetElement === "assistant") {
-      const assistantEl = document.querySelector('[data-guide="assistant"]');
-      if (assistantEl) {
-        const rect = assistantEl.getBoundingClientRect();
+      } else {
         return {
-          top: rect.top + rect.height / 2,
-          left: rect.right + 20,
-          transform: 'translateY(-50%)'
+          position: {
+            bottom: window.innerHeight - targetRect.top + 20,
+            left: '50%',
+            transform: 'translateX(-50%)'
+          },
+          arrow: <ArrowDown className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-10 h-10 text-purple-400 animate-bounce" />
         };
       }
     }
 
-    return { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' };
+    return { position: {}, arrow: null };
   };
 
-  const position = getPosition();
+  const { position, arrow } = getPositionAndArrow();
 
   return (
     <>
-      {/* Dark overlay */}
-      <div className="fixed inset-0 z-[90] bg-black/70 backdrop-blur-sm" onClick={onNext} />
+      {/* Dark overlay with cutout for target */}
+      <div className="fixed inset-0 z-[90] bg-black/80 backdrop-blur-sm pointer-events-none" />
+      
+      {/* Spotlight on target element */}
+      {targetRect && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="fixed z-[95] rounded-2xl pointer-events-auto"
+            style={{
+              top: targetRect.top - 8,
+              left: targetRect.left - 8,
+              width: targetRect.width + 16,
+              height: targetRect.height + 16,
+              boxShadow: '0 0 0 9999px rgba(0,0,0,0.8), 0 0 60px 20px rgba(168,85,247,0.6)',
+              border: '3px solid rgba(168,85,247,0.8)'
+            }}
+          />
+          
+          {/* Pulsing ring */}
+          <motion.div
+            animate={{ 
+              scale: [1, 1.1, 1],
+              opacity: [0.6, 0.3, 0.6]
+            }}
+            transition={{ 
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="fixed z-[94] rounded-2xl pointer-events-none"
+            style={{
+              top: targetRect.top - 12,
+              left: targetRect.left - 12,
+              width: targetRect.width + 24,
+              height: targetRect.height + 24,
+              border: '2px solid rgb(168,85,247)'
+            }}
+          />
+        </>
+      )}
       
       {/* Tooltip */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="fixed z-[100] glass-card rounded-2xl p-6 max-w-sm"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="fixed z-[100] glass-card rounded-2xl p-6 w-80 max-w-[90vw]"
         style={position}
       >
-        {(step.targetTab === "schedule" || step.targetTab === "study") && (
-          <div className="absolute -bottom-8 left-1/2 -translate-x-1/2">
-            <ArrowDown className="w-8 h-8 text-purple-400 animate-bounce" />
-          </div>
-        )}
+        {arrow}
         
-        <p className="text-white text-lg font-semibold mb-4 text-center">
+        <p className="text-white text-lg font-bold mb-4 text-center leading-tight">
           {step.message}
         </p>
         
@@ -191,14 +251,14 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
           {currentStep < steps.length ? (
             <Button
               onClick={onNext}
-              className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:scale-105 transition-transform"
+              className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:scale-105 transition-transform h-12 font-bold"
             >
               Next →
             </Button>
           ) : (
             <Button
               onClick={onComplete}
-              className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:scale-105 transition-transform"
+              className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:scale-105 transition-transform h-12 font-bold"
             >
               Got it! ✓
             </Button>
@@ -209,8 +269,8 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
           {steps.map((_, i) => (
             <div
               key={i}
-              className={`w-2 h-2 rounded-full transition-all ${
-                i + 1 === currentStep ? 'bg-purple-400 w-6' : 'bg-white/20'
+              className={`h-2 rounded-full transition-all ${
+                i + 1 === currentStep ? 'bg-purple-400 w-8' : 'bg-white/30 w-2'
               }`}
             />
           ))}
