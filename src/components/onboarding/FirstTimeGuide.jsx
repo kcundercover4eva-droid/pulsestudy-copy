@@ -223,14 +223,14 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
       // Arrow should point down at target from above
       return (
         <div 
-          className="fixed z-[101] pointer-events-none"
+          className="fixed z-[100000] pointer-events-none"
           style={{
             left: targetCenterX,
             top: targetRect.top - 30,
             transform: 'translateX(-50%)'
           }}
         >
-          <ArrowDown className="w-10 h-10 text-purple-400 animate-bounce drop-shadow-lg" />
+          <ArrowDown className="w-10 h-10 text-purple-400 animate-bounce drop-shadow-[0_0_20px_rgba(168,85,247,0.8)]" />
         </div>
       );
     }
@@ -239,14 +239,14 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
       // Arrow should point up at target from below
       return (
         <div 
-          className="fixed z-[101] pointer-events-none"
+          className="fixed z-[100000] pointer-events-none"
           style={{
             left: targetCenterX,
             top: targetRect.bottom + 30,
             transform: 'translateX(-50%)'
           }}
         >
-          <ArrowUp className="w-10 h-10 text-purple-400 animate-bounce drop-shadow-lg" />
+          <ArrowUp className="w-10 h-10 text-purple-400 animate-bounce drop-shadow-[0_0_20px_rgba(168,85,247,0.8)]" />
         </div>
       );
     }
