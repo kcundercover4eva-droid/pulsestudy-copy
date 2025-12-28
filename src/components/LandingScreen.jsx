@@ -34,6 +34,15 @@ const GAMIFIED_LINES = [
   "Your next badge is waiting."
 ];
 
+const MOTIVATIONAL_QUOTES = [
+  "Your focus shapes your future.",
+  "Small daily wins build massive success.",
+  "Block the noise. Own the moment.",
+  "Discipline today. Freedom tomorrow.",
+  "Every session counts. Every streak matters.",
+  "You're one study session away from progress."
+];
+
 const COLORS = {
   coral: "from-rose-400 to-orange-300",
   neonGreen: "from-green-400 to-emerald-300",
