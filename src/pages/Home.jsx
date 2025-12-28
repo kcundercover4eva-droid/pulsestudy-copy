@@ -170,6 +170,7 @@ export default function Home() {
 
             {/* Upload Tab */}
             <button 
+              data-tab="generate"
               onClick={() => setAppTab('generate')}
               className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
               style={{ minWidth: '44px', minHeight: '44px' }}
