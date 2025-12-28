@@ -75,6 +75,7 @@ export default function Home() {
   if (view === 'landing') {
     return <LandingScreen onGetStarted={() => {
       setView('app');
+      setGuideStep(1);
     }} />;
   }
 
