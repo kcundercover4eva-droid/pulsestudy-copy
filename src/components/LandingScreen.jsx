@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Zap, Award, Sparkles, X, TrendingUp } from 'lucide-react';
+import { ChevronRight, Zap, Shield, Brain, Sparkles, X } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
-import confetti from 'canvas-confetti';
 import {
   Dialog,
   DialogContent,
@@ -44,211 +42,101 @@ const COLORS = {
 };
 
 export default function LandingScreen({ onGetStarted }) {
-  const [showXP, setShowXP] = useState(false);
+  const [currentLine, setCurrentLine] = useState(0);
+  const [sublineType, setSublineType] = useState('gamified'); // 'motivational' or 'gamified'
   const [showLearnMore, setShowLearnMore] = useState(false);
-  const [progress, setProgress] = useState(0);
 
-  // Get current user
-  const { data: currentUser } = useQuery({
-    queryKey: ['currentUser'],
-    queryFn: () => base44.auth.me(),
-  });
-
-  const firstName = currentUser?.full_name?.split(' ')[0] || 'Champion';
-
-  // XP popup animation
+  // Rotate lines
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowXP(true);
-      confetti({
-        particleCount: 50,
-        spread: 60,
-        origin: { y: 0.4 },
-        colors: ['#06b6d4', '#ec4899', '#fbbf24']
-      });
-    }, 800);
-    return () => clearTimeout(timer);
-  }, []);
+    const lines = sublineType === 'gamified' ? GAMIFIED_LINES : MOTIVATIONAL_LINES;
+    const interval = setInterval(() => {
+      setCurrentLine((prev) => (prev + 1) % lines.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [sublineType]);
 
-  // Progress bar animation
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setProgress(12);
-    }, 1200);
-    return () => clearTimeout(timer);
-  }, []);
+  const activeLines = sublineType === 'gamified' ? GAMIFIED_LINES : MOTIVATIONAL_LINES;
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 text-white font-sans">
+    <div className="relative min-h-screen w-full overflow-hidden bg-slate-900 text-white font-sans selection:bg-cyan-500 selection:text-slate-900">
       
-      {/* Animated Background Effects */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        {/* Glowing Streaks */}
-        <motion.div 
-          animate={{ 
-            x: ['-100%', '200%'],
-            opacity: [0, 1, 0]
-          }}
-          transition={{ 
-            duration: 3,
-            repeat: Infinity,
-            repeatDelay: 2
-          }}
-          className="absolute top-1/4 w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent blur-sm"
-        />
-        <motion.div 
-          animate={{ 
-            x: ['200%', '-100%'],
-            opacity: [0, 1, 0]
-          }}
-          transition={{ 
-            duration: 4,
-            repeat: Infinity,
-            repeatDelay: 1,
-            delay: 1
-          }}
-          className="absolute top-3/4 w-full h-1 bg-gradient-to-r from-transparent via-pink-400 to-transparent blur-sm"
-        />
-        
-        {/* Floating Particles */}
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            animate={{
-              y: [0, -100, 0],
-              opacity: [0, 1, 0],
-              scale: [0, 1, 0]
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 3
-            }}
-            className="absolute w-1 h-1 bg-white rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              bottom: `${Math.random() * 50}%`
-            }}
-          />
-        ))}
+      {/* Dynamic Background */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-purple-600/30 blur-[100px] animate-float" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-cyan-600/30 blur-[100px] animate-float" style={{ animationDelay: '-2s' }} />
+        <div className="absolute top-[40%] left-[40%] w-[30%] h-[30%] rounded-full bg-pink-600/20 blur-[80px] animate-pulse-slow" />
       </div>
 
       {/* Content Container */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
         
-        {/* Mascot Icon with Glow */}
+        {/* Logo/Brand */}
         <motion.div 
-          initial={{ scale: 0, rotate: -180 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: "spring", duration: 1, delay: 0.2 }}
-          className="mb-6 relative"
-        >
-          <div className="absolute inset-0 bg-yellow-400/40 blur-3xl rounded-full animate-pulse" />
-          <div className="relative w-28 h-28 rounded-full bg-gradient-to-br from-yellow-400 via-orange-400 to-pink-500 flex items-center justify-center shadow-2xl border-4 border-white/30">
-            <Zap className="w-14 h-14 text-white drop-shadow-lg" strokeWidth={2.5} />
-          </div>
-        </motion.div>
-
-        {/* XP Achievement Popup */}
-        <AnimatePresence>
-          {showXP && (
-            <motion.div
-              initial={{ scale: 0, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0 }}
-              transition={{ type: "spring", duration: 0.6 }}
-              className="mb-8 relative"
-            >
-              <div className="absolute inset-0 bg-cyan-400/20 blur-2xl rounded-2xl" />
-              <div className="relative px-8 py-4 bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 rounded-2xl border-2 border-white/50 shadow-2xl">
-                <motion.div
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  className="flex items-center gap-3"
-                >
-                  <Award className="w-8 h-8 text-yellow-300" strokeWidth={2.5} />
-                  <span className="text-2xl font-black tracking-tight">+10 Focus XP</span>
-                </motion.div>
-                <p className="text-sm font-semibold mt-1 text-cyan-100">You showed up! 🎉</p>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Personalized Welcome */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1 }}
-          className="mb-10"
+          transition={{ duration: 0.8 }}
+          className="mb-8"
         >
-          <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-2 drop-shadow-2xl">
-            Ready to level up,
+          <div className="w-20 h-20 mx-auto mb-4 rounded-3xl glass flex items-center justify-center bg-gradient-to-br from-white/20 to-white/5 border border-white/20">
+            <Zap className="w-10 h-10 text-cyan-400 fill-cyan-400/20" />
+          </div>
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-200 to-purple-200 drop-shadow-lg">
+            PulseStudy
           </h1>
-          <h2 className="text-5xl md:text-7xl font-black bg-gradient-to-r from-yellow-300 via-pink-300 to-cyan-300 bg-clip-text text-transparent drop-shadow-lg">
-            {firstName}?
-          </h2>
+          <p className="text-xl md:text-2xl font-medium text-white/80 tracking-wide">
+            Focus smarter. Study stronger.
+          </p>
         </motion.div>
 
-        {/* Main CTA Button */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1.2, type: "spring" }}
-          className="mb-6 relative w-full max-w-xs"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 via-pink-400 to-cyan-400 blur-xl opacity-60 animate-pulse" />
+        {/* Rotating Sublines */}
+        <div className="h-16 mb-12 flex items-center justify-center w-full max-w-lg">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={currentLine + sublineType}
+              initial={{ opacity: 0, y: 10, filter: 'blur(5px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -10, filter: 'blur(5px)' }}
+              className="text-lg md:text-xl font-medium text-cyan-300/90 flex items-center gap-2"
+            >
+              {sublineType === 'gamified' && <Sparkles className="w-4 h-4" />}
+              {activeLines[currentLine]}
+              {sublineType === 'gamified' && <Sparkles className="w-4 h-4" />}
+            </motion.p>
+          </AnimatePresence>
+        </div>
+
+        {/* Actions */}
+        <div className="flex flex-col gap-4 w-full max-w-xs">
           <Button 
             onClick={onGetStarted}
-            className="relative w-full h-16 rounded-2xl text-xl font-black bg-gradient-to-r from-yellow-400 via-pink-500 to-cyan-500 hover:scale-105 transition-transform shadow-2xl border-2 border-white/50"
+            className="h-14 rounded-2xl text-lg font-bold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-lg shadow-cyan-500/25 border border-white/10 transition-all hover:scale-105 active:scale-95"
           >
-            <Sparkles className="w-6 h-6 mr-2" />
-            Start Your Focus Quest
-            <TrendingUp className="w-6 h-6 ml-2" />
+            Get Started
+            <ChevronRight className="w-5 h-5 ml-1" />
           </Button>
-        </motion.div>
 
-        {/* Animated Progress Bar */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="w-full max-w-xs"
+          <Dialog open={showLearnMore} onOpenChange={setShowLearnMore}>
+            <DialogTrigger asChild>
+              <Button 
+                variant="ghost" 
+                className="h-12 rounded-2xl text-white/60 hover:text-white hover:bg-white/10"
+              >
+                Learn More
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md p-0 border-0 bg-transparent shadow-none overflow-hidden text-white">
+              <LearnMoreCarousel onClose={() => setShowLearnMore(false)} />
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        {/* Mode Toggle */}
+        <button 
+          onClick={() => setSublineType(prev => prev === 'motivational' ? 'gamified' : 'motivational')}
+          className="mt-8 text-xs text-white/40 hover:text-white/70 transition-colors px-4 py-2 rounded-full border border-white/10 hover:border-white/20"
         >
-          <div className="flex justify-between text-xs font-bold mb-2 text-cyan-100">
-            <span>Today's Progress</span>
-            <span>{progress}%</span>
-          </div>
-          <div className="h-3 bg-black/30 rounded-full overflow-hidden border border-white/20 relative">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ delay: 1.5, duration: 1.5, ease: "easeOut" }}
-              className="h-full bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 relative overflow-hidden"
-            >
-              <motion.div
-                animate={{ x: ['0%', '200%'] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-                className="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-white/60 to-transparent skew-x-12"
-              />
-            </motion.div>
-          </div>
-        </motion.div>
-
-        {/* Learn More Link */}
-        <Dialog open={showLearnMore} onOpenChange={setShowLearnMore}>
-          <DialogTrigger asChild>
-            <Button 
-              variant="ghost" 
-              className="mt-8 h-10 rounded-xl text-white/80 hover:text-white hover:bg-white/10 text-sm"
-            >
-              Learn More
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-md p-0 border-0 bg-transparent shadow-none overflow-hidden text-white">
-            <LearnMoreCarousel onClose={() => setShowLearnMore(false)} />
-          </DialogContent>
-        </Dialog>
+          Switch Vibe: {sublineType}
+        </button>
 
       </div>
     </div>
