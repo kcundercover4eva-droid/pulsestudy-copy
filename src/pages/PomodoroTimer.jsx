@@ -280,6 +280,8 @@ export default function PomodoroTimer() {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
+  const accentColor = userProfile?.accentColor || 'neonGreen';
+
   const getProgress = () => {
     const totalTime = phase === 'break' 
       ? MODES[mode].break * 60 
@@ -419,7 +421,6 @@ export default function PomodoroTimer() {
   }
 
   // Main timer view
-  const accentColor = userProfile?.accentColor || 'neonGreen';
   const themeColor = accentColor === 'coral' ? 'rose' : accentColor === 'electricBlue' ? 'cyan' : 'green';
 
   return (
