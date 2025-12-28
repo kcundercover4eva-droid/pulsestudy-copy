@@ -302,7 +302,12 @@ export default function Home() {
             {/* Quiz Tab */}
             <button 
               data-tab="study"
-              onClick={() => setAppTab('quiz')}
+              onClick={() => {
+                setAppTab('quiz');
+                if (guideStep === 0 && !userProfile?.hasSeenQuizIntro) {
+                  setTimeout(() => setShowQuizHelp(true), 300);
+                }
+              }}
               className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
               style={{ minWidth: '44px', minHeight: '44px' }}
             >
