@@ -15,9 +15,6 @@ export default function Home() {
   const [view, setView] = useState('checking'); // checking, landing, onboarding, app
   const [appTab, setAppTab] = useState('dashboard'); // dashboard, quiz, schedule, generate
   const [guideStep, setGuideStep] = useState(0);
-  const [inApp, setInApp] = useState(() => {
-    return sessionStorage.getItem('inApp') === 'true';
-  });
   const dynamicPadding = useBottomPadding();
   const queryClient = useQueryClient();
 
@@ -51,14 +48,11 @@ export default function Home() {
     if (!userProfile?.hasCompletedOnboarding) {
       // First time user - show onboarding wizard
       setView('onboarding');
-    } else if (inApp) {
-      // User is already in the app (returning from another page)
-      setView('app');
     } else {
-      // Show landing every time on fresh load
+      // Show landing every time
       setView('landing');
     }
-  }, [userProfile, profileLoading, view, inApp]);
+  }, [userProfile, profileLoading, view]);
 
 
 
@@ -74,8 +68,6 @@ export default function Home() {
     return <OnboardingWizard onComplete={() => {
       updateProfileMutation.mutate({ hasCompletedOnboarding: true });
       setView('app');
-      setInApp(true);
-      sessionStorage.setItem('inApp', 'true');
       setGuideStep(1);
     }} />;
   }
@@ -83,8 +75,6 @@ export default function Home() {
   if (view === 'landing') {
     return <LandingScreen onGetStarted={() => {
       setView('app');
-      setInApp(true);
-      sessionStorage.setItem('inApp', 'true');
     }} />;
   }
 
