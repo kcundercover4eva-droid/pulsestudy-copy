@@ -76,6 +76,13 @@ export default function Home() {
     }} />;
   }
 
+  // TEMP: Auto-start guide for testing
+  React.useEffect(() => {
+    if (view === 'app' && guideStep === 0) {
+      setTimeout(() => setGuideStep(1), 500);
+    }
+  }, [view]);
+
   if (view === 'landing') {
     return <LandingScreen onGetStarted={() => setView('app')} />;
   }
@@ -96,7 +103,7 @@ export default function Home() {
       '--accent-secondary': theme.secondary
     }}>
       {/* First Time Guide */}
-      {guideStep > 0 && !userProfile?.hasCompletedOnboarding && (
+      {guideStep > 0 && (
         <FirstTimeGuide
           currentStep={guideStep}
           onNext={() => setGuideStep(prev => prev + 1)}
