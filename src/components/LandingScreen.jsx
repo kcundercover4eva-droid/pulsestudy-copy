@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Zap, Shield, Brain, Sparkles, X } from 'lucide-react';
+import { ChevronRight, Zap, Shield, Brain, Sparkles, X, Trophy } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Dialog,
   DialogContent,
@@ -45,6 +46,61 @@ export default function LandingScreen({ onGetStarted }) {
   const [currentLine, setCurrentLine] = useState(0);
   const [sublineType, setSublineType] = useState('gamified'); // 'motivational' or 'gamified'
   const [showLearnMore, setShowLearnMore] = useState(false);
+  const [showXPBanner, setShowXPBanner] = useState(false);
+  const [userName, setUserName] = useState('');
+  const queryClient = useQueryClient();
+
+  // Fetch user profile
+  const { data: userProfile } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: async () => {
+      const profiles = await base44.entities.UserProfile.list();
+      return profiles[0] || { totalPoints: 0 };
+    },
+  });
+
+  // Fetch user name
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const user = await base44.auth.me();
+        const name = user.full_name ? user.full_name.split(' ')[0] : 'there';
+        setUserName(name);
+      } catch (error) {
+        setUserName('there');
+      }
+    };
+    fetchUserName();
+  }, []);
+
+  // Award 10 XP mutation
+  const awardXPMutation = useMutation({
+    mutationFn: async () => {
+      const profiles = await base44.entities.UserProfile.list();
+      if (profiles[0]) {
+        return await base44.entities.UserProfile.update(profiles[0].id, {
+          totalPoints: (userProfile?.totalPoints || 0) + 10
+        });
+      } else {
+        return await base44.entities.UserProfile.create({
+          totalPoints: 10
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userProfile']);
+    },
+  });
+
+  // Show XP banner on mount and award XP
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowXPBanner(true);
+      awardXPMutation.mutate();
+      setTimeout(() => setShowXPBanner(false), 3000);
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Rotate lines
   useEffect(() => {
@@ -58,14 +114,43 @@ export default function LandingScreen({ onGetStarted }) {
   const activeLines = sublineType === 'gamified' ? GAMIFIED_LINES : MOTIVATIONAL_LINES;
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-slate-900 text-white font-sans selection:bg-cyan-500 selection:text-slate-900">
+    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white font-sans selection:bg-cyan-400 selection:text-slate-900">
       
-      {/* Dynamic Background */}
+      {/* Enhanced Vibrant Background with Neon Accents */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-purple-600/30 blur-[100px] animate-float" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-cyan-600/30 blur-[100px] animate-float" style={{ animationDelay: '-2s' }} />
-        <div className="absolute top-[40%] left-[40%] w-[30%] h-[30%] rounded-full bg-pink-600/20 blur-[80px] animate-pulse-slow" />
+        {/* Primary neon glows */}
+        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-purple-500/40 blur-[120px] animate-float" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-cyan-500/40 blur-[120px] animate-float" style={{ animationDelay: '-2s' }} />
+        <div className="absolute top-[30%] right-[10%] w-[40%] h-[40%] rounded-full bg-pink-500/30 blur-[100px] animate-pulse-slow" />
+        <div className="absolute bottom-[20%] left-[10%] w-[35%] h-[35%] rounded-full bg-green-400/25 blur-[90px] animate-float" style={{ animationDelay: '-3s' }} />
+        
+        {/* Subtle grid overlay for depth */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
+
+      {/* XP Achievement Banner */}
+      <AnimatePresence>
+        {showXPBanner && (
+          <motion.div
+            initial={{ opacity: 0, y: -100, scale: 0.8 }}
+            animate={{ opacity: 1, y: 20, scale: 1 }}
+            exit={{ opacity: 0, y: -100, scale: 0.8 }}
+            className="fixed top-0 left-1/2 -translate-x-1/2 z-[100]"
+          >
+            <div className="glass-card px-6 py-4 rounded-2xl border-2 border-green-400/50 bg-gradient-to-r from-green-500/20 via-emerald-500/20 to-cyan-500/20 shadow-[0_0_40px_rgba(34,197,94,0.4)]">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-green-400/20 flex items-center justify-center">
+                  <Trophy className="w-5 h-5 text-green-400" />
+                </div>
+                <div>
+                  <div className="text-green-400 font-bold text-lg">+10 Focus XP</div>
+                  <div className="text-white/70 text-sm">You showed up</div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Content Container */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
@@ -77,15 +162,43 @@ export default function LandingScreen({ onGetStarted }) {
           transition={{ duration: 0.8 }}
           className="mb-8"
         >
-          <div className="w-20 h-20 mx-auto mb-4 rounded-3xl glass flex items-center justify-center bg-gradient-to-br from-white/20 to-white/5 border border-white/20">
-            <Zap className="w-10 h-10 text-cyan-400 fill-cyan-400/20" />
-          </div>
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-200 to-purple-200 drop-shadow-lg">
+          <motion.div 
+            animate={{ 
+              boxShadow: [
+                '0 0 20px rgba(6, 182, 212, 0.5)',
+                '0 0 40px rgba(168, 85, 247, 0.6)',
+                '0 0 20px rgba(6, 182, 212, 0.5)',
+              ]
+            }}
+            transition={{ duration: 3, repeat: Infinity }}
+            className="w-24 h-24 mx-auto mb-6 rounded-3xl flex items-center justify-center bg-gradient-to-br from-cyan-500/20 via-purple-500/20 to-pink-500/20 border-2 border-white/20 backdrop-blur-xl"
+          >
+            <Zap className="w-12 h-12 text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.8)]" strokeWidth={2.5} />
+          </motion.div>
+          <motion.h1 
+            animate={{ 
+              textShadow: [
+                '0 0 20px rgba(6, 182, 212, 0.5)',
+                '0 0 30px rgba(168, 85, 247, 0.6)',
+                '0 0 20px rgba(6, 182, 212, 0.5)',
+              ]
+            }}
+            transition={{ duration: 3, repeat: Infinity }}
+            className="text-6xl md:text-7xl font-black tracking-tighter mb-3 bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-purple-300 to-pink-300"
+          >
             PulseStudy
-          </h1>
-          <p className="text-xl md:text-2xl font-medium text-white/80 tracking-wide">
+          </motion.h1>
+          <p className="text-lg md:text-xl font-semibold text-white/90 tracking-wide mb-2">
             Focus smarter. Study stronger.
           </p>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-base text-cyan-300/80 font-medium"
+          >
+            Ready to level up, {userName}?
+          </motion.p>
         </motion.div>
 
         {/* Rotating Sublines */}
@@ -107,13 +220,18 @@ export default function LandingScreen({ onGetStarted }) {
 
         {/* Actions */}
         <div className="flex flex-col gap-4 w-full max-w-xs">
-          <Button 
-            onClick={onGetStarted}
-            className="h-14 rounded-2xl text-lg font-bold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-lg shadow-cyan-500/25 border border-white/10 transition-all hover:scale-105 active:scale-95"
+          <motion.div
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
           >
-            Get Started
-            <ChevronRight className="w-5 h-5 ml-1" />
-          </Button>
+            <Button 
+              onClick={onGetStarted}
+              className="h-16 w-full rounded-2xl text-lg font-bold bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 hover:from-cyan-400 hover:via-purple-400 hover:to-pink-400 shadow-[0_0_30px_rgba(6,182,212,0.4)] border-2 border-white/20 transition-all backdrop-blur-sm"
+            >
+              <span className="drop-shadow-lg">Start Your Focus Quest</span>
+              <ChevronRight className="w-5 h-5 ml-2" />
+            </Button>
+          </motion.div>
 
           <Dialog open={showLearnMore} onOpenChange={setShowLearnMore}>
             <DialogTrigger asChild>
