@@ -59,6 +59,13 @@ export default function Home() {
     }
   }, [userProfile, profileLoading, view, landingShownThisSession]);
 
+  // TEMP: Auto-start guide for testing
+  React.useEffect(() => {
+    if (view === 'app' && guideStep === 0) {
+      setTimeout(() => setGuideStep(1), 500);
+    }
+  }, [view, guideStep]);
+
   if (view === 'checking' || profileLoading) {
     return (
       <div className="fixed inset-0 bg-slate-950 flex items-center justify-center">
@@ -75,13 +82,6 @@ export default function Home() {
       setTimeout(() => setGuideStep(1), 500);
     }} />;
   }
-
-  // TEMP: Auto-start guide for testing
-  React.useEffect(() => {
-    if (view === 'app' && guideStep === 0) {
-      setTimeout(() => setGuideStep(1), 500);
-    }
-  }, [view]);
 
   if (view === 'landing') {
     return <LandingScreen onGetStarted={() => setView('app')} />;
