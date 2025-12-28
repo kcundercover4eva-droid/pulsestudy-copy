@@ -145,7 +145,7 @@ export default function PomodoroTimer() {
 
   // Ambient sound management
   useEffect(() => {
-    if (phase === 'focus' && isActive && ambientSound !== 'none' && soundEnabled) {
+    if (ambientSound !== 'none' && soundEnabled && (phase === 'configure' || (phase === 'focus' && isActive))) {
       playAmbient(ambientSound);
     } else {
       stopAmbient();
@@ -377,10 +377,6 @@ export default function PomodoroTimer() {
                     key={sound.id}
                     onClick={() => {
                       setAmbientSound(sound.id);
-                      stopAmbient();
-                      if (sound.id !== 'none' && soundEnabled) {
-                        playAmbient(sound.id);
-                      }
                     }}
                     className={`p-3 rounded-xl text-center transition-all ${
                       ambientSound === sound.id
@@ -397,7 +393,6 @@ export default function PomodoroTimer() {
 
             <Button
               onClick={() => {
-                stopAmbient();
                 setPhase('idle');
               }}
               className={`w-full h-14 rounded-2xl font-bold text-lg bg-gradient-to-r ${getColorByProgress()} hover:scale-105 transition-transform`}
