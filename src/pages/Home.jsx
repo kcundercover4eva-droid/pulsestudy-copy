@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import LandingScreen from '@/components/LandingScreen';
 import OnboardingWizard from '@/components/OnboardingWizard';
+import FirstTimeGuide from '@/components/onboarding/FirstTimeGuide';
 import Dashboard from '@/components/dashboard/Dashboard';
 import StudyHub from '@/components/quiz/StudyHub';
 import ScheduleBuilder from '@/components/schedule/ScheduleBuilder';
@@ -13,16 +14,32 @@ import { Calendar, Brain, LayoutDashboard, Home as HomeIcon, Upload } from 'luci
 export default function Home() {
   const [view, setView] = useState('landing'); // landing, onboarding, app
   const [appTab, setAppTab] = useState('dashboard'); // dashboard, quiz, schedule, generate
+  const [guideStep, setGuideStep] = useState(0);
   const dynamicPadding = useBottomPadding();
+  const queryClient = useQueryClient();
 
   // Fetch user profile for accent color
   const { data: userProfile } = useQuery({
     queryKey: ['userProfile'],
     queryFn: async () => {
       const profiles = await base44.entities.UserProfile.list();
-      return profiles[0] || { accentColor: 'neonGreen' };
+      return profiles[0] || { accentColor: 'neonGreen', hasCompletedOnboarding: false };
     },
     enabled: view === 'app',
+  });
+
+  const updateProfileMutation = useMutation({
+    mutationFn: async (updates) => {
+      const profiles = await base44.entities.UserProfile.list();
+      if (profiles.length > 0) {
+        return await base44.entities.UserProfile.update(profiles[0].id, updates);
+      } else {
+        return await base44.entities.UserProfile.create(updates);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userProfile']);
+    },
   });
 
   if (view === 'landing') {
@@ -52,6 +69,17 @@ export default function Home() {
       '--accent-primary': theme.primary,
       '--accent-secondary': theme.secondary
     }}>
+      {/* First Time Guide */}
+      {guideStep > 0 && !userProfile?.hasCompletedOnboarding && (
+        <FirstTimeGuide
+          currentStep={guideStep}
+          onNext={() => setGuideStep(prev => prev + 1)}
+          onComplete={() => {
+            setGuideStep(0);
+            updateProfileMutation.mutate({ hasCompletedOnboarding: true });
+          }}
+        />
+      )}
       <main className="flex-1 overflow-y-auto overflow-x-hidden pt-safe" style={{ paddingBottom: `${dynamicPadding}px` }}>
         <div>
           {appTab === 'dashboard' && <Dashboard />}
@@ -88,6 +116,7 @@ export default function Home() {
           <div className="grid grid-cols-4 gap-0">
             {/* Schedule Tab */}
             <button 
+              data-tab="schedule"
               onClick={() => setAppTab('schedule')}
               className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
               style={{ minWidth: '44px', minHeight: '44px' }}
@@ -169,6 +198,7 @@ export default function Home() {
 
             {/* Quiz Tab */}
             <button 
+              data-tab="study"
               onClick={() => setAppTab('quiz')}
               className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
               style={{ minWidth: '44px', minHeight: '44px' }}
