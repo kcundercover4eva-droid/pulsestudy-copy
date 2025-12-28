@@ -260,7 +260,7 @@ Return ONLY a JSON array with this exact structure:
           className="max-w-2xl w-full glass-card rounded-3xl p-8 text-center"
         >
           <button
-            onClick={() => navigate(createPageUrl('Home'))}
+            onClick={() => navigate('/')}
             className="absolute top-6 left-6 text-white/60 hover:text-white"
           >
             <ArrowLeft className="w-5 h-5" />
@@ -439,7 +439,7 @@ Return ONLY a JSON array with this exact structure:
               Another Sprint
             </Button>
             <Button
-              onClick={() => navigate(createPageUrl('Home'))}
+              onClick={() => navigate('/')}
               variant="outline"
               className="border-white/20"
             >

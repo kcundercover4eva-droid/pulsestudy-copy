@@ -217,7 +217,7 @@ Generate an engaging mnemonic, analogy, or memory technique to help them remembe
       <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 glass">
         <div className="flex items-center gap-4">
           <button
-            onClick={() => navigate(createPageUrl('Home'))}
+            onClick={() => navigate('/')}
             className="text-white/60 hover:text-white transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />

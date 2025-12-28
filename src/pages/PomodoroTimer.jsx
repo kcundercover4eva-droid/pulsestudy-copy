@@ -448,10 +448,10 @@ export default function PomodoroTimer() {
               if (phase === 'focus' && isActive) {
                 if (window.confirm('Are you sure you want to leave? Your current focus session will be lost and you will not earn points.')) {
                   stopAmbient();
-                  navigate(createPageUrl('Home'));
+                  navigate('/');
                 }
               } else {
-                navigate(createPageUrl('Home'));
+                navigate('/');
               }
             }}
             className={`flex items-center gap-2 transition-colors ${
