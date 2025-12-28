@@ -10,6 +10,7 @@ import ScheduleBuilder from '@/components/schedule/ScheduleBuilder';
 import GenerateContent from './GenerateContent';
 import { useBottomPadding } from '@/components/utils/useBottomPadding';
 import { Calendar, Brain, LayoutDashboard, Home as HomeIcon, Upload } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const [view, setView] = useState('checking'); // checking, landing, onboarding, app
