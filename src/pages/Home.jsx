@@ -67,9 +67,8 @@ export default function Home() {
   if (view === 'onboarding') {
     return <OnboardingWizard onComplete={() => {
       updateProfileMutation.mutate({ hasCompletedOnboarding: true });
+      setGuideStep(1);
       setView('app');
-      // Small delay to ensure app renders before guide starts
-      setTimeout(() => setGuideStep(1), 100);
     }} />;
   }
 
