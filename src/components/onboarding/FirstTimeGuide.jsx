@@ -223,7 +223,7 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
       // Arrow should point down at target from above
       return (
         <div 
-          className="fixed z-[100001] pointer-events-none"
+          className="fixed z-[100002] pointer-events-none"
           style={{
             left: targetCenterX,
             bottom: viewportHeight - targetRect.top + 200,
@@ -239,7 +239,7 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
       // Arrow should point up at target from below
       return (
         <div 
-          className="fixed z-[100001] pointer-events-none"
+          className="fixed z-[100002] pointer-events-none"
           style={{
             left: targetCenterX,
             top: targetRect.bottom + 200,
