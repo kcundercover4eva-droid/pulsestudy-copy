@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Zap, Shield, Brain, Sparkles, X } from 'lucide-react';
+import { ChevronRight, Zap, Shield, Brain, Sparkles, X, Edit2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import {
   Dialog,
@@ -42,101 +42,182 @@ const COLORS = {
 };
 
 export default function LandingScreen({ onGetStarted }) {
-  const [currentLine, setCurrentLine] = useState(0);
-  const [sublineType, setSublineType] = useState('gamified'); // 'motivational' or 'gamified'
+  const [currentQuote, setCurrentQuote] = useState(0);
   const [showLearnMore, setShowLearnMore] = useState(false);
+  const [showXPBanner, setShowXPBanner] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [userName, setUserName] = useState('Friend');
 
-  // Rotate lines
+  // Get user name
   useEffect(() => {
-    const lines = sublineType === 'gamified' ? GAMIFIED_LINES : MOTIVATIONAL_LINES;
-    const interval = setInterval(() => {
-      setCurrentLine((prev) => (prev + 1) % lines.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [sublineType]);
+    base44.auth.me().then(user => {
+      if (user?.full_name) {
+        setUserName(user.full_name.split(' ')[0]);
+      }
+    }).catch(() => {});
+  }, []);
 
-  const activeLines = sublineType === 'gamified' ? GAMIFIED_LINES : MOTIVATIONAL_LINES;
+  // Show XP banner after short delay
+  useEffect(() => {
+    const timer = setTimeout(() => setShowXPBanner(true), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Animate progress bar
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const interval = setInterval(() => {
+        setProgress(prev => {
+          if (prev >= 12) {
+            clearInterval(interval);
+            return 12;
+          }
+          return prev + 1;
+        });
+      }, 80);
+      return () => clearInterval(interval);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Rotate quotes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentQuote((prev) => (prev + 1) % MOTIVATIONAL_QUOTES.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-slate-900 text-white font-sans selection:bg-cyan-500 selection:text-slate-900">
+    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-900 font-sans">
       
-      {/* Dynamic Background */}
+      {/* Airy Depth Background */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-purple-600/30 blur-[100px] animate-float" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-cyan-600/30 blur-[100px] animate-float" style={{ animationDelay: '-2s' }} />
-        <div className="absolute top-[40%] left-[40%] w-[30%] h-[30%] rounded-full bg-pink-600/20 blur-[80px] animate-pulse-slow" />
+        <div className="absolute top-[10%] right-[15%] w-[400px] h-[400px] rounded-full bg-gradient-to-br from-cyan-200/30 to-blue-300/30 blur-[120px]" />
+        <div className="absolute bottom-[20%] left-[10%] w-[350px] h-[350px] rounded-full bg-gradient-to-br from-purple-200/25 to-pink-200/25 blur-[100px]" />
+        <div className="absolute top-[50%] left-[50%] w-[300px] h-[300px] rounded-full bg-gradient-to-br from-green-200/20 to-emerald-200/20 blur-[80px]" />
       </div>
 
       {/* Content Container */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
         
-        {/* Logo/Brand */}
+        {/* PulseStudy Wordmark */}
         <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="mb-8"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="mb-6"
         >
-          <div className="w-20 h-20 mx-auto mb-4 rounded-3xl glass flex items-center justify-center bg-gradient-to-br from-white/20 to-white/5 border border-white/20">
-            <Zap className="w-10 h-10 text-cyan-400 fill-cyan-400/20" />
-          </div>
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-200 to-purple-200 drop-shadow-lg">
+          <h1 className="text-6xl md:text-7xl font-black tracking-tight text-slate-900 relative">
             PulseStudy
+            <div className="absolute inset-0 blur-xl opacity-30 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400" />
           </h1>
-          <p className="text-xl md:text-2xl font-medium text-white/80 tracking-wide">
-            Focus smarter. Study stronger.
-          </p>
         </motion.div>
 
-        {/* Rotating Sublines */}
-        <div className="h-16 mb-12 flex items-center justify-center w-full max-w-lg">
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={currentLine + sublineType}
-              initial={{ opacity: 0, y: 10, filter: 'blur(5px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, y: -10, filter: 'blur(5px)' }}
-              className="text-lg md:text-xl font-medium text-cyan-300/90 flex items-center gap-2"
+        {/* XP Achievement Banner */}
+        <AnimatePresence>
+          {showXPBanner && (
+            <motion.div
+              initial={{ opacity: 0, y: -20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.9 }}
+              transition={{ type: "spring", damping: 20 }}
+              className="mb-6 px-5 py-3 rounded-2xl bg-white/60 backdrop-blur-xl border border-white/40 shadow-lg shadow-black/5 flex items-center gap-3"
             >
-              {sublineType === 'gamified' && <Sparkles className="w-4 h-4" />}
-              {activeLines[currentLine]}
-              {sublineType === 'gamified' && <Sparkles className="w-4 h-4" />}
-            </motion.p>
-          </AnimatePresence>
-        </div>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-md">
+                <Sparkles className="w-5 h-5 text-white" />
+              </div>
+              <div className="text-left">
+                <p className="text-sm font-bold text-slate-900">+10 Focus XP</p>
+                <p className="text-xs text-slate-600">You showed up</p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        {/* Actions */}
-        <div className="flex flex-col gap-4 w-full max-w-xs">
+        {/* Personalized Welcome */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="text-2xl md:text-3xl font-semibold text-slate-800 mb-8"
+        >
+          Ready to level up, {userName}?
+        </motion.p>
+
+        {/* CTA Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="mb-8"
+        >
           <Button 
             onClick={onGetStarted}
-            className="h-14 rounded-2xl text-lg font-bold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-lg shadow-cyan-500/25 border border-white/10 transition-all hover:scale-105 active:scale-95"
+            className="h-16 px-10 rounded-[20px] text-lg font-bold bg-white/70 backdrop-blur-xl border border-white/60 text-slate-900 hover:bg-white/80 shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-all hover:scale-[1.02] active:scale-[0.98] relative overflow-hidden group"
           >
-            Get Started
-            <ChevronRight className="w-5 h-5 ml-1" />
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 via-purple-400/20 to-pink-400/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <span className="relative">Start Your Focus Quest</span>
+            <ChevronRight className="w-5 h-5 ml-2 relative" />
           </Button>
+        </motion.div>
 
-          <Dialog open={showLearnMore} onOpenChange={setShowLearnMore}>
-            <DialogTrigger asChild>
-              <Button 
-                variant="ghost" 
-                className="h-12 rounded-2xl text-white/60 hover:text-white hover:bg-white/10"
-              >
-                Learn More
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-md p-0 border-0 bg-transparent shadow-none overflow-hidden text-white">
-              <LearnMoreCarousel onClose={() => setShowLearnMore(false)} />
-            </DialogContent>
-          </Dialog>
-        </div>
-
-        {/* Mode Toggle */}
-        <button 
-          onClick={() => setSublineType(prev => prev === 'motivational' ? 'gamified' : 'motivational')}
-          className="mt-8 text-xs text-white/40 hover:text-white/70 transition-colors px-4 py-2 rounded-full border border-white/10 hover:border-white/20"
+        {/* Rotating Quote Module */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="mb-6 w-full max-w-md"
         >
-          Switch Vibe: {sublineType}
-        </button>
+          <div className="relative h-16 flex items-center justify-center px-4">
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={currentQuote}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.4 }}
+                className="text-sm md:text-base text-slate-600 font-medium italic"
+              >
+                "{MOTIVATIONAL_QUOTES[currentQuote]}"
+              </motion.p>
+            </AnimatePresence>
+            <button className="absolute right-0 top-1/2 -translate-y-1/2 p-2 text-slate-400 hover:text-slate-600 transition-colors">
+              <Edit2 className="w-4 h-4" />
+            </button>
+          </div>
+        </motion.div>
+
+        {/* Progress Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="w-full max-w-xs mb-6"
+        >
+          <div className="h-2 bg-slate-200/50 rounded-full overflow-hidden backdrop-blur-sm">
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              className="h-full bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 rounded-full relative"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-white/40 to-transparent animate-pulse" />
+            </motion.div>
+          </div>
+          <p className="text-xs text-slate-500 mt-2 font-medium">{progress}% — Your journey begins</p>
+        </motion.div>
+
+        {/* Learn More Link */}
+        <Dialog open={showLearnMore} onOpenChange={setShowLearnMore}>
+          <DialogTrigger asChild>
+            <button className="text-sm text-slate-500 hover:text-slate-700 transition-colors font-medium">
+              Learn More
+            </button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md p-0 border-0 bg-transparent shadow-none overflow-hidden text-white">
+            <LearnMoreCarousel onClose={() => setShowLearnMore(false)} />
+          </DialogContent>
+        </Dialog>
 
       </div>
     </div>
