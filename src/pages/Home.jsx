@@ -136,7 +136,7 @@ export default function Home() {
           <div className="fixed inset-0 bg-black/60 backdrop-blur-md" />
           <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100002] rounded-2xl p-6 w-80 max-w-[90vw] bg-slate-900 border-2 border-purple-500/50 shadow-2xl">
             <p className="text-white text-lg font-bold mb-4 text-center leading-tight drop-shadow-lg">
-              Upload school stuff here for quiz
+              Upload school stuff here
             </p>
             <Button
               onClick={() => {
