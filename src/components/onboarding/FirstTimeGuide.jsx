@@ -256,22 +256,30 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
 
   return (
     <>
+      {/* Full screen interaction blocker - blocks ALL clicks except guide */}
+      <div 
+        className="fixed inset-0 z-[100000]"
+        onClick={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
+        style={{ pointerEvents: 'auto' }}
+      />
+
       {/* Blocking Overlay - 4 sections around target */}
       {targetRect && (
         <>
           {/* Top overlay */}
           <div 
-            className="fixed left-0 right-0 z-[100000] bg-black/60 backdrop-blur-md"
+            className="fixed left-0 right-0 z-[100001] bg-black/60 backdrop-blur-md pointer-events-none"
             style={{ top: 0, height: targetRect.top - 8 }}
           />
           {/* Bottom overlay */}
           <div 
-            className="fixed left-0 right-0 z-[100000] bg-black/60 backdrop-blur-md"
+            className="fixed left-0 right-0 z-[100001] bg-black/60 backdrop-blur-md pointer-events-none"
             style={{ top: targetRect.bottom + 8, bottom: 0 }}
           />
           {/* Left overlay */}
           <div 
-            className="fixed left-0 z-[100000] bg-black/60 backdrop-blur-md"
+            className="fixed left-0 z-[100001] bg-black/60 backdrop-blur-md pointer-events-none"
             style={{ 
               top: targetRect.top - 8, 
               width: targetRect.left - 8,
@@ -280,7 +288,7 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
           />
           {/* Right overlay */}
           <div 
-            className="fixed right-0 z-[100000] bg-black/60 backdrop-blur-md"
+            className="fixed right-0 z-[100001] bg-black/60 backdrop-blur-md pointer-events-none"
             style={{ 
               top: targetRect.top - 8, 
               left: targetRect.right + 8,
