@@ -150,7 +150,7 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
           bottom: viewportHeight - targetRect.top + 20,
           left: left
         },
-        arrow: <ArrowDown className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-10 h-10 text-purple-400 animate-bounce" />
+        arrow: null
       };
     }
 
@@ -163,7 +163,7 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
           top: targetRect.bottom + 20,
           left: left
         },
-        arrow: <ArrowUp className="absolute -top-10 left-1/2 -translate-x-1/2 w-10 h-10 text-purple-400 animate-bounce" />
+        arrow: null
       };
     }
 
@@ -188,7 +188,7 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
           top: targetRect.bottom + 20,
           left: left
         },
-        arrow: <ArrowUp className="absolute -top-10 left-1/2 -translate-x-1/2 w-10 h-10 text-purple-400 animate-bounce" />
+        arrow: null
       };
     } else {
       const centerX = targetRect.left + targetRect.width / 2;
@@ -198,7 +198,7 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
           bottom: viewportHeight - targetRect.top + 20,
           left: left
         },
-        arrow: <ArrowDown className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-10 h-10 text-purple-400 animate-bounce" />
+        arrow: null
       };
     }
   };
