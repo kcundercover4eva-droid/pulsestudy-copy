@@ -256,8 +256,8 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
 
   return (
     <>
-      {/* Always-on backdrop during entire guide */}
-      <div className="fixed inset-0 z-[99999] bg-black/60 backdrop-blur-md" />
+      {/* Always-on backdrop during entire guide - no blur so targets are visible */}
+      <div className="fixed inset-0 z-[99999] bg-black/60" />
       
       {/* Full screen interaction blocker - blocks ALL clicks except guide */}
       <div 
