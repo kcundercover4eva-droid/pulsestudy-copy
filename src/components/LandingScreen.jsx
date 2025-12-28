@@ -184,7 +184,8 @@ export default function LandingScreen({ onGetStarted }) {
               ]
             }}
             transition={{ duration: 3, repeat: Infinity }}
-            className="text-6xl md:text-7xl font-black tracking-tighter mb-3 bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-purple-300 to-pink-300"
+            className="text-6xl md:text-7xl font-black tracking-tighter mb-3 bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-purple-300 to-pink-300 pb-2"
+            style={{ lineHeight: '1.2' }}
           >
             PulseStudy
           </motion.h1>
