@@ -17,7 +17,6 @@ export default function Home() {
   const [appTab, setAppTab] = useState('dashboard'); // dashboard, quiz, schedule, generate
   const [guideStep, setGuideStep] = useState(0);
   const [showScheduleHelp, setShowScheduleHelp] = useState(false);
-  const [hasSeenScheduleHelp, setHasSeenScheduleHelp] = useState(false);
   const dynamicPadding = useBottomPadding();
   const queryClient = useQueryClient();
 
@@ -120,7 +119,7 @@ export default function Home() {
             <Button
               onClick={() => {
                 setShowScheduleHelp(false);
-                setHasSeenScheduleHelp(true);
+                updateProfileMutation.mutate({ hasSeenScheduleIntro: true });
               }}
               className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:scale-105 transition-transform h-12 font-bold"
             >
@@ -168,7 +167,7 @@ export default function Home() {
               data-tab="schedule"
               onClick={() => {
                 setAppTab('schedule');
-                if (guideStep === 0 && !hasSeenScheduleHelp) {
+                if (guideStep === 0 && !userProfile?.hasSeenScheduleIntro) {
                   setTimeout(() => setShowScheduleHelp(true), 300);
                 }
               }}
