@@ -256,9 +256,6 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
 
   return (
     <>
-      {/* Always-on backdrop during entire guide - no blur so targets are visible */}
-      <div className="fixed inset-0 z-[99999] bg-black/60" />
-      
       {/* Full screen interaction blocker - blocks ALL clicks except guide */}
       <div 
         className="fixed inset-0 z-[100000]"
@@ -267,8 +264,8 @@ export default function FirstTimeGuide({ currentStep, onNext, onComplete }) {
         style={{ pointerEvents: 'auto' }}
       />
 
-      {/* Blocking Overlay - 4 sections around target */}
-      {targetRect && (
+            {/* Blocking Overlay - 4 sections around target (only render when target exists) */}
+            {targetRect && (
         <>
           {/* Top overlay */}
           <div 
