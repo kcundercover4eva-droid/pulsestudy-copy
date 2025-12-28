@@ -132,12 +132,12 @@ export default function PomodoroTimer() {
     return () => clearInterval(timerRef.current);
   }, [isActive, phase, timeLeft]);
 
-  // Rotate quotes every 2 minutes
+  // Randomize quotes every 2 minutes
   useEffect(() => {
     if (phase === 'focus' && isActive) {
       const quotes = userProfile?.motivationStyle === 'negative' ? FOCUS_QUOTES_NEGATIVE : FOCUS_QUOTES_POSITIVE;
       const quoteInterval = setInterval(() => {
-        setQuoteIndex(prev => (prev + 1) % quotes.length);
+        setQuoteIndex(Math.floor(Math.random() * quotes.length));
       }, 120000);
       return () => clearInterval(quoteInterval);
     }
@@ -157,6 +157,9 @@ export default function PomodoroTimer() {
     setIsActive(true);
     setPhase('focus');
     setSessionStartTime(Date.now());
+    // Randomize starting quote
+    const quotes = userProfile?.motivationStyle === 'negative' ? FOCUS_QUOTES_NEGATIVE : FOCUS_QUOTES_POSITIVE;
+    setQuoteIndex(Math.floor(Math.random() * quotes.length));
     if (soundEnabled) playSound('start');
   };
 
@@ -697,9 +700,25 @@ export default function PomodoroTimer() {
             <div className="glass-card rounded-2xl p-4 mt-8 max-w-md">
               <p className="text-xs text-white/60 text-center leading-relaxed">
                 {userProfile?.motivationStyle === 'negative' ? (
-                  <>💀 <span className="font-semibold">Reality check:</span> Every second you waste scrolling is a second you'll regret. Focus now or suffer later.</>
+                  (() => {
+                    const tips = [
+                      <>💀 <span className="font-semibold">Reality check:</span> Every second you waste scrolling is a second you'll regret. Focus now or suffer later.</>,
+                      <>⚠️ <span className="font-semibold">Hard truth:</span> Your competitors are working right now. Are you really going to check your phone?</>,
+                      <>🔥 <span className="font-semibold">Wake up:</span> Distractions are for the weak. Prove you're not weak.</>,
+                      <>💀 <span className="font-semibold">No excuses:</span> Every notification can wait. Your future can't.</>
+                    ];
+                    return tips[Math.floor(Math.random() * tips.length)];
+                  })()
                 ) : (
-                  <>💡 <span className="font-semibold">Pro tip:</span> Stay off social media until your break. You're building incredible willpower! 💪</>
+                  (() => {
+                    const tips = [
+                      <>💡 <span className="font-semibold">Pro tip:</span> Stay off social media until your break. You're building incredible willpower! 💪</>,
+                      <>✨ <span className="font-semibold">Remember:</span> This focused time is your superpower. Protect it! 🛡️</>,
+                      <>🎯 <span className="font-semibold">Fun fact:</span> Deep work makes you smarter and happier. You've got this! 🧠</>,
+                      <>🚀 <span className="font-semibold">You're amazing:</span> Every minute of focus is building the future you want. Keep going! 💫</>
+                    ];
+                    return tips[Math.floor(Math.random() * tips.length)];
+                  })()
                 )}
               </p>
             </div>
