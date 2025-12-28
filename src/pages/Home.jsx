@@ -58,7 +58,7 @@ export default function Home() {
       // Show landing every time on fresh load
       setView('landing');
     }
-  }, [userProfile, profileLoading, view, landingShownThisSession]);
+  }, [userProfile, profileLoading, view, inApp]);
 
 
 
