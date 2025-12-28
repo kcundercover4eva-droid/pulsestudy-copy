@@ -59,12 +59,7 @@ export default function Home() {
     }
   }, [userProfile, profileLoading, view, landingShownThisSession]);
 
-  // TEMP: Auto-start guide for testing
-  React.useEffect(() => {
-    if (view === 'app' && guideStep === 0) {
-      setTimeout(() => setGuideStep(1), 500);
-    }
-  }, [view, guideStep]);
+
 
   if (view === 'checking' || profileLoading) {
     return (
@@ -78,8 +73,7 @@ export default function Home() {
     return <OnboardingWizard onComplete={() => {
       updateProfileMutation.mutate({ hasCompletedOnboarding: true });
       setView('app');
-      // Start the guide after a short delay
-      setTimeout(() => setGuideStep(1), 500);
+      setGuideStep(1);
     }} />;
   }
 
