@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Zap, Shield, Brain, Sparkles, X } from 'lucide-react';
+import { ChevronRight, Zap, Award, Sparkles, X, TrendingUp } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
+import confetti from 'canvas-confetti';
 import {
   Dialog,
   DialogContent,
@@ -42,20 +44,39 @@ const COLORS = {
 };
 
 export default function LandingScreen({ onGetStarted }) {
-  const [currentLine, setCurrentLine] = useState(0);
-  const [sublineType, setSublineType] = useState('gamified'); // 'motivational' or 'gamified'
+  const [showXP, setShowXP] = useState(false);
   const [showLearnMore, setShowLearnMore] = useState(false);
+  const [progress, setProgress] = useState(0);
 
-  // Rotate lines
+  // Get current user
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me(),
+  });
+
+  const firstName = currentUser?.full_name?.split(' ')[0] || 'Champion';
+
+  // XP popup animation
   useEffect(() => {
-    const lines = sublineType === 'gamified' ? GAMIFIED_LINES : MOTIVATIONAL_LINES;
-    const interval = setInterval(() => {
-      setCurrentLine((prev) => (prev + 1) % lines.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [sublineType]);
+    const timer = setTimeout(() => {
+      setShowXP(true);
+      confetti({
+        particleCount: 50,
+        spread: 60,
+        origin: { y: 0.4 },
+        colors: ['#06b6d4', '#ec4899', '#fbbf24']
+      });
+    }, 800);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const activeLines = sublineType === 'gamified' ? GAMIFIED_LINES : MOTIVATIONAL_LINES;
+  // Progress bar animation
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setProgress(12);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 text-white font-sans">
