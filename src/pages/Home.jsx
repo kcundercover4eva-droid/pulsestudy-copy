@@ -26,7 +26,7 @@ export default function Home() {
   const { data: userProfile, isLoading: profileLoading } = useQuery({
     queryKey: ['userProfile'],
     queryFn: async () => {
-      const profiles = await base44.entities.UserProfile.list();
+      const profiles = await base44.entities.UserProfile.list('-updated_date', 1);
       return profiles[0] || { accentColor: 'neonGreen', hasCompletedOnboarding: false };
     },
   });
