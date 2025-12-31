@@ -35,12 +35,12 @@ export default function OnboardingWizard({ onComplete }) {
 
   const updateProfileMutation = useMutation({
     mutationFn: async (profileData) => {
-      // In a real app we would update the user record
-      // For now we just create a record to simulate
-      return await base44.entities.UserProfile.create({
-        ...profileData,
-        email: 'current-user@example.com' // Placeholder
-      });
+      const profiles = await base44.entities.UserProfile.list('-updated_date', 1);
+      if (profiles[0]) {
+        return await base44.entities.UserProfile.update(profiles[0].id, profileData);
+      } else {
+        return await base44.entities.UserProfile.create(profileData);
+      }
     },
     onSuccess: () => {
       onComplete();

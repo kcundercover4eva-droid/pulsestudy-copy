@@ -76,7 +76,7 @@ export default function LandingScreen({ onGetStarted }) {
   // Award 10 XP mutation
   const awardXPMutation = useMutation({
     mutationFn: async () => {
-      const profiles = await base44.entities.UserProfile.list();
+      const profiles = await base44.entities.UserProfile.list('-updated_date', 1);
       if (profiles[0]) {
         return await base44.entities.UserProfile.update(profiles[0].id, {
           totalPoints: (userProfile?.totalPoints || 0) + 10
