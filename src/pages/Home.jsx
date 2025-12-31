@@ -71,9 +71,10 @@ export default function Home() {
 
   if (view === 'landing') {
     return <LandingScreen onGetStarted={() => {
-      setView('app');
-      // Only show guide if they haven't completed onboarding yet
       if (!userProfile?.hasCompletedOnboarding) {
+        setView('onboarding');
+      } else {
+        setView('app');
         setGuideStep(1);
       }
     }} />;
