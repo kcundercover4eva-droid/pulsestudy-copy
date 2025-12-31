@@ -207,7 +207,7 @@ export default function Home() {
               data-tab="schedule"
               onClick={() => {
                 setAppTab('schedule');
-                if (guideStep === 0 && !userProfile?.hasSeenScheduleIntro) {
+                if (guideStep === 0 && !userProfile?.hasCompletedOnboarding && !userProfile?.hasSeenScheduleIntro) {
                   setTimeout(() => setShowScheduleHelp(true), 300);
                 }
               }}
@@ -240,7 +240,7 @@ export default function Home() {
               data-tab="generate"
               onClick={() => {
                 setAppTab('generate');
-                if (guideStep === 0 && !userProfile?.hasSeenGenerateIntro) {
+                if (guideStep === 0 && !userProfile?.hasCompletedOnboarding && !userProfile?.hasSeenGenerateIntro) {
                   setTimeout(() => setShowGenerateHelp(true), 300);
                 }
               }}
@@ -300,7 +300,7 @@ export default function Home() {
               data-tab="study"
               onClick={() => {
                 setAppTab('quiz');
-                if (guideStep === 0 && !userProfile?.hasSeenQuizIntro) {
+                if (guideStep === 0 && !userProfile?.hasCompletedOnboarding && !userProfile?.hasSeenQuizIntro) {
                   setTimeout(() => setShowQuizHelp(true), 300);
                 }
               }}
