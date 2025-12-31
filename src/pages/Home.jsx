@@ -75,7 +75,6 @@ export default function Home() {
         setView('onboarding');
       } else {
         setView('app');
-        setGuideStep(1);
       }
     }} />;
   }
