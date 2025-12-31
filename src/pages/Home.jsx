@@ -45,18 +45,11 @@ export default function Home() {
     },
   });
 
-  // Determine initial view based on profile
+  // Always show landing screen first
   React.useEffect(() => {
     if (profileLoading || view !== 'checking') return;
-    
-    if (!userProfile?.hasCompletedOnboarding) {
-      // First time user - show onboarding wizard
-      setView('onboarding');
-    } else {
-      // Show landing every time
-      setView('landing');
-    }
-  }, [userProfile, profileLoading, view]);
+    setView('landing');
+  }, [profileLoading, view]);
 
 
 
