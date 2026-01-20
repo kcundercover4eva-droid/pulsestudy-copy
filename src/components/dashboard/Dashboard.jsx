@@ -880,6 +880,34 @@ export default function Dashboard() {
             </button>
           </div>
 
+          {/* Sprint Unlock Notification */}
+          <AnimatePresence>
+            {showSprintUnlock && (
+              <motion.div
+                initial={{ opacity: 0, y: -100, scale: 0.8 }}
+                animate={{ opacity: 1, y: 20, scale: 1 }}
+                exit={{ opacity: 0, y: -100, scale: 0.8 }}
+                className="fixed top-0 left-1/2 -translate-x-1/2 z-[100]"
+              >
+                <div className="glass-card px-6 py-4 rounded-2xl border-2 border-yellow-400/50 bg-gradient-to-r from-yellow-500/20 via-orange-500/20 to-red-500/20 shadow-[0_0_40px_rgba(250,204,21,0.4)]">
+                  <div className="flex items-center gap-3">
+                    <motion.div
+                      animate={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ duration: 0.5, repeat: Infinity }}
+                      className="w-10 h-10 rounded-full bg-yellow-400/20 flex items-center justify-center"
+                    >
+                      <Zap className="w-5 h-5 text-yellow-400" />
+                    </motion.div>
+                    <div>
+                      <div className="text-yellow-400 font-bold text-lg">Sprint Mode Unlocked! ⚡</div>
+                      <div className="text-white/70 text-sm">You can now test yourself with speed rounds!</div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* AI Study Assistant */}
           <div className="md:col-span-6 h-full" data-guide="assistant">
             <button
@@ -899,24 +927,26 @@ export default function Dashboard() {
             </button>
           </div>
 
-          {/* Sprint Mode */}
-          <div className="md:col-span-6 h-full">
-            <button
-              onClick={() => navigate(createPageUrl('SprintMode'))}
-              className="w-full glass-card rounded-2xl md:rounded-3xl p-4 md:p-6 hover:shadow-2xl hover:shadow-yellow-500/30 transition-all group h-full relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-yellow-600/10 to-orange-600/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative flex flex-col items-center justify-center gap-3 md:gap-4 h-full">
-                <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
-                  <Zap className="w-7 h-7 md:w-8 md:h-8 text-white" />
+          {/* Sprint Mode - Only show if user has quizzes */}
+          {hasQuizzes && (
+            <div className="md:col-span-6 h-full">
+              <button
+                onClick={() => navigate(createPageUrl('SprintMode'))}
+                className="w-full glass-card rounded-2xl md:rounded-3xl p-4 md:p-6 hover:shadow-2xl hover:shadow-yellow-500/30 transition-all group h-full relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-600/10 to-orange-600/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="relative flex flex-col items-center justify-center gap-3 md:gap-4 h-full">
+                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                    <Zap className="w-7 h-7 md:w-8 md:h-8 text-white" />
+                  </div>
+                  <div className="text-center">
+                    <h3 className="text-base md:text-xl font-bold text-white mb-1">Sprint Mode ⚡</h3>
+                    <p className="text-white/60 text-xs">2-10 min speed rounds</p>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <h3 className="text-base md:text-xl font-bold text-white mb-1">Sprint Mode ⚡</h3>
-                  <p className="text-white/60 text-xs">2-10 min speed rounds</p>
-                </div>
-              </div>
-            </button>
-          </div>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Stats Grid */}
