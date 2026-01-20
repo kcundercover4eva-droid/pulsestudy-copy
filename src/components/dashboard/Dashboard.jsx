@@ -960,27 +960,29 @@ export default function Dashboard() {
           </AnimatePresence>
 
           {/* AI Study Assistant */}
-          <div className="md:col-span-6 h-full" data-guide="assistant">
-            <button
-              onClick={() => navigate(createPageUrl('StudyAssistant'))}
-              className="w-full glass-card rounded-2xl md:rounded-3xl p-4 md:p-6 hover:shadow-2xl transition-all group h-full"
-              style={{ boxShadow: `0 0 60px -15px ${themeColor === 'green' ? '#4ade80' : themeColor === 'rose' ? '#fb7185' : '#06b6d4'}33` }}
-            >
-              <div className="flex flex-col items-center justify-center gap-3 md:gap-4 h-full">
-                <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-${themeColor}-600 to-${themeColor === 'green' ? 'emerald' : themeColor === 'rose' ? 'pink' : 'blue'}-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg`}>
-                  <MessageSquare className="w-7 h-7 md:w-8 md:h-8 text-white" />
+          {userProfile?.aiAssistantEnabled !== false && (
+            <div className="md:col-span-6 h-full" data-guide="assistant">
+              <button
+                onClick={() => navigate(createPageUrl('StudyAssistant'))}
+                className="w-full glass-card rounded-2xl md:rounded-3xl p-4 md:p-6 hover:shadow-2xl transition-all group h-full"
+                style={{ boxShadow: `0 0 60px -15px ${themeColor === 'green' ? '#4ade80' : themeColor === 'rose' ? '#fb7185' : '#06b6d4'}33` }}
+              >
+                <div className="flex flex-col items-center justify-center gap-3 md:gap-4 h-full">
+                  <div className={`w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-${themeColor}-600 to-${themeColor === 'green' ? 'emerald' : themeColor === 'rose' ? 'pink' : 'blue'}-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg`}>
+                    <MessageSquare className="w-7 h-7 md:w-8 md:h-8 text-white" />
+                  </div>
+                  <div className="text-center">
+                    <h3 className="text-base md:text-xl font-bold text-white mb-1">Study Assistant</h3>
+                    <p className="text-white/60 text-xs">Get instant help</p>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <h3 className="text-base md:text-xl font-bold text-white mb-1">Study Assistant</h3>
-                  <p className="text-white/60 text-xs">Get instant help</p>
-                </div>
-              </div>
-            </button>
-          </div>
+              </button>
+            </div>
+          )}
 
           {/* Sprint Mode - Only show if user has quizzes */}
           {hasQuizzes && (
-            <div className="md:col-span-6 h-full">
+            <div className={`h-full ${userProfile?.aiAssistantEnabled !== false ? 'md:col-span-6' : 'md:col-span-12'}`}>
               <button
                 onClick={() => navigate(createPageUrl('SprintMode'))}
                 className="w-full glass-card rounded-2xl md:rounded-3xl p-4 md:p-6 hover:shadow-2xl hover:shadow-yellow-500/30 transition-all group h-full relative overflow-hidden"

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { Check, Sun, Zap, Target } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -22,7 +23,8 @@ export default function SettingsModal({ isOpen, onClose, userProfile, onSave }) 
     accentColor: userProfile?.accentColor || 'neonGreen',
     motivationStyle: userProfile?.motivationStyle || 'positive',
     commitmentLevel: userProfile?.commitmentLevel || 'balanced',
-    weeklyGoalHours: userProfile?.weeklyGoalHours || 10
+    weeklyGoalHours: userProfile?.weeklyGoalHours || 10,
+    aiAssistantEnabled: userProfile?.aiAssistantEnabled !== false
   });
 
   const handleSave = () => {
@@ -94,6 +96,21 @@ export default function SettingsModal({ isOpen, onClose, userProfile, onSave }) 
                   {settings.commitmentLevel === level.id && <Target className="w-5 h-5 text-cyan-600" />}
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* AI Assistant Toggle */}
+          <div>
+            <h3 className="text-lg font-bold mb-3">Features</h3>
+            <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all">
+              <div>
+                <div className="font-bold text-base">AI Study Assistant</div>
+                <div className="text-sm text-white/60">Get instant help with homework</div>
+              </div>
+              <Switch
+                checked={settings.aiAssistantEnabled}
+                onCheckedChange={(checked) => updateSetting('aiAssistantEnabled', checked)}
+              />
             </div>
           </div>
 
