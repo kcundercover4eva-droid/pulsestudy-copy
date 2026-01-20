@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Coffee, Play, Pause, FastForward, Sparkles } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 
 const BREAK_SUGGESTIONS = [
   { emoji: '🚶', text: 'Take a short walk', desc: 'Get your blood flowing' },
@@ -14,6 +16,15 @@ const BREAK_SUGGESTIONS = [
 
 export default function BreakTimer({ timeLeft, isActive, onPause, onResume, onSkip, soundEnabled }) {
   const [currentSuggestion, setCurrentSuggestion] = useState(0);
+
+  // Fetch user profile
+  const { data: userProfile } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: async () => {
+      const profiles = await base44.entities.UserProfile.list();
+      return profiles[0] || {};
+    },
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -141,7 +152,11 @@ export default function BreakTimer({ timeLeft, isActive, onPause, onResume, onSk
         {/* Encouragement */}
         <div className="mt-6 text-white/60 text-sm">
           <Sparkles className="w-4 h-4 inline mr-1" />
-          You earned this break! Relax and recharge 🌟
+          {userProfile?.motivationStyle === 'negative' ? (
+            <>Don't waste this break. Get back to work soon. ⚡</>
+          ) : (
+            <>You earned this break! Relax and recharge 🌟</>
+          )}
         </div>
       </motion.div>
     </div>

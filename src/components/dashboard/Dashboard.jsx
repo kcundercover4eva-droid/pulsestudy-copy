@@ -81,7 +81,7 @@ const FocusTimer = ({ accentColor, userProfile, updateProfileMutation, createSes
     { id: 'none', name: 'Silence', emoji: '🔇' }
   ];
 
-  const motivationalMessages = [
+  const motivationalMessagesPositive = [
     "You're in the zone! Keep crushing it! 🔥",
     "Deep work = Deep results 💪",
     "Your future self will thank you 🌟",
@@ -91,6 +91,21 @@ const FocusTimer = ({ accentColor, userProfile, updateProfileMutation, createSes
     "This is where magic happens ✨",
     "Keep going! You're doing amazing! 🚀"
   ];
+
+  const motivationalMessagesNegative = [
+    "No distractions. Focus or fail. 💀",
+    "Your competitors aren't taking breaks. ⚠️",
+    "Weak focus = weak results. Push harder! ⚡",
+    "Time wasted now = regrets later. 🎯",
+    "Are you really trying your best? 🔥",
+    "Excuses won't get you results. ⏰",
+    "Winners don't quit. Are you a winner? 🏆",
+    "Stop thinking. Start doing. 🚀"
+  ];
+
+  const motivationalMessages = userProfile?.motivationStyle === 'negative' 
+    ? motivationalMessagesNegative 
+    : motivationalMessagesPositive;
 
   useEffect(() => {
     let interval = null;
@@ -291,7 +306,11 @@ const FocusTimer = ({ accentColor, userProfile, updateProfileMutation, createSes
            {/* Focus Tips Reminder */}
            <div className="glass-card rounded-2xl p-4 mb-8 max-w-sm mx-auto">
              <p className="text-xs text-white/60 leading-relaxed">
-               💡 <span className="font-semibold">Pro tip:</span> If you need a break, check social media AFTER this session. You're building willpower! 💪
+               {userProfile?.motivationStyle === 'negative' ? (
+                 <>💀 <span className="font-semibold">Reality check:</span> Every second you waste scrolling is a second you'll regret. Focus now or suffer later.</>
+               ) : (
+                 <>💡 <span className="font-semibold">Pro tip:</span> If you need a break, check social media AFTER this session. You're building willpower! 💪</>
+               )}
              </p>
            </div>
 
