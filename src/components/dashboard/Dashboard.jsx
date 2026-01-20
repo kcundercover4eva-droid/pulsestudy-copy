@@ -569,6 +569,7 @@ export default function Dashboard() {
   const [loginReward, setLoginReward] = useState(null);
   const [mysteryBoxToOpen, setMysteryBoxToOpen] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [showSprintUnlock, setShowSprintUnlock] = useState(false);
   const queryClient = useQueryClient();
 
   // Get Auth User for Name
@@ -590,6 +591,18 @@ export default function Dashboard() {
          currentStreak: 0,
          lastDopamineDropDate: null 
        };
+    },
+  });
+
+  // Check if user has any quizzes (for Sprint Mode unlock)
+  const { data: hasQuizzes = false } = useQuery({
+    queryKey: ['hasQuizzes'],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      const quizzes = await base44.entities.Quiz.filter({ 
+        created_by: user.email
+      });
+      return quizzes.length > 0;
     },
   });
 
@@ -671,6 +684,16 @@ export default function Dashboard() {
       });
     },
   });
+
+  // Check if Sprint Mode was just unlocked
+  useEffect(() => {
+    const wasLocked = !userProfile?.hasUnlockedSprint;
+    if (hasQuizzes && wasLocked) {
+      setShowSprintUnlock(true);
+      updateProfileMutation.mutate({ hasUnlockedSprint: true });
+      setTimeout(() => setShowSprintUnlock(false), 4000);
+    }
+  }, [hasQuizzes, userProfile?.hasUnlockedSprint]);
 
   // Handle Randomized Login Rewards
   useEffect(() => {
@@ -789,6 +812,34 @@ export default function Dashboard() {
         />
       )}
       
+      {/* Sprint Unlock Notification */}
+      <AnimatePresence>
+        {showSprintUnlock && (
+          <motion.div
+            initial={{ opacity: 0, y: -100, scale: 0.8 }}
+            animate={{ opacity: 1, y: 20, scale: 1 }}
+            exit={{ opacity: 0, y: -100, scale: 0.8 }}
+            className="fixed top-0 left-1/2 -translate-x-1/2 z-[100]"
+          >
+            <div className="glass-card px-6 py-4 rounded-2xl border-2 border-yellow-400/50 bg-gradient-to-r from-yellow-500/20 via-orange-500/20 to-red-500/20 shadow-[0_0_40px_rgba(250,204,21,0.4)]">
+              <div className="flex items-center gap-3">
+                <motion.div
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 0.5, repeat: Infinity }}
+                  className="w-10 h-10 rounded-full bg-yellow-400/20 flex items-center justify-center"
+                >
+                  <Zap className="w-5 h-5 text-yellow-400" />
+                </motion.div>
+                <div>
+                  <div className="text-yellow-400 font-bold text-lg">Sprint Mode Unlocked! ⚡</div>
+                  <div className="text-white/70 text-sm">You can now test yourself with speed rounds!</div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Background Gradients */}
       <div className="fixed inset-0 pointer-events-none">
         <div className={`absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-${themeColor}-600/10 blur-[120px]`} />

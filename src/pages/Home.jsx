@@ -270,7 +270,10 @@ export default function Home() {
 
             {/* Home Tab */}
             <button 
-              onClick={() => setAppTab('dashboard')}
+              onClick={() => {
+                setAppTab('dashboard');
+                queryClient.invalidateQueries(['hasQuizzes']);
+              }}
               className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
               style={{ minWidth: '44px', minHeight: '44px' }}
             >
