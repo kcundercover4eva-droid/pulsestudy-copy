@@ -657,6 +657,9 @@ export default function Dashboard() {
   useEffect(() => {
     if (!userProfile) return;
 
+    // Don't show reward for first-time users (wait until onboarding complete)
+    if (!userProfile.hasCompletedOnboarding) return;
+
     const now = moment();
     const lastRewardTime = userProfile.lastDopamineDropDate 
       ? moment(userProfile.lastDopamineDropDate) 
