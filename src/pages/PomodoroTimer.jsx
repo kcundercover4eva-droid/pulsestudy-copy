@@ -267,8 +267,7 @@ export default function PomodoroTimer() {
   };
 
   const skipBreak = () => {
-    setPhase('idle');
-    setTimeLeft(MODES[mode].focus * 60);
+    navigate(createPageUrl('Home'));
   };
 
   const changeMode = (newMode) => {
