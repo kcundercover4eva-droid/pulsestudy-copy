@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import confetti from 'canvas-confetti';
+import moment from 'moment';
 import XPPopup from '../components/rewards/XPPopup';
 
 export default function SprintMode() {
