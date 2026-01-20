@@ -45,11 +45,15 @@ export default function Home() {
     },
   });
 
-  // Always show landing screen first
+  // Skip landing screen for returning users who completed onboarding
   React.useEffect(() => {
     if (profileLoading || view !== 'checking') return;
-    setView('landing');
-  }, [profileLoading, view]);
+    if (userProfile?.hasCompletedOnboarding) {
+      setView('app');
+    } else {
+      setView('landing');
+    }
+  }, [profileLoading, view, userProfile?.hasCompletedOnboarding]);
 
 
 
