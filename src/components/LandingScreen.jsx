@@ -59,19 +59,7 @@ export default function LandingScreen({ onGetStarted }) {
     },
   });
 
-  // Fetch user name
-  useEffect(() => {
-    const fetchUserName = async () => {
-      try {
-        const user = await base44.auth.me();
-        const name = user.full_name ? user.full_name.split(' ')[0] : 'there';
-        setUserName(name);
-      } catch (error) {
-        setUserName('there');
-      }
-    };
-    fetchUserName();
-  }, []);
+  // Don't fetch user name - new users don't have a name yet
 
   // Award 10 XP mutation
   const awardXPMutation = useMutation({
@@ -192,16 +180,14 @@ export default function LandingScreen({ onGetStarted }) {
           <p className="text-lg md:text-xl font-semibold text-white/90 tracking-wide mb-2">
             Focus smarter. Study stronger.
           </p>
-          {userName && userName !== 'there' && (
-            <motion.p 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="text-base text-cyan-300/80 font-medium"
-            >
-              Ready to level up, {userName}?
-            </motion.p>
-          )}
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-base text-cyan-300/80 font-medium"
+          >
+            Ready to level up?
+          </motion.p>
         </motion.div>
 
         {/* Rotating Sublines */}

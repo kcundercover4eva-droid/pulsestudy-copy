@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { ChevronRight, ChevronLeft, Check, Sun, Moon, Zap, Target } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useMutation } from '@tanstack/react-query';
 
 const STEPS = [
+  { id: 'name', title: 'Your Name' },
   { id: 'color', title: 'Vibe Check' },
   { id: 'commitment', title: 'Commitment' },
   { id: 'tone', title: 'Coaching Style' }
@@ -20,6 +22,7 @@ const THEMES = [
 export default function OnboardingWizard({ onComplete }) {
   const [step, setStep] = useState(0);
   const [data, setData] = useState({
+    displayName: '',
     accentColor: 'neonGreen',
     motivationStyle: 'positive',
     commitmentLevel: 'balanced', // casual, balanced, serious, machine
@@ -92,8 +95,35 @@ export default function OnboardingWizard({ onComplete }) {
         <div className="flex-1 flex flex-col justify-center overflow-hidden">
           <AnimatePresence mode="wait">
             
-            {/* Step 0: Color Selection */}
+            {/* Step 0: Name Input */}
             {step === 0 && (
+              <motion.div
+                key="step0"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                className="space-y-7"
+              >
+                <div className="text-center">
+                  <h2 className="text-3xl md:text-4xl font-bold mb-3">What should we call you?</h2>
+                  <p className="text-base text-white/60">This name will appear throughout the app.</p>
+                </div>
+
+                <div className="bg-white rounded-2xl p-6">
+                  <Input
+                    type="text"
+                    value={data.displayName}
+                    onChange={(e) => update('displayName', e.target.value)}
+                    placeholder="Enter your name..."
+                    className="text-slate-900 text-xl font-medium border-0 focus-visible:ring-0 placeholder:text-slate-400"
+                    autoFocus
+                  />
+                </div>
+              </motion.div>
+            )}
+
+            {/* Step 1: Color Selection */}
+            {step === 1 && (
               <motion.div
                 key="step0"
                 initial={{ opacity: 0, x: 20 }}
@@ -124,8 +154,8 @@ export default function OnboardingWizard({ onComplete }) {
               </motion.div>
             )}
 
-            {/* Step 1: Commitment */}
-            {step === 1 && (
+            {/* Step 2: Commitment */}
+            {step === 2 && (
               <motion.div
                 key="step1"
                 initial={{ opacity: 0, x: 20 }}
@@ -161,8 +191,8 @@ export default function OnboardingWizard({ onComplete }) {
               </motion.div>
             )}
 
-            {/* Step 2: Tone */}
-            {step === 2 && (
+            {/* Step 3: Tone */}
+            {step === 3 && (
               <motion.div
                 key="step2"
                 initial={{ opacity: 0, x: 20 }}
@@ -221,7 +251,8 @@ export default function OnboardingWizard({ onComplete }) {
           
           <Button 
             onClick={next}
-            className={`bg-white text-slate-900 hover:bg-white/90 font-bold px-8 rounded-xl text-base h-12`}
+            disabled={step === 0 && !data.displayName.trim()}
+            className={`bg-white text-slate-900 hover:bg-white/90 font-bold px-8 rounded-xl text-base h-12 disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             {step === STEPS.length - 1 ? 'Finish' : 'Next'}
             {step !== STEPS.length - 1 && <ChevronRight className="w-4 h-4 ml-2" />}

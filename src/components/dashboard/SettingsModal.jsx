@@ -20,6 +20,7 @@ const COMMITMENT_LEVELS = [
 
 export default function SettingsModal({ isOpen, onClose, userProfile, onSave }) {
   const [settings, setSettings] = useState({
+    displayName: userProfile?.displayName || '',
     accentColor: userProfile?.accentColor || 'neonGreen',
     motivationStyle: userProfile?.motivationStyle || 'positive',
     commitmentLevel: userProfile?.commitmentLevel || 'balanced',
@@ -44,6 +45,20 @@ export default function SettingsModal({ isOpen, onClose, userProfile, onSave }) 
         </DialogHeader>
 
         <div className="space-y-6 mt-4">
+          {/* Display Name */}
+          <div>
+            <h3 className="text-lg font-bold mb-3">Display Name</h3>
+            <div className="bg-white rounded-xl p-4">
+              <Input
+                type="text"
+                value={settings.displayName}
+                onChange={(e) => updateSetting('displayName', e.target.value)}
+                placeholder="Enter your name..."
+                className="text-slate-900 text-lg font-medium border-0 focus-visible:ring-0 placeholder:text-slate-400"
+              />
+            </div>
+          </div>
+
           {/* Color Theme */}
           <div>
             <h3 className="text-lg font-bold mb-3">Color Theme</h3>

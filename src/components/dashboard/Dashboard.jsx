@@ -850,7 +850,7 @@ export default function Dashboard() {
         
         {/* Title and Subheading */}
         <div className="mb-4 md:mb-6">
-          <h1 className="text-2xl md:text-4xl font-bold text-white mb-1 md:mb-2">{getGreeting()}, {currentUser?.full_name?.split(' ')[0] || 'Friend'}</h1>
+          <h1 className="text-2xl md:text-4xl font-bold text-white mb-1 md:mb-2">{getGreeting()}, {userProfile?.displayName || 'Friend'}</h1>
           <p className="text-white/60 text-sm md:text-base">Ready to crush your {userProfile?.weeklyGoalHours || 10}h goal this week?</p>
         </div>
 
