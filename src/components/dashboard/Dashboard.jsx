@@ -867,7 +867,7 @@ export default function Dashboard() {
             <Settings2 className="w-4 h-4 md:w-5 md:h-5 text-white" />
           </button>
           <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 border border-white/10 flex items-center justify-center text-xs md:text-sm font-bold">
-            {currentUser?.full_name?.charAt(0) || 'U'}
+            {userProfile?.displayName?.charAt(0) || currentUser?.full_name?.charAt(0) || 'U'}
           </div>
         </div>
 
