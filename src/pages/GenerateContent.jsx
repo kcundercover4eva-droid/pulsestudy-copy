@@ -54,6 +54,26 @@ export default function GenerateContent() {
         status: 'processing',
       });
 
+      // Save reference to UserProfile
+      const profiles = await base44.entities.UserProfile.list();
+      const profile = profiles[0];
+      const newMaterialRef = {
+        id: material.id,
+        title,
+        subject,
+        uploadedDate: new Date().toISOString(),
+      };
+      if (profile) {
+        const existingMaterials = profile.uploadedMaterials || [];
+        await base44.entities.UserProfile.update(profile.id, {
+          uploadedMaterials: [...existingMaterials, newMaterialRef],
+        });
+      } else {
+        await base44.entities.UserProfile.create({
+          uploadedMaterials: [newMaterialRef],
+        });
+      }
+
       // Generate content using AI with quality filters
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `You are an expert tutor creating high-quality study materials from uploaded documents. Your goal: extract ONLY the most important, exam-useful information.
