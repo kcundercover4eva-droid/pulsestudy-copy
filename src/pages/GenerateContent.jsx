@@ -19,8 +19,14 @@ export default function GenerateContent() {
   const { data: materials = [] } = useQuery({
     queryKey: ['studyMaterials'],
     queryFn: async () => {
+      const profiles = await base44.entities.UserProfile.list();
+      const profile = profiles[0];
+      if (!profile || !profile.uploadedMaterials?.length) return [];
+
+      const profileMaterialIds = new Set(profile.uploadedMaterials.map(m => m.id));
       const user = await base44.auth.me();
-      return base44.entities.StudyMaterial.filter({ created_by: user.email }, '-created_date');
+      const allMaterials = await base44.entities.StudyMaterial.filter({ created_by: user.email }, '-created_date');
+      return allMaterials.filter(m => profileMaterialIds.has(m.id));
     },
   });
 
