@@ -16,7 +16,12 @@ export default function NotecardFeed({ selectedDeck = null, onBack = null }) {
       if (selectedDeck) {
         return base44.entities.Notecard.filter({ sourceId: selectedDeck.id, created_by: user.email });
       }
-      return base44.entities.Notecard.filter({ created_by: user.email });
+      const profiles = await base44.entities.UserProfile.list();
+      const profile = profiles[0];
+      const allowedIds = new Set((profile?.uploadedMaterials || []).map(m => m.id));
+      if (allowedIds.size === 0) return [];
+      const notes = await base44.entities.Notecard.filter({ created_by: user.email });
+      return notes.filter(n => allowedIds.has(n.sourceId));
     },
   });
 
