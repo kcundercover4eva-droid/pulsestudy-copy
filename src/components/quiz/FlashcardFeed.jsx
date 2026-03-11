@@ -145,7 +145,12 @@ export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
       if (selectedDeck) {
         return await base44.entities.Flashcard.filter({ sourceId: selectedDeck.id, created_by: user.email });
       }
-      return await base44.entities.Flashcard.filter({ created_by: user.email });
+      const profiles = await base44.entities.UserProfile.list();
+      const profile = profiles[0];
+      const allowedIds = new Set((profile?.uploadedMaterials || []).map(m => m.id));
+      if (allowedIds.size === 0) return [];
+      const cards = await base44.entities.Flashcard.filter({ created_by: user.email });
+      return cards.filter(c => allowedIds.has(c.sourceId));
     },
     initialData: []
   });
