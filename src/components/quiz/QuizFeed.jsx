@@ -38,7 +38,12 @@ export default function QuizFeed({ selectedDeck = null, onBack = null }) {
       if (selectedDeck) {
         return base44.entities.Quiz.filter({ sourceId: selectedDeck.id, created_by: user.email, isCompleted: false });
       }
-      return base44.entities.Quiz.filter({ created_by: user.email, isCompleted: false });
+      const profiles = await base44.entities.UserProfile.list();
+      const profile = profiles[0];
+      const allowedIds = new Set((profile?.uploadedMaterials || []).map(m => m.id));
+      if (allowedIds.size === 0) return [];
+      const quizzes = await base44.entities.Quiz.filter({ created_by: user.email, isCompleted: false });
+      return quizzes.filter(q => allowedIds.has(q.sourceId));
     },
   });
 
