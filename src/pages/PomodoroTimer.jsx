@@ -548,17 +548,20 @@ export default function PomodoroTimer() {
 
               {/* Ambient Sound */}
               <div className="mb-4">
-                <label className="text-white/60 text-sm mb-2 block">Ambient Sound</label>
+                <label className="text-white/60 text-sm mb-2 block">Ambient Sound
+                  {phase === 'focus' && isActive && <span className="ml-2 text-xs text-white/40">(pause to change)</span>}
+                </label>
                 <div className="grid grid-cols-5 gap-2">
                   {AMBIENT_SOUNDS.map(sound => (
                     <button
                       key={sound.id}
-                      onClick={() => setAmbientSound(sound.id)}
+                      onClick={() => !(phase === 'focus' && isActive) && setAmbientSound(sound.id)}
+                      disabled={phase === 'focus' && isActive}
                       className={`p-3 rounded-xl text-center transition-all ${
                         ambientSound === sound.id
                           ? 'bg-purple-500/20 border-2 border-purple-500'
                           : 'bg-white/5 border border-white/10 hover:bg-white/10'
-                      }`}
+                      } ${phase === 'focus' && isActive ? 'opacity-40 cursor-not-allowed' : ''}`}
                     >
                       <div className="text-2xl mb-1">{sound.emoji}</div>
                       <div className="text-white text-xs">{sound.name}</div>
