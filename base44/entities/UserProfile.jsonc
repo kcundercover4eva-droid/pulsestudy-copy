@@ -1,0 +1,145 @@
+{
+  "name": "UserProfile",
+  "type": "object",
+  "properties": {
+    "displayName": {
+      "type": "string",
+      "description": "User's preferred display name"
+    },
+    "accentColor": {
+      "type": "string",
+      "enum": [
+        "coral",
+        "neonGreen",
+        "electricBlue"
+      ],
+      "default": "neonGreen",
+      "description": "User's chosen dopamine accent color"
+    },
+    "motivationStyle": {
+      "type": "string",
+      "enum": [
+        "positive",
+        "negative"
+      ],
+      "default": "positive",
+      "description": "Tone of voice for notifications and nudges"
+    },
+    "weeklyGoalHours": {
+      "type": "number",
+      "default": 10
+    },
+    "totalPoints": {
+      "type": "number",
+      "default": 0
+    },
+    "currency": {
+      "type": "number",
+      "default": 0,
+      "description": "In-app currency for shop"
+    },
+    "currentStreak": {
+      "type": "number",
+      "default": 0
+    },
+    "lastStreakDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Last date the user earned a streak point"
+    },
+    "lastDopamineDropDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Last date the daily dopamine drop was shown"
+    },
+    "hasCompletedOnboarding": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether user has completed first-time onboarding"
+    },
+    "hasSeenPomodoroIntro": {
+      "type": "boolean",
+      "default": false
+    },
+    "hasSeenScheduleIntro": {
+      "type": "boolean",
+      "default": false
+    },
+    "hasSeenGenerateIntro": {
+      "type": "boolean",
+      "default": false
+    },
+    "hasSeenQuizIntro": {
+      "type": "boolean",
+      "default": false
+    },
+    "hasUnlockedSprint": {
+      "type": "boolean",
+      "default": false
+    },
+    "aiAssistantEnabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "uploadedMaterials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "uploadedDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "default": [],
+      "description": "List of uploaded study materials"
+    },
+    "learningPreferences": {
+      "type": "object",
+      "description": "Adaptive learning profile built from tutor interactions",
+      "properties": {
+        "preferredMethods": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Teaching methods that worked well: analogy, dual_coding, worked_example, socratic, mnemonic, chunking",
+          "default": []
+        },
+        "weakMethods": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Methods that confused or didn't resonate",
+          "default": []
+        },
+        "subjectNotes": {
+          "type": "object",
+          "description": "Per-subject notes on what works",
+          "default": {}
+        },
+        "totalTutorSessions": {
+          "type": "number",
+          "default": 0
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "default": {}
+    }
+  },
+  "required": []
+}
