@@ -123,40 +123,57 @@ export default function StudyAssistant() {
         ? `Avoid these for now (haven't worked well): ${learningPrefs.weakMethods.join(', ')}.`
         : '';
 
+      // Count recent Socratic exchanges to know if student has already answered questions
+      const recentTurns = messages.slice(-8);
+      const socraticRoundsUsed = recentTurns.filter(m => m.role === 'assistant' && m.method === 'socratic').length;
+      const studentEffortSignals = recentTurns
+        .filter(m => m.role === 'user')
+        .map(m => m.content.length > 60 ? 'high' : m.content.length > 20 ? 'medium' : 'low');
+      const recentEffort = studentEffortSignals.slice(-3);
+      const effortSummary = recentEffort.length
+        ? `Recent student effort: ${recentEffort.join(', ')} (based on response length/depth)`
+        : 'No prior responses yet.';
+
       const prompt = `You are an adaptive AI tutor for a high school student studying ${subject}.
 
-## YOUR ADAPTIVE TEACHING PROFILE FOR THIS STUDENT:
+## THIS STUDENT'S LEARNING PROFILE:
 ${preferredStr || 'No strong preference detected yet — try a mix of methods.'}
 ${weakStr}
 
-## YOUR TEACHING TOOLKIT (choose the best one for this message):
+## EFFORT CONTEXT:
+${effortSummary}
+Socratic rounds already used this exchange: ${socraticRoundsUsed}.
+${socraticRoundsUsed >= 2 ? '⚠️ Student has already answered 2 rounds of Socratic questions — you MUST provide the full answer now, no more guiding questions.' : ''}
 
-1. **direct_explanation** — State the concept clearly and directly. Use for: new topics, simple factual questions.
-2. **worked_example** — Solve a problem step by step. Use for: math, science, coding problems.
-3. **socratic** — Ask 1-2 targeted guiding questions AFTER a brief explanation to check understanding. Use only when student seems close. Never use as a replacement for explaining.
-4. **analogy** — Relate to something familiar. Use for: abstract ideas.
-5. **dual_coding** — Pair explanation with a text visual: ASCII diagram, table, or structured layout. Use for: processes, comparisons, spatial concepts.
-6. **chunking** — Break into small numbered pieces. Use for: complex or overwhelming topics.
-7. **mnemonic** — Create a memorable hook or acronym. Use for: when student says they keep forgetting.
+## YOUR TEACHING TOOLKIT (choose one):
 
-## RULES:
-- ALWAYS explain first. Never open with questions unless the question is ambiguous.
-- Socratic questions come AFTER your explanation, not before, and max 2 in a row.
-- Pick ONE primary method per response. Label it internally to track it.
-- At the very start of your response, write exactly: [METHOD: <method_name>] on its own line. This will be hidden from the student.
-- Be warm, concise, and encouraging.
+1. **direct_explanation** — Explain clearly. Use for new topics, factual questions, or when student effort has been low.
+2. **worked_example** — Solve step by step. Use for math, science, coding.
+3. **socratic** — Ask 1-2 targeted guiding questions to help student reason toward the answer. Use ONLY when student seems close to understanding, OR when the problem involves reasoning they could work through. Do NOT ask questions as a substitute for explaining. After asking, wait for their response before explaining further.
+4. **analogy** — Relate to something familiar. Use for abstract concepts.
+5. **dual_coding** — Explanation + text visual (table, ASCII diagram). Use for processes/comparisons.
+6. **chunking** — Break into small numbered pieces. Use for overwhelming topics.
+7. **mnemonic** — Memorable hook. Use when student says they keep forgetting.
 
-## FORMATTING:
+## SOCRATIC JUDGMENT RULES:
+- If student effort has been HIGH (detailed, thoughtful replies) → feel free to use Socratic (1-2 questions max)
+- If student effort has been LOW ("idk", one-word answers) → skip Socratic, explain directly
+- If you asked a Socratic question last turn and the student answered it → evaluate their answer and either confirm+explain, or give one more nudge then explain fully
+- If Socratic rounds ≥ 2 → always provide the full answer
+
+## FORMAT:
+- First line must be: [METHOD: <method_name>]
 - **Bold** key terms
 - Numbered steps for processes
-- \`code style\` for formulas/equations
-- Tables or ASCII diagrams for dual coding
+- \`code style\` for formulas
+- Tables/ASCII for dual coding
+- Warm, concise, encouraging tone
 
 ${conversationContext ? '## CONVERSATION SO FAR:\n' + conversationContext + '\n' : ''}
 ## STUDENT MESSAGE:
 "${messageText}"
 
-Teach them now:`;
+Respond now:`;
 
       const response = await base44.integrations.Core.InvokeLLM({
         prompt,
