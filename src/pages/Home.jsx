@@ -239,6 +239,39 @@ export default function Home() {
               )}
             </button>
 
+            {/* Upload Tab */}
+            <button 
+              data-tab="generate"
+              onClick={() => {
+                setAppTab('generate');
+                if (guideStep === 0 && !userProfile?.hasCompletedOnboarding && !userProfile?.hasSeenGenerateIntro) {
+                  setTimeout(() => setShowGenerateHelp(true), 300);
+                }
+              }}
+              className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
+              style={{ minWidth: '44px', minHeight: '44px' }}
+            >
+              <div className={`flex flex-col items-center gap-1 ${appTab === 'generate' ? 'transform scale-105' : ''}`}>
+                <Upload 
+                  className="w-7 h-7 mb-0.5 text-white" 
+                  strokeWidth={2.5}
+                  style={appTab === 'generate' ? { color: theme.primary } : {}}
+                />
+                <span 
+                  className="text-[11px] font-semibold whitespace-nowrap text-white"
+                  style={appTab === 'generate' ? { color: theme.primary } : {}}
+                >
+                  Upload
+                </span>
+              </div>
+              {appTab === 'generate' && (
+                <div 
+                  className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 rounded-b-full"
+                  style={{ backgroundColor: theme.primary, boxShadow: `0 0 12px ${theme.primary}` }}
+                />
+              )}
+            </button>
+
             {/* Home Tab */}
             <button 
               onClick={() => {
@@ -302,38 +335,6 @@ export default function Home() {
               )}
             </button>
 
-            {/* Upload Tab */}
-            <button 
-              data-tab="generate"
-              onClick={() => {
-                setAppTab('generate');
-                if (guideStep === 0 && !userProfile?.hasCompletedOnboarding && !userProfile?.hasSeenGenerateIntro) {
-                  setTimeout(() => setShowGenerateHelp(true), 300);
-                }
-              }}
-              className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
-              style={{ minWidth: '44px', minHeight: '44px' }}
-            >
-              <div className={`flex flex-col items-center gap-1 ${appTab === 'generate' ? 'transform scale-105' : ''}`}>
-                <Upload 
-                  className="w-7 h-7 mb-0.5 text-white" 
-                  strokeWidth={2.5}
-                  style={appTab === 'generate' ? { color: theme.primary } : {}}
-                />
-                <span 
-                  className="text-[11px] font-semibold whitespace-nowrap text-white"
-                  style={appTab === 'generate' ? { color: theme.primary } : {}}
-                >
-                  Upload
-                </span>
-              </div>
-              {appTab === 'generate' && (
-                <div 
-                  className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 rounded-b-full"
-                  style={{ backgroundColor: theme.primary, boxShadow: `0 0 12px ${theme.primary}` }}
-                />
-              )}
-            </button>
           </div>
         </div>
       </nav>
