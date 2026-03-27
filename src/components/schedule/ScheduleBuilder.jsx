@@ -455,7 +455,7 @@ export default function ScheduleBuilder() {
         </div>
         
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="glass bg-slate-900/90 text-white border-white/10">
+          <DialogContent className="glass bg-slate-900/90 text-white border-white/10 max-h-[90vh] overflow-y-auto mx-4 w-[calc(100%-2rem)] sm:w-full sm:mx-auto">
             <DialogHeader>
               <DialogTitle>Name Your Block</DialogTitle>
             </DialogHeader>
@@ -473,7 +473,7 @@ export default function ScheduleBuilder() {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="block-color">Block Color</Label>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   {['#ef4444', '#f97316', '#eab308', '#22c55e', '#10b981', '#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899'].map(color => (
                     <button
                       key={color}
