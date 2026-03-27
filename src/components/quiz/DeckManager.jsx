@@ -192,7 +192,7 @@ export default function DeckManager({ mode = 'flashcards', onSelectDeck, onBack 
 
       {/* Edit Deck Dialog */}
       <Dialog open={!!editingDeck} onOpenChange={() => setEditingDeck(null)}>
-        <DialogContent className="glass bg-slate-900/90 text-white border-white/10">
+        <DialogContent className="glass bg-slate-900/90 text-white border-white/10 max-h-[90vh] overflow-y-auto mx-4 w-[calc(100%-2rem)] sm:w-full sm:mx-auto">
           <DialogHeader>
             <DialogTitle>Edit Deck</DialogTitle>
           </DialogHeader>
@@ -239,7 +239,7 @@ export default function DeckManager({ mode = 'flashcards', onSelectDeck, onBack 
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={!!deckToDelete} onOpenChange={() => setDeckToDelete(null)}>
-        <DialogContent className="glass bg-slate-900/90 text-white border-white/10">
+        <DialogContent className="glass bg-slate-900/90 text-white border-white/10 max-h-[90vh] overflow-y-auto mx-4 w-[calc(100%-2rem)] sm:w-full sm:mx-auto">
           <DialogHeader>
             <DialogTitle>Delete Deck?</DialogTitle>
           </DialogHeader>

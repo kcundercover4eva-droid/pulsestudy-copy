@@ -40,7 +40,7 @@ export default function SettingsModal({ isOpen, onClose, userProfile, onSave }) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-lg max-h-[90vh] overflow-y-auto mx-4 w-[calc(100%-2rem)] sm:w-full sm:mx-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">Settings</DialogTitle>
         </DialogHeader>

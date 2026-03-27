@@ -907,7 +907,7 @@ export default function ScheduleBuilder() {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={!!blockToDelete} onOpenChange={() => setBlockToDelete(null)}>
-        <DialogContent className="glass bg-slate-900/90 text-white border-white/10">
+        <DialogContent className="glass bg-slate-900/90 text-white border-white/10 max-h-[90vh] overflow-y-auto mx-4 w-[calc(100%-2rem)] sm:w-full sm:mx-auto">
           <DialogHeader>
             <DialogTitle>Delete Block?</DialogTitle>
           </DialogHeader>
