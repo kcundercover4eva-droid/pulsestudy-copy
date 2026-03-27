@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Trophy, TrendingUp, TrendingDown, Minus, Zap, Target, Flame } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, Clock } from 'lucide-react';
 
 const rankColors = {
   1: 'from-yellow-400 to-yellow-600',
@@ -23,7 +23,7 @@ export default function LeaderboardTable({ entries, currentUserId }) {
         const isCurrentUser = entry.userId === currentUserId;
         const rank = entry.rank || index + 1;
         const rankChange = entry.lastRank ? entry.lastRank - rank : 0;
-        
+
         return (
           <motion.div
             key={entry.id}
@@ -52,23 +52,9 @@ export default function LeaderboardTable({ entries, currentUserId }) {
                       <Badge className="bg-purple-500 text-white">You</Badge>
                     )}
                   </div>
-                  
-                  {/* Stats */}
-                  <div className="flex items-center gap-4 flex-wrap text-sm">
-                    <div className="flex items-center gap-1 text-yellow-400">
-                      <Zap className="w-4 h-4" />
-                      <span className="font-bold">{entry.totalXP.toLocaleString()} XP</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-cyan-400">
-                      <Target className="w-4 h-4" />
-                      <span>{entry.questsCompleted} quests</span>
-                    </div>
-                    {entry.currentStreak > 0 && (
-                      <div className="flex items-center gap-1 text-orange-400">
-                        <Flame className="w-4 h-4" />
-                        <span>{entry.currentStreak} day streak</span>
-                      </div>
-                    )}
+                  <div className="flex items-center gap-1 text-cyan-400 text-sm">
+                    <Clock className="w-4 h-4" />
+                    <span className="font-bold">{(entry.studyMinutes || 0).toLocaleString()} min studied</span>
                   </div>
                 </div>
 
