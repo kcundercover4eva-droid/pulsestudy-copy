@@ -136,6 +136,8 @@ export default function StudyAssistant() {
 
       const prompt = `You are an adaptive AI tutor for a high school student studying ${subject}.
 
+IMPORTANT: If the student's question is clearly about a DIFFERENT subject than ${subject} (e.g. they ask a History question but the mode is Math), politely let them know and ask them to switch the subject selector at the top right to the appropriate subject before you answer. Do not attempt to answer off-topic questions.
+
 ## THIS STUDENT'S LEARNING PROFILE:
 ${preferredStr || 'No strong preference detected yet — try a mix of methods.'}
 ${weakStr}
@@ -264,9 +266,15 @@ Respond now:`;
                 </p>
               )}
               <div className="flex flex-wrap gap-2 justify-center max-w-2xl mx-auto mt-4">
-                {['How do I solve quadratic equations?', 'Explain photosynthesis simply', 'What caused World War II?', 'Help me understand functions'].map((suggestion, idx) => (
-                  <button key={idx} onClick={() => setInput(suggestion)} className="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/80 text-sm transition-all">
-                    {suggestion}
+                {[
+                  { text: 'How do I solve quadratic equations?', subject: 'Math' },
+                  { text: 'Explain photosynthesis simply', subject: 'Science' },
+                  { text: 'What caused World War II?', subject: 'History' },
+                  { text: 'Help me understand functions', subject: 'Math' },
+                ].map(({ text, subject: s }, idx) => (
+                  <button key={idx} onClick={() => setInput(text)} className="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/80 text-sm transition-all flex flex-col items-start text-left">
+                    <span>{text}</span>
+                    <span className="text-white/35 text-xs mt-0.5">{s} mode</span>
                   </button>
                 ))}
               </div>
