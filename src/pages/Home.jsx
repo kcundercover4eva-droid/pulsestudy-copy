@@ -239,6 +239,36 @@ export default function Home() {
               )}
             </button>
 
+            {/* Home Tab */}
+            <button 
+              onClick={() => {
+                setAppTab('dashboard');
+                queryClient.invalidateQueries(['hasQuizzes']);
+              }}
+              className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
+              style={{ minWidth: '44px', minHeight: '44px' }}
+            >
+              <div className={`flex flex-col items-center gap-1 ${appTab === 'dashboard' ? 'transform scale-105' : ''}`}>
+                <HomeIcon 
+                  className="w-7 h-7 mb-0.5 text-white" 
+                  strokeWidth={2.5}
+                  style={appTab === 'dashboard' ? { color: theme.primary } : {}}
+                />
+                <span 
+                  className="text-[11px] font-semibold whitespace-nowrap text-white"
+                  style={appTab === 'dashboard' ? { color: theme.primary } : {}}
+                >
+                  Home
+                </span>
+              </div>
+              {appTab === 'dashboard' && (
+                <div 
+                  className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 rounded-b-full"
+                  style={{ backgroundColor: theme.primary, boxShadow: `0 0 12px ${theme.primary}` }}
+                />
+              )}
+            </button>
+
             {/* Upload Tab */}
             <button 
               data-tab="generate"
@@ -265,36 +295,6 @@ export default function Home() {
                 </span>
               </div>
               {appTab === 'generate' && (
-                <div 
-                  className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 rounded-b-full"
-                  style={{ backgroundColor: theme.primary, boxShadow: `0 0 12px ${theme.primary}` }}
-                />
-              )}
-            </button>
-
-            {/* Home Tab */}
-            <button 
-              onClick={() => {
-                setAppTab('dashboard');
-                queryClient.invalidateQueries(['hasQuizzes']);
-              }}
-              className="flex flex-col items-center justify-center min-h-[68px] px-3 py-2 transition-all active:scale-95 touch-manipulation relative"
-              style={{ minWidth: '44px', minHeight: '44px' }}
-            >
-              <div className={`flex flex-col items-center gap-1 ${appTab === 'dashboard' ? 'transform scale-105' : ''}`}>
-                <HomeIcon 
-                  className="w-7 h-7 mb-0.5 text-white" 
-                  strokeWidth={2.5}
-                  style={appTab === 'dashboard' ? { color: theme.primary } : {}}
-                />
-                <span 
-                  className="text-[11px] font-semibold whitespace-nowrap text-white"
-                  style={appTab === 'dashboard' ? { color: theme.primary } : {}}
-                >
-                  Home
-                </span>
-              </div>
-              {appTab === 'dashboard' && (
                 <div 
                   className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 rounded-b-full"
                   style={{ backgroundColor: theme.primary, boxShadow: `0 0 12px ${theme.primary}` }}
