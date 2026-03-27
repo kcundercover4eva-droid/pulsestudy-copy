@@ -181,7 +181,7 @@ export default function Home() {
               <ScheduleBuilder />
             </div>
           )}
-          {appTab === 'generate' && <GenerateContent />}
+          {appTab === 'generate' && <GenerateContent onNavigateToQuiz={(mode) => setAppTab('quiz')} />}
         </div>
       </main>
 

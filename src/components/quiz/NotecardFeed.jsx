@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
+import { incrementDailyReview } from '@/utils/dailyGoal';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,14 @@ import { ChevronLeft, ChevronRight, BookOpen, ArrowLeft } from 'lucide-react';
 
 export default function NotecardFeed({ selectedDeck = null, onBack = null }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const { data: userProfile } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: async () => {
+      const profiles = await base44.entities.UserProfile.list();
+      return profiles[0] || {};
+    },
+  });
 
   const { data: notecards = [], isLoading } = useQuery({
     queryKey: ['notecards', selectedDeck?.id],
@@ -54,6 +63,7 @@ export default function NotecardFeed({ selectedDeck = null, onBack = null }) {
   const handleNext = () => {
     if (currentIndex < notecards.length - 1) {
       setCurrentIndex(currentIndex + 1);
+      incrementDailyReview(userProfile);
     }
   };
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
+import { incrementDailyReview } from '@/utils/dailyGoal';
 import { Button } from "@/components/ui/button";
 import { Check, X, RotateCcw, Brain, Layers, Trophy, ArrowLeft, Star, AlertCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -296,6 +297,7 @@ export default function FlashcardFeed({ selectedDeck = null, onBack = null }) {
 
     setActiveCards(prev => prev.slice(1));
     setSwipedCards(prev => prev + 1);
+    incrementDailyReview(userProfile);
   };
 
   const markDifficult = (card) => {

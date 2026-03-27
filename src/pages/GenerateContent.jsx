@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
+import FirstUploadCelebration from '@/components/rewards/FirstUploadCelebration';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,11 +11,12 @@ import { Upload, FileText, Loader2, Sparkles, CheckCircle2 } from 'lucide-react'
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
-export default function GenerateContent() {
+export default function GenerateContent({ onNavigateToQuiz } = {}) {
   const queryClient = useQueryClient();
   const [title, setTitle] = useState('');
   const [subject, setSubject] = useState('other');
   const [file, setFile] = useState(null);
+  const [showCelebration, setShowCelebration] = useState(false);
 
   const { data: materials = [] } = useQuery({
     queryKey: ['studyMaterials'],
@@ -306,13 +308,20 @@ Begin extraction. Use ONLY document content. No invention.`,
         }
       };
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.invalidateQueries(['studyMaterials']);
       queryClient.invalidateQueries(['flashcards']);
       toast.success(`Generated ${data.counts.flashcards} flashcards, ${data.counts.notecards} notecards, and ${data.counts.quizzes} quizzes!`);
       setTitle('');
       setFile(null);
       setSubject('other');
+      // Show first-upload celebration if this is the first material
+      const profiles = await base44.entities.UserProfile.list();
+      const profile = profiles[0];
+      if (profile && !profile.hasSeenFirstUploadCelebration) {
+        setShowCelebration(true);
+        await base44.entities.UserProfile.update(profile.id, { hasSeenFirstUploadCelebration: true });
+      }
     },
     onError: (error) => {
       toast.error('Failed to generate content: ' + error.message);
@@ -328,8 +337,18 @@ Begin extraction. Use ONLY document content. No invention.`,
     generateMutation.mutate({ title, subject, file });
   };
 
+  const handleCelebrationStudy = (mode) => {
+    setShowCelebration(false);
+    if (onNavigateToQuiz) onNavigateToQuiz(mode);
+  };
+
   return (
     <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-3 md:p-6 pb-6 min-h-mobile">
+      <FirstUploadCelebration
+        isOpen={showCelebration}
+        onClose={() => setShowCelebration(false)}
+        onGoStudy={handleCelebrationStudy}
+      />
       <div className="max-w-4xl mx-auto">
         <div className="mb-6 md:mb-8">
           <h1 className="text-2xl md:text-4xl font-bold text-white mb-1 md:mb-2">Generate Study Content</h1>

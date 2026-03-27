@@ -32,6 +32,7 @@ import RandomEventBanner from '../rewards/RandomEventBanner';
 import MysteryBoxUnbox from '../rewards/MysteryBoxUnbox';
 import StreakDisplay from '../rewards/StreakDisplay';
 import SettingsModal from './SettingsModal';
+import DailyGoalRing from './DailyGoalRing';
 
 // --- SUB-COMPONENTS ---
 
@@ -1045,6 +1046,13 @@ export default function Dashboard() {
               />
             </div>
           </div>
+
+          {/* Daily Goal Ring - only show if user has any uploaded materials */}
+          {(userProfile?.uploadedMaterials?.length > 0) && (
+            <div className="md:col-span-12">
+              <DailyGoalRing userProfile={userProfile} themeColor={themeColor} />
+            </div>
+          )}
 
           {/* Today's Schedule - Full width */}
           <div className="md:col-span-12 glass-card p-4 md:p-6 rounded-2xl md:rounded-3xl">

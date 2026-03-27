@@ -3,8 +3,7 @@
   "type": "object",
   "properties": {
     "displayName": {
-      "type": "string",
-      "description": "User's preferred display name"
+      "type": "string"
     },
     "accentColor": {
       "type": "string",
@@ -13,8 +12,7 @@
         "neonGreen",
         "electricBlue"
       ],
-      "default": "neonGreen",
-      "description": "User's chosen dopamine accent color"
+      "default": "neonGreen"
     },
     "motivationStyle": {
       "type": "string",
@@ -22,8 +20,7 @@
         "positive",
         "negative"
       ],
-      "default": "positive",
-      "description": "Tone of voice for notifications and nudges"
+      "default": "positive"
     },
     "weeklyGoalHours": {
       "type": "number",
@@ -35,8 +32,7 @@
     },
     "currency": {
       "type": "number",
-      "default": 0,
-      "description": "In-app currency for shop"
+      "default": 0
     },
     "currentStreak": {
       "type": "number",
@@ -44,18 +40,15 @@
     },
     "lastStreakDate": {
       "type": "string",
-      "format": "date",
-      "description": "Last date the user earned a streak point"
+      "format": "date"
     },
     "lastDopamineDropDate": {
       "type": "string",
-      "format": "date",
-      "description": "Last date the daily dopamine drop was shown"
+      "format": "date"
     },
     "hasCompletedOnboarding": {
       "type": "boolean",
-      "default": false,
-      "description": "Whether user has completed first-time onboarding"
+      "default": false
     },
     "hasSeenPomodoroIntro": {
       "type": "boolean",
@@ -81,6 +74,26 @@
       "type": "boolean",
       "default": true
     },
+    "hasSeenFirstUploadCelebration": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether user has seen the first-upload celebration modal"
+    },
+    "dailyGoalTarget": {
+      "type": "number",
+      "default": 10,
+      "description": "Number of cards/notes/quizzes to review per day"
+    },
+    "dailyReviewCount": {
+      "type": "number",
+      "default": 0,
+      "description": "How many items reviewed today"
+    },
+    "lastReviewDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of last review activity"
+    },
     "uploadedMaterials": {
       "type": "array",
       "items": {
@@ -101,19 +114,16 @@
           }
         }
       },
-      "default": [],
-      "description": "List of uploaded study materials"
+      "default": []
     },
     "learningPreferences": {
       "type": "object",
-      "description": "Adaptive learning profile built from tutor interactions",
       "properties": {
         "preferredMethods": {
           "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "Teaching methods that worked well: analogy, dual_coding, worked_example, socratic, mnemonic, chunking",
           "default": []
         },
         "weakMethods": {
@@ -121,12 +131,10 @@
           "items": {
             "type": "string"
           },
-          "description": "Methods that confused or didn't resonate",
           "default": []
         },
         "subjectNotes": {
           "type": "object",
-          "description": "Per-subject notes on what works",
           "default": {}
         },
         "totalTutorSessions": {

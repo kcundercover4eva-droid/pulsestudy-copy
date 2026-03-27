@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import { incrementDailyReview } from '@/utils/dailyGoal';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
@@ -234,6 +235,7 @@ export default function QuizFeed({ selectedDeck = null, onBack = null }) {
     
     if (isCorrect) {
       setScore(score + 1);
+      incrementDailyReview(userProfile);
       
       // Calculate XP with critical hit chance
       const baseXP = questionDifficulty === 'easy' ? 10 : questionDifficulty === 'hard' ? 30 : 20;
