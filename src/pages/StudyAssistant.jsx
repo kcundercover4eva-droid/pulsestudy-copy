@@ -10,7 +10,7 @@ import { createPageUrl } from '@/utils';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
 
-const SUBJECTS = ['Math', 'Science', 'History', 'English', 'Physics', 'Chemistry', 'Biology', 'Coding'];
+const SUBJECTS = ['Math', 'Science', 'History', 'English', 'Coding'];
 
 // Signals we parse from student messages to detect sentiment
 const POSITIVE_SIGNALS = ["i get it", "oh!", "that makes sense", "great analogy", "i understand", "perfect", "thanks", "got it", "makes sense", "love that", "helpful"];
