@@ -1,0 +1,60 @@
+{
+  "name": "AvatarData",
+  "type": "object",
+  "properties": {
+    "stage": {
+      "type": "number",
+      "default": 1,
+      "description": "Current evolution stage (1-10)"
+    },
+    "evolutionPoints": {
+      "type": "number",
+      "default": 0,
+      "description": "Points toward next evolution"
+    },
+    "unlockedCosmetics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "IDs of unlocked cosmetic items"
+    },
+    "equippedCosmetics": {
+      "type": "object",
+      "properties": {
+        "skin": {
+          "type": "string",
+          "default": "default"
+        },
+        "accessory": {
+          "type": "string"
+        },
+        "aura": {
+          "type": "string"
+        },
+        "background": {
+          "type": "string"
+        }
+      },
+      "default": {}
+    },
+    "evolutionHistory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "stage": {
+            "type": "number"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "default": []
+    }
+  },
+  "required": []
+}

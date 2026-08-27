@@ -1,0 +1,35 @@
+{
+  "name": "Comment",
+  "type": "object",
+  "properties": {
+    "targetType": {
+      "type": "string",
+      "enum": [
+        "achievement",
+        "profile"
+      ],
+      "description": "What is being commented on"
+    },
+    "targetId": {
+      "type": "string",
+      "description": "ID of the target entity"
+    },
+    "content": {
+      "type": "string",
+      "description": "Comment text"
+    },
+    "authorName": {
+      "type": "string",
+      "description": "Cached author name"
+    },
+    "likeCount": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "targetType",
+    "targetId",
+    "content"
+  ]
+}

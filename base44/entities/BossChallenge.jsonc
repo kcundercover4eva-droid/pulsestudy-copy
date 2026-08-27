@@ -1,0 +1,84 @@
+{
+  "name": "BossChallenge",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Boss name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Boss description and lore"
+    },
+    "emoji": {
+      "type": "string",
+      "default": "\ud83d\udc7e"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "normal",
+        "hard",
+        "nightmare",
+        "impossible"
+      ],
+      "default": "normal"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Subject area"
+    },
+    "challenges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          },
+          "timeLimit": {
+            "type": "number"
+          }
+        }
+      },
+      "default": []
+    },
+    "attempts": {
+      "type": "number",
+      "default": 0
+    },
+    "isDefeated": {
+      "type": "boolean",
+      "default": false
+    },
+    "bestTime": {
+      "type": "number",
+      "description": "Best completion time in seconds"
+    },
+    "rewards": {
+      "type": "object",
+      "properties": {
+        "xp": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "number"
+        },
+        "title": {
+          "type": "string"
+        },
+        "cosmetic": {
+          "type": "string"
+        }
+      },
+      "default": {}
+    }
+  },
+  "required": [
+    "name",
+    "difficulty"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "name": "FocusSession",
+  "type": "object",
+  "properties": {
+    "durationMinutes": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "interrupted",
+        "abandoned"
+      ],
+      "default": "completed"
+    },
+    "pointsEarned": {
+      "type": "number"
+    },
+    "focusProfile": {
+      "type": "string",
+      "default": "standard"
+    }
+  },
+  "required": []
+}

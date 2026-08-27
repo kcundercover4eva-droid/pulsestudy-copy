@@ -1,0 +1,74 @@
+{
+  "name": "Quest",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Quest title"
+    },
+    "description": {
+      "type": "string",
+      "description": "What needs to be done"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "special"
+      ],
+      "default": "daily"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "study",
+        "streak",
+        "achievement",
+        "variety"
+      ],
+      "default": "study"
+    },
+    "targetValue": {
+      "type": "number",
+      "description": "Target to reach (e.g., 3 tasks, 30 minutes)"
+    },
+    "currentProgress": {
+      "type": "number",
+      "default": 0
+    },
+    "rewards": {
+      "type": "object",
+      "properties": {
+        "xp": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "number"
+        },
+        "evolutionPoints": {
+          "type": "number"
+        }
+      },
+      "default": {}
+    },
+    "isCompleted": {
+      "type": "boolean",
+      "default": false
+    },
+    "isClaimed": {
+      "type": "boolean",
+      "default": false
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the quest expires"
+    }
+  },
+  "required": [
+    "title",
+    "type",
+    "targetValue"
+  ]
+}

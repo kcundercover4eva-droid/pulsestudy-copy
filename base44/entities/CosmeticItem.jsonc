@@ -1,0 +1,89 @@
+{
+  "name": "CosmeticItem",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Item name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Item description"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "skin",
+        "accessory",
+        "aura",
+        "background",
+        "animation",
+        "badge"
+      ],
+      "default": "accessory"
+    },
+    "rarity": {
+      "type": "string",
+      "enum": [
+        "common",
+        "rare",
+        "epic",
+        "legendary",
+        "mythic"
+      ],
+      "default": "common"
+    },
+    "price": {
+      "type": "number",
+      "description": "Cost in currency"
+    },
+    "emoji": {
+      "type": "string",
+      "default": "\u2728"
+    },
+    "imageUrl": {
+      "type": "string",
+      "description": "Item preview image"
+    },
+    "isLimited": {
+      "type": "boolean",
+      "default": false
+    },
+    "availableUntil": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When limited item expires"
+    },
+    "requiredLevel": {
+      "type": "number",
+      "default": 1,
+      "description": "Minimum level to purchase"
+    },
+    "stock": {
+      "type": "number",
+      "description": "Limited quantity (optional)"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "previewData": {
+      "type": "object",
+      "description": "Visual preview data",
+      "default": {}
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "rarity",
+    "price"
+  ]
+}

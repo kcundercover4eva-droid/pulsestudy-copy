@@ -1,0 +1,51 @@
+{
+  "name": "StudyMaterial",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Material title"
+    },
+    "fileUrl": {
+      "type": "string",
+      "description": "Uploaded file URL"
+    },
+    "subject": {
+      "type": "string",
+      "enum": [
+        "math",
+        "science",
+        "history",
+        "english",
+        "coding",
+        "art",
+        "music",
+        "other"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "processing",
+        "completed",
+        "failed"
+      ],
+      "default": "processing"
+    },
+    "flashcardCount": {
+      "type": "number",
+      "default": 0
+    },
+    "notecardCount": {
+      "type": "number",
+      "default": 0
+    },
+    "quizCount": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "title"
+  ]
+}

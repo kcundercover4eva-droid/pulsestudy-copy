@@ -1,0 +1,66 @@
+{
+  "name": "PublicProfile",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "description": "Reference to User"
+    },
+    "displayName": {
+      "type": "string",
+      "description": "Public display name"
+    },
+    "bio": {
+      "type": "string",
+      "description": "User bio"
+    },
+    "avatarUrl": {
+      "type": "string",
+      "description": "Profile picture URL"
+    },
+    "isPublic": {
+      "type": "boolean",
+      "default": true
+    },
+    "stats": {
+      "type": "object",
+      "properties": {
+        "totalXP": {
+          "type": "number"
+        },
+        "currentStreak": {
+          "type": "number"
+        },
+        "questsCompleted": {
+          "type": "number"
+        },
+        "bossesDefeated": {
+          "type": "number"
+        },
+        "evolutionStage": {
+          "type": "number"
+        }
+      },
+      "default": {}
+    },
+    "badges": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "followerCount": {
+      "type": "number",
+      "default": 0
+    },
+    "followingCount": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "userId",
+    "displayName"
+  ]
+}

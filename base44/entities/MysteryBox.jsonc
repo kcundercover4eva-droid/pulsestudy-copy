@@ -1,0 +1,48 @@
+{
+  "name": "MysteryBox",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "bronze",
+        "silver",
+        "gold",
+        "legendary"
+      ],
+      "default": "bronze"
+    },
+    "isOpened": {
+      "type": "boolean",
+      "default": false
+    },
+    "contents": {
+      "type": "object",
+      "properties": {
+        "xp": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "number"
+        },
+        "cosmeticIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "streakFreeze": {
+          "type": "number"
+        }
+      },
+      "default": {}
+    },
+    "earnedFrom": {
+      "type": "string",
+      "description": "How this box was earned"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}

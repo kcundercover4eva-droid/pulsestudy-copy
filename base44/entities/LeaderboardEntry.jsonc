@@ -1,0 +1,76 @@
+{
+  "name": "LeaderboardEntry",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "description": "Reference to User"
+    },
+    "username": {
+      "type": "string",
+      "description": "Cached username"
+    },
+    "season": {
+      "type": "string",
+      "enum": [
+        "current",
+        "spring",
+        "summer",
+        "fall",
+        "winter"
+      ],
+      "default": "current"
+    },
+    "period": {
+      "type": "string",
+      "enum": [
+        "weekly",
+        "seasonal",
+        "alltime"
+      ],
+      "default": "weekly"
+    },
+    "teamId": {
+      "type": "string",
+      "description": "Optional team ID"
+    },
+    "totalXP": {
+      "type": "number",
+      "default": 0
+    },
+    "questsCompleted": {
+      "type": "number",
+      "default": 0
+    },
+    "bossesDefeated": {
+      "type": "number",
+      "default": 0
+    },
+    "currentStreak": {
+      "type": "number",
+      "default": 0
+    },
+    "studyMinutes": {
+      "type": "number",
+      "default": 0
+    },
+    "rank": {
+      "type": "number",
+      "description": "Current rank position"
+    },
+    "lastRank": {
+      "type": "number",
+      "description": "Previous rank for change indicator"
+    },
+    "weekStartDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Start of current week"
+    }
+  },
+  "required": [
+    "userId",
+    "season",
+    "period"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "name": "Flashcard",
+  "type": "object",
+  "properties": {
+    "question": {
+      "type": "string"
+    },
+    "answer": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string",
+      "enum": [
+        "math",
+        "science",
+        "history",
+        "english",
+        "coding",
+        "art",
+        "music",
+        "other"
+      ]
+    },
+    "sourceId": {
+      "type": "string",
+      "description": "Reference to uploaded material"
+    },
+    "masteryLevel": {
+      "type": "number",
+      "default": 0,
+      "description": "0-5 scale of mastery"
+    },
+    "nextReviewDate": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "question",
+    "answer",
+    "subject"
+  ]
+}

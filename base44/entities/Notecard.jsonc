@@ -1,0 +1,35 @@
+{
+  "name": "Notecard",
+  "type": "object",
+  "properties": {
+    "topic": {
+      "type": "string",
+      "description": "Main topic of the notecard"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Concise explanation"
+    },
+    "sourceId": {
+      "type": "string",
+      "description": "Reference to uploaded material"
+    },
+    "subject": {
+      "type": "string",
+      "enum": [
+        "math",
+        "science",
+        "history",
+        "english",
+        "coding",
+        "art",
+        "music",
+        "other"
+      ]
+    }
+  },
+  "required": [
+    "topic",
+    "summary"
+  ]
+}

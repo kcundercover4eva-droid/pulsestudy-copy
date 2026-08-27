@@ -1,0 +1,49 @@
+{
+  "name": "Team",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Team name"
+    },
+    "emoji": {
+      "type": "string",
+      "default": "\u2694\ufe0f"
+    },
+    "color": {
+      "type": "string",
+      "default": "#6366f1"
+    },
+    "captainId": {
+      "type": "string",
+      "description": "User ID of team captain"
+    },
+    "memberIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "totalXP": {
+      "type": "number",
+      "default": 0
+    },
+    "questsCompleted": {
+      "type": "number",
+      "default": 0
+    },
+    "motto": {
+      "type": "string",
+      "description": "Team motto or description"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "captainId"
+  ]
+}

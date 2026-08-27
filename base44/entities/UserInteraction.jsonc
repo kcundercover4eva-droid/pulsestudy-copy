@@ -1,0 +1,56 @@
+{
+  "name": "UserInteraction",
+  "type": "object",
+  "properties": {
+    "contentId": {
+      "type": "string",
+      "description": "Reference to StudyContent"
+    },
+    "interactionType": {
+      "type": "string",
+      "enum": [
+        "viewed",
+        "started",
+        "completed",
+        "skipped",
+        "liked",
+        "disliked"
+      ],
+      "default": "viewed"
+    },
+    "timeSpent": {
+      "type": "number",
+      "description": "Time spent in seconds"
+    },
+    "accuracy": {
+      "type": "number",
+      "description": "0-1 accuracy score if applicable"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ]
+    },
+    "wasSuccessful": {
+      "type": "boolean",
+      "description": "Whether the interaction was successful"
+    },
+    "feedback": {
+      "type": "string",
+      "description": "Optional user feedback"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional interaction data",
+      "default": {}
+    }
+  },
+  "required": [
+    "contentId",
+    "interactionType"
+  ]
+}

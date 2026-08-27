@@ -1,0 +1,35 @@
+{
+  "name": "Reaction",
+  "type": "object",
+  "properties": {
+    "targetType": {
+      "type": "string",
+      "enum": [
+        "achievement",
+        "profile",
+        "comment"
+      ],
+      "description": "What is being reacted to"
+    },
+    "targetId": {
+      "type": "string",
+      "description": "ID of the target entity"
+    },
+    "reactionType": {
+      "type": "string",
+      "enum": [
+        "like",
+        "fire",
+        "clap",
+        "star",
+        "rocket"
+      ],
+      "default": "like"
+    }
+  },
+  "required": [
+    "targetType",
+    "targetId",
+    "reactionType"
+  ]
+}

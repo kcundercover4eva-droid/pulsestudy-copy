@@ -1,0 +1,36 @@
+{
+  "name": "UserInventory",
+  "type": "object",
+  "properties": {
+    "itemId": {
+      "type": "string",
+      "description": "Reference to CosmeticItem"
+    },
+    "itemName": {
+      "type": "string",
+      "description": "Cached item name"
+    },
+    "itemCategory": {
+      "type": "string",
+      "description": "Cached category"
+    },
+    "itemRarity": {
+      "type": "string",
+      "description": "Cached rarity"
+    },
+    "purchaseDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When item was acquired"
+    },
+    "isEquipped": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "itemId",
+    "itemName",
+    "itemCategory"
+  ]
+}

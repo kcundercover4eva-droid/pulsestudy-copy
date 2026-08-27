@@ -1,0 +1,78 @@
+{
+  "name": "StudyContent",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the study content"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description or question"
+    },
+    "contentType": {
+      "type": "string",
+      "enum": [
+        "quiz",
+        "flashcard",
+        "practice",
+        "reading",
+        "video",
+        "challenge"
+      ],
+      "default": "quiz"
+    },
+    "subject": {
+      "type": "string",
+      "enum": [
+        "math",
+        "science",
+        "history",
+        "english",
+        "coding",
+        "art",
+        "music",
+        "other"
+      ]
+    },
+    "topic": {
+      "type": "string",
+      "description": "Specific topic within subject"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "easy",
+        "medium",
+        "hard",
+        "expert"
+      ],
+      "default": "medium"
+    },
+    "estimatedMinutes": {
+      "type": "number",
+      "default": 5
+    },
+    "content": {
+      "type": "object",
+      "description": "Actual content data (questions, answers, etc.)",
+      "default": {}
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "title",
+    "subject",
+    "difficulty"
+  ]
+}

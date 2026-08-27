@@ -1,0 +1,60 @@
+{
+  "name": "Quiz",
+  "type": "object",
+  "properties": {
+    "question": {
+      "type": "string",
+      "description": "Quiz question"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "multiple_choice",
+        "true_false",
+        "short_answer"
+      ],
+      "default": "multiple_choice"
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Options for multiple choice"
+    },
+    "answer": {
+      "type": "string",
+      "description": "Correct answer"
+    },
+    "sourceId": {
+      "type": "string",
+      "description": "Reference to uploaded material"
+    },
+    "subject": {
+      "type": "string",
+      "enum": [
+        "math",
+        "science",
+        "history",
+        "english",
+        "coding",
+        "art",
+        "music",
+        "other"
+      ]
+    },
+    "isCompleted": {
+      "type": "boolean",
+      "default": false
+    },
+    "isCorrect": {
+      "type": "boolean",
+      "description": "Whether user answered correctly"
+    }
+  },
+  "required": [
+    "question",
+    "type",
+    "answer"
+  ]
+}

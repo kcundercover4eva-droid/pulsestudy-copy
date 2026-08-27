@@ -1,0 +1,65 @@
+{
+  "name": "Achievement",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Achievement title"
+    },
+    "description": {
+      "type": "string",
+      "description": "What was accomplished"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "streak",
+        "quest",
+        "boss",
+        "evolution",
+        "milestone",
+        "custom"
+      ],
+      "default": "milestone"
+    },
+    "emoji": {
+      "type": "string",
+      "default": "\ud83c\udfc6"
+    },
+    "rarity": {
+      "type": "string",
+      "enum": [
+        "common",
+        "rare",
+        "epic",
+        "legendary"
+      ],
+      "default": "common"
+    },
+    "imageUrl": {
+      "type": "string",
+      "description": "Optional achievement image"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional achievement data",
+      "default": {}
+    },
+    "isPublic": {
+      "type": "boolean",
+      "default": true
+    },
+    "likeCount": {
+      "type": "number",
+      "default": 0
+    },
+    "commentCount": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "title",
+    "type"
+  ]
+}

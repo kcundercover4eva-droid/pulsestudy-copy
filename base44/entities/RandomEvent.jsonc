@@ -1,0 +1,51 @@
+{
+  "name": "RandomEvent",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "doubleXP",
+        "lightning",
+        "bonusChallenge",
+        "streakBonus"
+      ],
+      "default": "doubleXP"
+    },
+    "multiplier": {
+      "type": "number",
+      "default": 2,
+      "description": "XP multiplier for event"
+    },
+    "durationMinutes": {
+      "type": "number",
+      "default": 15
+    },
+    "subject": {
+      "type": "string",
+      "description": "Specific subject for event, or 'all'"
+    },
+    "isActive": {
+      "type": "boolean",
+      "default": true
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "emoji": {
+      "type": "string",
+      "default": "\u26a1"
+    }
+  },
+  "required": [
+    "title",
+    "type"
+  ]
+}

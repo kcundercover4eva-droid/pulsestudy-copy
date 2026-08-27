@@ -1,0 +1,35 @@
+{
+  "name": "Task",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Task title"
+    },
+    "isCompleted": {
+      "type": "boolean",
+      "default": false
+    },
+    "day": {
+      "type": "number",
+      "description": "Day of week (0-6 for Mon-Sun)"
+    },
+    "blockId": {
+      "type": "string",
+      "description": "Optional reference to a schedule block"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "medium"
+    }
+  },
+  "required": [
+    "title",
+    "day"
+  ]
+}

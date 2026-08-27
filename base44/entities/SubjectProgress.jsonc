@@ -1,0 +1,47 @@
+{
+  "name": "SubjectProgress",
+  "type": "object",
+  "properties": {
+    "subject": {
+      "type": "string",
+      "enum": [
+        "math",
+        "science",
+        "history",
+        "english",
+        "coding",
+        "art",
+        "music",
+        "other"
+      ]
+    },
+    "xp": {
+      "type": "number",
+      "default": 0
+    },
+    "level": {
+      "type": "number",
+      "default": 1
+    },
+    "currentDifficulty": {
+      "type": "string",
+      "enum": [
+        "easy",
+        "medium",
+        "hard"
+      ],
+      "default": "medium"
+    },
+    "correctStreak": {
+      "type": "number",
+      "default": 0
+    },
+    "incorrectStreak": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "subject"
+  ]
+}
